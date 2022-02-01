@@ -7,6 +7,6 @@ import (
 
 func main() {
 
-	http.Handle("/", http.FileServer(http.Dir("./html")))
+	http.Handle("/", http.FileServer(http.Dir("./Tailwind/html/")))
 	log.Fatal(http.ListenAndServe(":80", nil))
 }
