@@ -18,7 +18,7 @@ import (
 
 func main() {
 	r := gin.Default()
-	r.LoadHTMLGlob("./Tailwind/html/*.html")
+	r.LoadHTMLGlob("./Tailwind/html/**/*.html")
 	// CSS files
 	r.Static("/dist", "./Tailwind/dist")
 	// Images
@@ -39,16 +39,15 @@ func main() {
 
 func RequestHandler(url string, c *gin.Context) {
 	fmt.Println("URL IS: " + url + ".")
-	if url == "/" {
-		c.HTML(http.StatusOK, "index.html", gin.H{})
-	} else {
-		// TODO: Add a validity test here for the url
-
-		// TODO: Remove trailing slashes and .*
-
-		// TODO: Implement templating? Gin has built in template functionality
-
-		// Display the webpage
-		c.HTML(http.StatusOK, url, gin.H{})
+	if url == "favicon.ico" {
+		return
 	}
+	// TODO: Add a validity test here for the url
+
+	// TODO: Remove trailing slashes and .*
+
+	// TODO: Implement templating? Gin has built in template functionality
+
+	// Display the webpage
+	c.HTML(http.StatusOK, url, gin.H{})
 }
