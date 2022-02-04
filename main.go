@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"net/http"
 
@@ -25,24 +24,45 @@ func main() {
 	r.Static("/img", "./Tailwind/img")
 
 	r.GET("/", func(c *gin.Context) {
-		c.HTML(http.StatusOK, "index.html", gin.H{})
+		c.HTML(http.StatusOK, "index.html", gin.H{
+			"isSelected": true,
+		})
 	})
 
-	// Generic get request, gets parsed in the RequestHandler function
-	r.GET("/:url", func(c *gin.Context) {
-		url := c.Param("url")
-		RequestHandler(url, c)
+	r.GET("/upload", func(c *gin.Context) {
+		c.HTML(http.StatusOK, "upload.html", gin.H{
+			"isSelected": false,
+		})
 	})
+
+	r.GET("/investigate", func(c *gin.Context) {
+		c.HTML(http.StatusOK, "investigate.html", gin.H{})
+	})
+
+	/*
+		// Generic get request, gets parsed in the RequestHandler function
+		r.GET("/:url", func(c *gin.Context) {
+			url := c.Param("url")
+			RequestHandler(url, c)
+		})
+	*/
 
 	log.Fatal(r.Run(":80"))
 }
 
+/*
 func RequestHandler(url string, c *gin.Context) {
 	fmt.Println("URL IS: " + url + ".")
 	if url == "favicon.ico" {
 		return
 	}
 	// TODO: Add a validity test here for the url
+	if url == "upload.html" {
+		c.HTML(http.StatusOK, "upload.html", gin.H{
+			"isSelected": false,
+		})
+		return
+	}
 
 	// TODO: Remove trailing slashes and .*
 
@@ -51,3 +71,4 @@ func RequestHandler(url string, c *gin.Context) {
 	// Display the webpage
 	c.HTML(http.StatusOK, url, gin.H{})
 }
+*/
