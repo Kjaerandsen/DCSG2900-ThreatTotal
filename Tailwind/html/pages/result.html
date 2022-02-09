@@ -1,0 +1,33 @@
+<doctype html>
+    <html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="description" content="Threat Total">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">  
+        <link href="../dist/output.css" rel="stylesheet">
+    </head>
+    <body>
+        <div class="bg-gray-200 grid place-items-center">
+    
+            {{ template "navbar.html" .}}
+    
+    
+            <div class = "bg-red-300 container text-center break-words sm:justify-center">
+                <h1 class="text-3xl font-bold p-0 mt-8 mb-8 sm:mt-12 sm:mb-12 w-auto">
+                    Results
+                </h1>
+            </div>
+    
+            
+           
+    
+            <div class = "bg-green-300 container w-full mt-1.5 mb-3 sm:pl-36 sm:pr-36 flex justify-center overflow-hidden">
+                <a href="./investigate">
+                    <button class="bg-orange-500 p-2 rounded justify-center">Submit for Manual Analysis</button>
+                </a>
+            </div>
+    
+        </div> 
+    
+    </body>
+    </html>   

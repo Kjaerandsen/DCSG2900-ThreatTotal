@@ -39,6 +39,14 @@ func main() {
 		c.HTML(http.StatusOK, "investigate.html", gin.H{})
 	})
 
+	r.GET("/submitted", func(c *gin.Context) {
+		c.HTML(http.StatusOK, "submitted.html", gin.H{})
+	})
+
+	r.GET("/results", func(c *gin.Context) {
+		c.HTML(http.StatusOK, "result.html", gin.H{})
+	})
+
 	/*
 		// Generic get request, gets parsed in the RequestHandler function
 		r.GET("/:url", func(c *gin.Context) {
