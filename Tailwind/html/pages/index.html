@@ -20,18 +20,24 @@
         </div>
 
         {{ template "mainInput.html" . }}
-       
+
+        <!-- Form input for retrieving search request (domain, url or filehash) -->
+        <form class="bg-gray-200 w-full grid place-items-center">
+
         <div class = "bg-green-300 container w-full mt-3 mb-1.5 pl-2 pr-2 sm:pl-36 sm:pr-36 overflow-hidden">
-            <form class="p-0 m-0">
-            <input class="w-full rounded h-8 box-border p-2 m-0" placeholder="https://www.ntnu.no"></input>
-            </form>
+            <label for="inputText">Input url, filehash or domain:</label>
+                <input class="w-full rounded h-8 box-border p-2 m-0"
+                       placeholder="https://www.ntnu.no"
+                       type="text" name="inputText" id="inputText">
         </div>
 
         <div class = "bg-green-300 container w-full mt-1.5 mb-3 sm:pl-36 sm:pr-36 flex justify-center overflow-hidden">
             <a href="./investigate">
-                <button class="bg-orange-500 p-2 rounded justify-center">Investigate</button>
+                <button class="bg-orange-500 p-2 rounded justify-center" type="submit">Investigate</button>
             </a>
         </div>
+
+        </form>
 
     </div> 
 
