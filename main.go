@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 
@@ -23,6 +24,12 @@ func main() {
 	r.Static("/img", "./Tailwind/img")
 
 	r.GET("/", func(c *gin.Context) {
+		fmt.Print("The input text is: ")
+
+		// All parameters in the url can be retrieved with the c.Request.Url.Query() command
+		// Returns a map of all the items, can be used for parsing several values / put into a struct?
+		fmt.Println(c.Request.URL.Query()["inputText"])
+
 		c.HTML(http.StatusOK, "index.html", gin.H{
 			"isSelected": true,
 		})
