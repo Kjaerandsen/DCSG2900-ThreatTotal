@@ -8,23 +8,20 @@ type fileData struct {
 }
 
 type reputationDomain struct {
-	domain string
-	isGood bool
-    threatScore int
-}
-
-type reputationUrl struct {
-	url string
-	isGood bool
+	domain      string
+	isGood      bool
 	threatScore int
-
 }
 
-type fileHashReputation struct{
+type ReputationUrl struct {
+	url         string
+	isGood      bool
+	threatScore int
+}
+
+type fileHashReputation struct {
 	filehash string
 	filename string
 	fileType string
 	fileSize string
 }
-
-
