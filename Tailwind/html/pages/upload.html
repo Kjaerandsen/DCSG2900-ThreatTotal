@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="no">
     <head>
         <meta charset="UTF-8">
         <meta name="description" content="Threat Total">
@@ -8,32 +8,28 @@
         <title>Upload</title>
     </head>
     <body>
-        <div class="bg-gray-200 grid place-items-center">
-            {{ template "navbar.html" .}}
-    
-            <div class = "bg-red-300 container text-center break-all sm:justify-center">
-                <h1 class="text-3xl font-bold p-0 mt-8 mb-8 sm:mt-12 sm:mb-12 w-auto">
-                    Threat Total
-                </h1>
+        <div class="grid place-items-center">
+            {{ template "navbarEN.html" .}}
+
+            <div class = "bg-white">
+                <img src="../img/TT2.png" class="">
             </div>
 
-            {{ template "mainInput.html" . }}
+            {{ template "mainInputEN.html" . }}
 
-            <div class="bg-green-300 container w-full mt-3 mb-3 pl-2 pr-2 sm:pl-36">
+            <div class="container w-full mt-3 mb-3 pl-2 pr-2 sm:pl-36">
                 <form class="flex justify-center place-items-center">
                     <label class="block m-4">
-                      <span class="sr-only">Choose profile photo</span>
                       <input type="file" class="block w-full text-3xl text-slate-500
-                        file:mr-4 file:py-2 file:px-4
+                        file:mr-4 file:py-2 file:px-3
                         file:rounded-full file:border-0
-                        file:text-3xl file:font-semibold
-                        file:bg-blue-50 file:text-blue-300
+                        file:text-3xl
                         hover:file:bg-blue-500"/>
                     </label>
                   </form>
             </div>
     
-            <div class = "bg-green-300 container w-full mt-1.5 mb-3 sm:pl-36 sm:pr-36 flex justify-center overflow-hidden">
+            <div class = "container w-full mt-1.5 mb-3 sm:pl-36 sm:pr-36 flex justify-center overflow-hidden">
                 <a href="./investigate">
                     <button class="bg-orange-500 p-2 rounded justify-center">Investigate</button>
                 </a>

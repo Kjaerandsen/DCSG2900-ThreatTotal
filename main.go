@@ -29,8 +29,14 @@ func main() {
 		})
 	})
 
-	r.GET("/upload", func(c *gin.Context) {
-		c.HTML(http.StatusOK, "upload.html", gin.H{
+	r.GET("/en", func(c *gin.Context) {
+		c.HTML(http.StatusOK, "en.html", gin.H{
+			"isSelected": true,
+		})
+	})
+
+	r.GET("/lastopp", func(c *gin.Context) {
+		c.HTML(http.StatusOK, "lastopp.html", gin.H{
 			"isSelected": false,
 		})
 	})
@@ -45,6 +51,16 @@ func main() {
 
 	r.GET("/results", func(c *gin.Context) {
 		c.HTML(http.StatusOK, "result.html", gin.H{})
+	})
+
+	r.GET("/upload", func(c *gin.Context) {
+		c.HTML(http.StatusOK, "upload.html", gin.H{
+			"isSelected": false,
+		})
+	})
+
+	r.GET("/undersok", func(c *gin.Context) {
+		c.HTML(http.StatusOK, "undersok.html", gin.H{})
 	})
 
 	/*
