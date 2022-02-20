@@ -1,7 +1,6 @@
-import logo from './logo.svg';
 import './output.css';
-import './App.css'
-import Navbar from './navbar'
+import './App.css';
+import Upload from './upload'
 import Indextest from './indextest';
 import { BrowserRouter as Router, Routes, Route}
     from 'react-router-dom';
@@ -10,8 +9,9 @@ function App() {
   return (
 	<Router>
     <Routes>
-		<Route exact path='/' exact element={<Indextest />} />
-	</Routes>
+		<Route path='/' element={<Indextest />} />
+    <Route path='/upload' element={<Upload />} />
+	  </Routes>
 	</Router>
   );
 }
