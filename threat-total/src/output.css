@@ -508,24 +508,16 @@ Ensure the default browser behavior of the `hidden` attribute.
   grid-column: span 3 / span 3;
 }
 
+.m-2 {
+  margin: 0.5rem;
+}
+
 .m-0 {
   margin: 0px;
 }
 
-.ml-3 {
-  margin-left: 0.75rem;
-}
-
-.mt-1 {
-  margin-top: 0.25rem;
-}
-
-.mt-8 {
-  margin-top: 2rem;
-}
-
-.mb-8 {
-  margin-bottom: 2rem;
+.m-4 {
+  margin: 1rem;
 }
 
 .mt-3 {
@@ -548,6 +540,10 @@ Ensure the default browser behavior of the `hidden` attribute.
   margin-bottom: 0.75rem;
 }
 
+.mt-1 {
+  margin-top: 0.25rem;
+}
+
 .mt-12 {
   margin-top: 3rem;
 }
@@ -556,8 +552,12 @@ Ensure the default browser behavior of the `hidden` attribute.
   margin-bottom: 1.5rem;
 }
 
-.box-border {
-  box-sizing: border-box;
+.ml-3 {
+  margin-left: 0.75rem;
+}
+
+.block {
+  display: block;
 }
 
 .flex {
@@ -572,16 +572,24 @@ Ensure the default browser behavior of the `hidden` attribute.
   height: auto;
 }
 
+.h-14 {
+  height: 3.5rem;
+}
+
 .h-full {
   height: 100%;
+}
+
+.h-10 {
+  height: 2.5rem;
 }
 
 .h-12 {
   height: 3rem;
 }
 
-.h-8 {
-  height: 2rem;
+.h-1 {
+  height: 0.25rem;
 }
 
 .w-full {
@@ -592,12 +600,12 @@ Ensure the default browser behavior of the `hidden` attribute.
   width: auto;
 }
 
-.grid-cols-3 {
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-}
-
 .grid-cols-1 {
   grid-template-columns: repeat(1, minmax(0, 1fr));
+}
+
+.grid-cols-3 {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
 .place-items-center {
@@ -612,12 +620,44 @@ Ensure the default browser behavior of the `hidden` attribute.
   overflow: hidden;
 }
 
-.break-words {
-  overflow-wrap: break-word;
+.rounded-lg {
+  border-radius: 0.5rem;
 }
 
 .rounded {
   border-radius: 0.25rem;
+}
+
+.border-2 {
+  border-width: 2px;
+}
+
+.border-b-2 {
+  border-bottom-width: 2px;
+}
+
+.border-solid {
+  border-style: solid;
+}
+
+.border-gray-400 {
+  --tw-border-opacity: 1;
+  border-color: rgb(156 163 175 / var(--tw-border-opacity));
+}
+
+.border-gray-900 {
+  --tw-border-opacity: 1;
+  border-color: rgb(17 24 39 / var(--tw-border-opacity));
+}
+
+.border-black {
+  --tw-border-opacity: 1;
+  border-color: rgb(0 0 0 / var(--tw-border-opacity));
+}
+
+.bg-orange-500 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(249 115 22 / var(--tw-bg-opacity));
 }
 
 .bg-white {
@@ -630,24 +670,9 @@ Ensure the default browser behavior of the `hidden` attribute.
   background-color: rgb(229 231 235 / var(--tw-bg-opacity));
 }
 
-.bg-red-300 {
+.bg-red-600 {
   --tw-bg-opacity: 1;
-  background-color: rgb(252 165 165 / var(--tw-bg-opacity));
-}
-
-.bg-green-300 {
-  --tw-bg-opacity: 1;
-  background-color: rgb(134 239 172 / var(--tw-bg-opacity));
-}
-
-.bg-orange-500 {
-  --tw-bg-opacity: 1;
-  background-color: rgb(249 115 22 / var(--tw-bg-opacity));
-}
-
-.bg-yellow-300 {
-  --tw-bg-opacity: 1;
-  background-color: rgb(253 224 71 / var(--tw-bg-opacity));
+  background-color: rgb(220 38 38 / var(--tw-bg-opacity));
 }
 
 .bg-blue-400 {
@@ -663,12 +688,32 @@ Ensure the default browser behavior of the `hidden` attribute.
   padding: 0.5rem;
 }
 
+.p-1 {
+  padding: 0.25rem;
+}
+
 .pl-2 {
   padding-left: 0.5rem;
 }
 
 .pr-2 {
   padding-right: 0.5rem;
+}
+
+.pt-10 {
+  padding-top: 2.5rem;
+}
+
+.pt-36 {
+  padding-top: 9rem;
+}
+
+.pt-12 {
+  padding-top: 3rem;
+}
+
+.text-left {
+  text-align: left;
 }
 
 .text-center {
@@ -684,9 +729,92 @@ Ensure the default browser behavior of the `hidden` attribute.
   font-weight: 700;
 }
 
+.font-semibold {
+  font-weight: 600;
+}
+
+.text-lime-500 {
+  --tw-text-opacity: 1;
+  color: rgb(132 204 22 / var(--tw-text-opacity));
+}
+
+.text-white {
+  --tw-text-opacity: 1;
+  color: rgb(255 255 255 / var(--tw-text-opacity));
+}
+
+.text-slate-500 {
+  --tw-text-opacity: 1;
+  color: rgb(100 116 139 / var(--tw-text-opacity));
+}
+
+.file\:mr-4::-webkit-file-upload-button {
+  margin-right: 1rem;
+}
+
+.file\:mr-4::file-selector-button {
+  margin-right: 1rem;
+}
+
+.file\:rounded-full::-webkit-file-upload-button {
+  border-radius: 9999px;
+}
+
+.file\:rounded-full::file-selector-button {
+  border-radius: 9999px;
+}
+
+.file\:border-0::-webkit-file-upload-button {
+  border-width: 0px;
+}
+
+.file\:border-0::file-selector-button {
+  border-width: 0px;
+}
+
+.file\:py-2::-webkit-file-upload-button {
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+}
+
+.file\:py-2::file-selector-button {
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+}
+
+.file\:px-3::-webkit-file-upload-button {
+  padding-left: 0.75rem;
+  padding-right: 0.75rem;
+}
+
+.file\:px-3::file-selector-button {
+  padding-left: 0.75rem;
+  padding-right: 0.75rem;
+}
+
+.file\:text-3xl::-webkit-file-upload-button {
+  font-size: 1.875rem;
+  line-height: 2.25rem;
+}
+
+.file\:text-3xl::file-selector-button {
+  font-size: 1.875rem;
+  line-height: 2.25rem;
+}
+
+.hover\:bg-blue-200:hover {
+  --tw-bg-opacity: 1;
+  background-color: rgb(191 219 254 / var(--tw-bg-opacity));
+}
+
 .hover\:bg-blue-500:hover {
   --tw-bg-opacity: 1;
   background-color: rgb(59 130 246 / var(--tw-bg-opacity));
+}
+
+.hover\:bg-red-400:hover {
+  --tw-bg-opacity: 1;
+  background-color: rgb(248 113 113 / var(--tw-bg-opacity));
 }
 
 .hover\:underline:hover {
@@ -694,17 +822,19 @@ Ensure the default browser behavior of the `hidden` attribute.
           text-decoration-line: underline;
 }
 
+.hover\:file\:bg-blue-500::-webkit-file-upload-button:hover {
+  --tw-bg-opacity: 1;
+  background-color: rgb(59 130 246 / var(--tw-bg-opacity));
+}
+
+.hover\:file\:bg-blue-500::file-selector-button:hover {
+  --tw-bg-opacity: 1;
+  background-color: rgb(59 130 246 / var(--tw-bg-opacity));
+}
+
 @media (min-width: 640px) {
   .sm\:col-span-1 {
     grid-column: span 1 / span 1;
-  }
-
-  .sm\:mt-12 {
-    margin-top: 3rem;
-  }
-
-  .sm\:mb-12 {
-    margin-bottom: 3rem;
   }
 
   .sm\:mr-36 {
@@ -723,6 +853,10 @@ Ensure the default browser behavior of the `hidden` attribute.
     height: 100%;
   }
 
+  .sm\:grid-cols-1 {
+    grid-template-columns: repeat(1, minmax(0, 1fr));
+  }
+
   .sm\:grid-cols-2 {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
@@ -739,15 +873,15 @@ Ensure the default browser behavior of the `hidden` attribute.
     justify-content: center;
   }
 
-  .sm\:pr-3 {
-    padding-right: 0.75rem;
-  }
-
   .sm\:pl-36 {
     padding-left: 9rem;
   }
 
   .sm\:pr-36 {
     padding-right: 9rem;
+  }
+
+  .sm\:pr-3 {
+    padding-right: 0.75rem;
   }
 }
