@@ -1,9 +1,24 @@
-import React from 'react';
+import React, { Component } from 'react';
 import Navbar from './navbar';
 import MainInput from './mainInput';
-  
-const Indextest = () => {
-  return (
+import App from './App';
+
+class Indextest extends React.Component {
+//const Indextest = () => {
+
+
+  search(e){
+      e.preventDefault();
+    var formData = new FormData(e.target.form);
+    var object={};
+
+    formData.forEach((value, key) => object[key] = value);
+    const data = JSON.stringify(object)
+      console.log(data[2])
+  }
+
+render(){
+    return (
     <>
 	<div className="bg-gray-200 grid place-items-center">
 		
@@ -28,7 +43,7 @@ const Indextest = () => {
 
         <div class = "bg-green-300 container w-full mt-1.5 mb-3 sm:pl-36 sm:pr-36 flex justify-center overflow-hidden">
             <a href="./investigate">
-                <button className="bg-orange-500 p-2 rounded justify-center" type="submit">Investigate</button>
+                <button onClick={this.search} className="bg-orange-500 p-2 rounded justify-center" type="submit">Investigate</button>
             </a>
         </div>
 
@@ -37,6 +52,9 @@ const Indextest = () => {
     </div>
 	</>
   );
-};
-  
+    }
+//};
+}
+
 export default Indextest;
+
