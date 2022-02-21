@@ -16,7 +16,7 @@ const Navbar = () => {
 			</div>
 			<div class="grid col-span-3 sm:col-span-1 sm:flex sm:justify-end place-items-center w-full h-12 sm:h-full sm:pr-3">
 				<div>
-					&#127760; <a href="./" class="hover:underline" title="English version"> English </a>
+					&#127760; <a href="./" class="hover:underline" title="Norsk versjon her: https://www.url.domene/"> Norsk </a>
 				</div>
 			</div>
 		</div>
