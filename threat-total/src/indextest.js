@@ -33,7 +33,7 @@ render(){
 		
 		<MainInput />
 		
-        <form>
+        <form className='w-full container'>
         <div className= "container w-full mt-3 mb-1.5 pl-2 pr-2 sm:pl-36 sm:pr-36 overflow-hidden">
             <div className="p-0 m-2 border-2 border-gray-400 rounded-lg">
             <input  className="w-full rounded h-14 p-2 m-0 hover:bg-blue-200" placeholder="https://www.ntnu.no" type="text" name="inputText"></input>
