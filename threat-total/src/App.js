@@ -5,6 +5,7 @@ import Indextest from './indextest';
 import Investigate from './investigate';
 import { BrowserRouter as Router, Routes, Route}
     from 'react-router-dom';
+import Result from './result';
 
 function App() {
   return (
@@ -13,6 +14,7 @@ function App() {
 		<Route path='/' element={<Indextest />} />
     <Route path='/upload' element={<Upload />} />
     <Route path='/investigate' element={<Investigate />} />
+    <Route path='/result' element={<Result />} />
 	  </Routes>
 	</Router>
   );

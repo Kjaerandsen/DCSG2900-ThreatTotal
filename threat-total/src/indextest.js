@@ -7,14 +7,24 @@ import App from './App';
 class Indextest extends React.Component {
 //const Indextest = () => {
 
+    
 
   search(e){
       e.preventDefault();
     var formData = new FormData(e.target.form);
     var object={};
+    const re = /[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()!@:%_\+.~#?&\/\/=]*)/;
 
     formData.forEach((value, key) => object[key] = value);
-    window.location.replace("/upload?"+encodeURIComponent(object["inputText"]))
+    if (object["inputText"].match(re) ) {
+        // if user input matches regex, send to url
+        window.location.replace("/upload?url="+encodeURIComponent(object["inputText"]))
+    }
+    else {
+        // if user input does not match regex, send to backend and do checks there
+        window.location.replace("/upload?hash="+encodeURIComponent(object["inputText"]))
+    }
+
     }
 
 render(){
