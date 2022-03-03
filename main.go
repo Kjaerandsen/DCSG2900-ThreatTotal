@@ -2,10 +2,15 @@ package main
 
 import (
 	"log"
-	"net/http"
-
 	//"net/http"
+
+	"net/http"
 	"github.com/gin-gonic/gin"
+	"github.com/gin-contrib/cors"
+	"fmt"
+	"encoding/json"
+	"io/ioutil"
+	//"log"
 )
 
 /**func main() {
@@ -17,18 +22,69 @@ import (
 
 func main() {
 	r := gin.Default()
-	r.LoadHTMLGlob("./Tailwind/html/**/*.html")
+	
+	r.Use(cors.Default())
+
+	
+	
+	//r.LoadHTMLGlob("./Tailwind/html/**/*.html")
 	// CSS files
-	r.Static("/dist", "./Tailwind/dist")
+	//r.Static("/dist", "./Tailwind/dist")
 	// Images
-	r.Static("/img", "./Tailwind/img")
+	//r.Static("/img", "./Tailwind/img")
 
 	r.GET("/", func(c *gin.Context) {
-		c.HTML(http.StatusOK, "index.html", gin.H{
-			"isSelected": true,
-		})
+		//c.HTML(http.StatusOK, hello world, gin.H{
+		//	"isSelected": true,
+		log.Println("Messsage")
 	})
 
+	/**
+	r.POST("/searchreputation", func(c *gin.Context){
+		//data := c.PostForm("submitted")
+		reqData, err := ioutil.ReadAll(c.Request.Body)
+		var data interface{}
+
+		err = json.Unmarshal(reqData, &data)
+	
+		if err!=nil{
+
+		}
+		else{
+
+		c.JSON(http.StatusOK, data)
+		}
+		
+	})
+	*/
+
+	r.POST("/upload", func(c *gin.Context) {
+        var outputData []byte
+        jsonData, err := ioutil.ReadAll(c.Request.Body)
+        if err != nil {
+            // Handle error
+        }
+        var test map[string]interface{}
+        err = json.Unmarshal(jsonData, &test)
+        if err != nil {
+            // Handle error
+        }
+        fmt.Println(test)
+        if test["inputText"] == "ntnu.no" {
+            outputData, err = json.Marshal("YESYESYESYESYES")
+            if err != nil {
+                // Handle error
+            }
+        } else {
+            outputData, err = json.Marshal("NONONONONONO")
+            if err != nil {
+                // Handle error
+            }
+        }
+
+        c.Data(http.StatusOK, "application/json", outputData)
+    })
+	/*
 	r.GET("/upload", func(c *gin.Context) {
 		c.HTML(http.StatusOK, "upload.html", gin.H{
 			"isSelected": false,
@@ -38,6 +94,7 @@ func main() {
 	r.GET("/investigate", func(c *gin.Context) {
 		c.HTML(http.StatusOK, "investigate.html", gin.H{})
 	})
+	
 
 	/*
 		// Generic get request, gets parsed in the RequestHandler function
@@ -47,7 +104,7 @@ func main() {
 		})
 	*/
 
-	log.Fatal(r.Run(":80"))
+	log.Fatal(r.Run(":8081"))
 }
 
 /*

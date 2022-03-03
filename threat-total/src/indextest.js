@@ -15,8 +15,20 @@ class Indextest extends React.Component {
 
     formData.forEach((value, key) => object[key] = value);
     const data = JSON.stringify(object)
-      console.log(data)
-  }
+      //console.log(data)
+
+    fetch("http://localhost:8081/upload",{
+        method:'POST',
+        headers:{
+            'Content-Type':'application/json'
+        },
+        body:data
+        }).then(res => res.json() //Venter på svar
+        ).then(data => {    //Sjekker hva data er
+            
+           window.alert(data)
+        });
+    }
 
 render(){
     return (
