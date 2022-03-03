@@ -6,10 +6,11 @@ import (
 
 	"encoding/json"
 	"fmt"
-	"github.com/gin-contrib/cors"
-	"github.com/gin-gonic/gin"
 	"io/ioutil"
 	"net/http"
+
+	"github.com/gin-contrib/cors"
+	"github.com/gin-gonic/gin"
 	//"log"
 )
 
@@ -60,23 +61,23 @@ func main() {
 		var outputData []byte
 		jsonData, err := ioutil.ReadAll(c.Request.Body)
 		if err != nil {
-			// Handle error
+			http.Error(c.Writer, "Failed to read request", http.StatusInternalServerError)
 		}
 		var test map[string]interface{}
 		err = json.Unmarshal(jsonData, &test)
-		if err != nil {
-			// Handle error
+		if err != nil { // Handled error
+			http.Error(c.Writer, "Failed to unmarshal data", http.StatusInternalServerError)
 		}
 		fmt.Println(test)
 		if test["inputText"] == "ntnu.no" {
 			outputData, err = json.Marshal("YESYESYESYESYES")
 			if err != nil {
-				// Handle error
+				http.Error(c.Writer, "Failed to marshal data", http.StatusInternalServerError)
 			}
 		} else {
 			outputData, err = json.Marshal("NONONONONONO")
 			if err != nil {
-				// Handle error
+				http.Error(c.Writer, "Invalid format, please enter a valid domain", http.StatusForbidden)
 			}
 		}
 
