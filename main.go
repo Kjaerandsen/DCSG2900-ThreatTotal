@@ -4,12 +4,12 @@ import (
 	"log"
 	//"net/http"
 
-	"net/http"
-	"github.com/gin-gonic/gin"
-	"github.com/gin-contrib/cors"
-	"fmt"
 	"encoding/json"
+	"fmt"
+	"github.com/gin-contrib/cors"
+	"github.com/gin-gonic/gin"
 	"io/ioutil"
+	"net/http"
 	//"log"
 )
 
@@ -22,11 +22,9 @@ import (
 
 func main() {
 	r := gin.Default()
-	
+
 	r.Use(cors.Default())
 
-	
-	
 	//r.LoadHTMLGlob("./Tailwind/html/**/*.html")
 	// CSS files
 	//r.Static("/dist", "./Tailwind/dist")
@@ -46,7 +44,7 @@ func main() {
 		var data interface{}
 
 		err = json.Unmarshal(reqData, &data)
-	
+
 		if err!=nil{
 
 		}
@@ -54,54 +52,59 @@ func main() {
 
 		c.JSON(http.StatusOK, data)
 		}
-		
+
 	})
 	*/
 
 	r.POST("/upload", func(c *gin.Context) {
-        var outputData []byte
-        jsonData, err := ioutil.ReadAll(c.Request.Body)
-        if err != nil {
-            // Handle error
-        }
-        var test map[string]interface{}
-        err = json.Unmarshal(jsonData, &test)
-        if err != nil {
-            // Handle error
-        }
-        fmt.Println(test)
-        if test["inputText"] == "ntnu.no" {
-            outputData, err = json.Marshal("YESYESYESYESYES")
-            if err != nil {
-                // Handle error
-            }
-        } else {
-            outputData, err = json.Marshal("NONONONONONO")
-            if err != nil {
-                // Handle error
-            }
-        }
+		var outputData []byte
+		jsonData, err := ioutil.ReadAll(c.Request.Body)
+		if err != nil {
+			// Handle error
+		}
+		var test map[string]interface{}
+		err = json.Unmarshal(jsonData, &test)
+		if err != nil {
+			// Handle error
+		}
+		fmt.Println(test)
+		if test["inputText"] == "ntnu.no" {
+			outputData, err = json.Marshal("YESYESYESYESYES")
+			if err != nil {
+				// Handle error
+			}
+		} else {
+			outputData, err = json.Marshal("NONONONONONO")
+			if err != nil {
+				// Handle error
+			}
+		}
 
-        c.Data(http.StatusOK, "application/json", outputData)
-    })
-	/*
-	r.GET("/upload", func(c *gin.Context) {
-		c.HTML(http.StatusOK, "upload.html", gin.H{
-			"isSelected": false,
-		})
+		c.Data(http.StatusOK, "application/json", outputData)
 	})
 
-	r.GET("/investigate", func(c *gin.Context) {
-		c.HTML(http.StatusOK, "investigate.html", gin.H{})
+	r.GET("/result", func(c *gin.Context) {
+		fmt.Println(c.Query("request"))
 	})
-	
 
 	/*
-		// Generic get request, gets parsed in the RequestHandler function
-		r.GET("/:url", func(c *gin.Context) {
-			url := c.Param("url")
-			RequestHandler(url, c)
+		r.GET("/upload", func(c *gin.Context) {
+			c.HTML(http.StatusOK, "upload.html", gin.H{
+				"isSelected": false,
+			})
 		})
+
+		r.GET("/investigate", func(c *gin.Context) {
+			c.HTML(http.StatusOK, "investigate.html", gin.H{})
+		})
+
+
+		/*
+			// Generic get request, gets parsed in the RequestHandler function
+			r.GET("/:url", func(c *gin.Context) {
+				url := c.Param("url")
+				RequestHandler(url, c)
+			})
 	*/
 
 	log.Fatal(r.Run(":8081"))
