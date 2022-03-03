@@ -14,20 +14,7 @@ class Indextest extends React.Component {
     var object={};
 
     formData.forEach((value, key) => object[key] = value);
-    const data = JSON.stringify(object)
-      //console.log(data)
-
-    fetch("http://localhost:8081/upload",{
-        method:'POST',
-        headers:{
-            'Content-Type':'application/json'
-        },
-        body:data
-        }).then(res => res.json() //Venter på svar
-        ).then(data => {    //Sjekker hva data er
-            
-           window.alert(data)
-        });
+    window.location.replace("/upload?"+encodeURIComponent(object["inputText"]))
     }
 
 render(){
