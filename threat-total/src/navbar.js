@@ -5,14 +5,14 @@ const Navbar = () => {
 	return (
 	<>
 	<nav className="container h-auto ">
-		<div className="flex h-14 p-1">
-			<div className="h-full ml-3">
+		<div className="flex h-12 sm:h-14 p-1">
+			<div className="h-full ml-3 w-full">
 				<a href="./">
-				<img src={logo} className="h-10 w-auto mt-1" alt="NTNU Logo" />
+				<img src={logo} className="sm:h-10 h-8 w-auto mt-1" alt="NTNU Logo" />
 				</a>
 			</div>
 			<div className="float float-right w-full h-12 sm:h-full sm:pr-3">
-				<div className="float-right place-items-center h-12 mt-3">
+				<div className="float-right place-items-center h-12 mt-2 sm:mt-3">
 					&#127760; <a href="./" className="hover:underline" title="Norsk versjon her: https://www.url.domene/"> Norsk </a>
 				</div>
 			</div>
