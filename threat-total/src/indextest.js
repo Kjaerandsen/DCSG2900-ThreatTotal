@@ -16,10 +16,10 @@ class Indextest extends React.Component {
     // Also check if empty and return an error, or invalid on both hash and url
     if (object["inputText"].match(re) ) {
         // if user input matches regex, send to url
-        window.location.replace("/upload?url="+encodeURIComponent(object["inputText"]))
+        window.location.replace("/result?url="+encodeURIComponent(object["inputText"]))
     } else {
         // if user input does not match regex, send to backend and do checks there
-        window.location.replace("/upload?hash="+encodeURIComponent(object["inputText"]))
+        window.location.replace("/result?hash="+encodeURIComponent(object["inputText"]))
     }
   }
 

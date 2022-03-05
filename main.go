@@ -1,13 +1,14 @@
 package main
 
 import (
+	"encoding/json"
+	"io/ioutil"
 	"log"
+	"net/http"
+
 	//"net/http"
 
-	"encoding/json"
 	"fmt"
-	"io/ioutil"
-	"net/http"
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
@@ -57,12 +58,19 @@ func main() {
 	})
 	*/
 
-	r.POST("/upload", func(c *gin.Context) {
+	/*
+		TODO SEE
+		Perhaps we need a routing to "search" for searching domains, url or file hashes
+		then we have another routing for "upload", where we upload files from local machine, and send that
+
+	*/
+	r.POST("/", func(c *gin.Context) {
 		var outputData []byte
 		jsonData, err := ioutil.ReadAll(c.Request.Body)
 		if err != nil {
 			http.Error(c.Writer, "Failed to read request", http.StatusInternalServerError)
 		}
+
 		var test map[string]interface{}
 		err = json.Unmarshal(jsonData, &test)
 		if err != nil { // Handled error
@@ -86,6 +94,21 @@ func main() {
 
 	r.GET("/result", func(c *gin.Context) {
 		fmt.Println(c.Query("request"))
+	})
+
+	// Upload a file TODO
+	// figure out routing here, where are we supposted to have/deliver a file?
+	// do we make a new route that says "search" instead? discuss this tomorrow
+	// https://github.com/gin-gonic/gin#single-file
+	r.POST("/uploadFile", func(c *gin.Context) {
+		// for a single file
+		file, _ := c.FormFile("Filename")
+		log.Println(file.Filename)
+
+		// upload file to the specific destination
+		c.SaveUploadedFile(file, "/investigate")
+
+		c.String(http.StatusOK, fmt.Sprintf("'%s' uploaded!", file.Filename))
 	})
 
 	/*
