@@ -6,12 +6,12 @@ import Navbar from "./navbar";
 const Result = () => {
 	return (
 	<>
-    <div class="bg-gray-200 grid place-items-center">
+    <div class="grid place-items-center">
     
         <Navbar />
 
 
-    <div class = "bg-red-300 container text-center break-words sm:justify-center">
+    <div class = "bg-red-500 container text-center break-words sm:justify-center">
         <h1 class="text-3xl font-bold p-0 mt-8 mb-8 sm:mt-12 sm:mb-12 w-auto">
             Results
         </h1>
