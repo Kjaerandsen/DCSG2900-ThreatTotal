@@ -59,19 +59,19 @@ render(){
             <br></br>
             <ul className='w-full'>
                 <li className='w-full pl-4 pr-4 m-0'>
-                    <button className='w-full border-2 border-gray-600 p-2' onClick={this.toggleQ1}>Q: What is the difference between a domain and a url?</button>
+                    <button className='w-full border-2 border-gray-400 rounded-lg p-2' onClick={this.toggleQ1}>Q: What is the difference between a domain and a url?</button>
                 </li>
                 {this.state.q1 && (<li className='w-full  pl-4 pr-4'>
-                    <p className='border border-gray-600 p-2'>
-                    A url is a specific webpage, for example this page threat-total.edu/about. While a domain covers the broader website 
-                    "threat-total.edu" and all pages under the domain, such as threat-total.edu/about.
+                    <p className='border border-gray-400 rounded-lg p-2 sm:break-normal'>
+                    A url is a specific webpage, for example this page <i>"threat-total.edu/about"</i>. While a domain covers the broader website 
+                    <i>"threat-total.edu"</i> and all pages under the domain, such as <i>"threat-total.edu/about"</i>.
                     </p>
                 </li>) }
                 <li className='w-full pl-4 pr-4 m-0'>
-                    <button className='w-full border-2 border-gray-600 p-2' onClick={this.toggleQ2}>Q: What information sources do you use?</button>
+                    <button className='w-full border-2 border-gray-400 rounded-lg p-2' onClick={this.toggleQ2}>Q: Which information sources do you use?</button>
                 </li>
                 {this.state.q2 && (<li className='w-full  pl-4 pr-4'>
-                    <p className='border border-gray-600 p-2'>
+                    <p className='border border-gray-400 rounded-lg p-2 sm:break-normal'>
                     Our main information source is the NTNU soc, but we also retrieve information from ....
                     </p>
                 </li>) }

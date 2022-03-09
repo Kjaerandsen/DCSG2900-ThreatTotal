@@ -924,6 +924,11 @@ Ensure the default browser behavior of the `hidden` attribute.
     justify-content: center;
   }
 
+  .sm\:break-normal {
+    overflow-wrap: normal;
+    word-break: normal;
+  }
+
   .sm\:p-12 {
     padding: 3rem;
   }
