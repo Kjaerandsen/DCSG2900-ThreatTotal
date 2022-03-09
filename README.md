@@ -12,9 +12,9 @@ this is a test file
 * Jonas Kjærandsen
 * Peder Andreas Stuen
 
-To develop with tailwind run:
+To develop with tailwind from the threat-total folder run:
 npx tailwindcss -i ./src/input.css -o ./src/output.css --watch
-from the threat-total folder
-To run the web-development server run:
+
+To run the web-development server from the threat-total folder run:
 npm start:
 from the threat-total folder

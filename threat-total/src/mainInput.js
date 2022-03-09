@@ -1,9 +1,10 @@
 import React from "react";
 
-const MainInput = () => {
+const MainInput = props => {
 	return (
 	<>
 	<div className= "container w-full h-auto p-2">
+		
 		<div className="bg-gray-200 grid grid-cols-1 sm:grid-cols-2 sm:mr-36 sm:ml-36 mt-12 mb-6 border-2 border-gray-400 rounded-lg">
 			<div className="flex justify-center place-items-center w-full h-full overflow-hidden"> 
 				<a href="/" className="w-full h-full
