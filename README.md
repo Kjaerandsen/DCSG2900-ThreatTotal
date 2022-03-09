@@ -1,20 +1,46 @@
-# DCSG2900-ThreatTotal
+# DCSG2900-ThreatTotal:
 
+Threat total is a threat intelligence service which allows you to get a quick overlook over the safety of using a particular website, 
+domain or application. 
+We retrieve data from the NTNU soc database, as well as external sources such as: .... 
 
-hello world
-
-this is a test file
-
-**Team members: **
+## Team members:
 
 * Johannes Madsen Barstad
 * Odin Korsfur Henriksen
 * Jonas Kjærandsen
 * Peder Andreas Stuen
 
-To develop with tailwind from the threat-total folder run:
-npx tailwindcss -i ./src/input.css -o ./src/output.css --watch
+## About
 
-To run the web-development server from the threat-total folder run:
-npm start:
-from the threat-total folder
+The application is developed in react.js + tailwindcss for the frontend and golang with the gin web framework for the backend.
+
+# Development:
+
+## Frontend:
+
+Go to the threat-total folder
+
+To install the dependencies run:
+
+`npm i`
+
+To start the development server run:
+
+`npm start`
+
+To generate css while working run:
+
+`npx tailwindcss -i ./src/input.css -o ./src/output.css --watch`
+
+## Backend:
+
+Open the main folder.
+
+Install the dependencies with:
+
+`go mod download`
+
+Run the backend with:
+
+`go run main.go`
