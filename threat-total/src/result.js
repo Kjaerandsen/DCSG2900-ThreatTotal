@@ -11,8 +11,20 @@ function Result() {
     const url = queryParams.get('url');
 
     useEffect(() => {
-        console.log({hash})
-        console.log({url})
+        if (hash != null) {
+            console.log({hash})
+            // Send an api request to the backend with hash data
+
+            // Show the results
+        } else if (url != null){
+            // Send an api request to the backend with url data
+
+            // Show the results
+            console.log({url})
+        } else {
+            // Show an error message, and show a redirect to search page button
+            console.log("Invalid parameter")
+        }
     });
 
     return (
