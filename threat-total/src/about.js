@@ -1,11 +1,25 @@
 import React from 'react';
 import Navbar from './navbar';
-import MainInput from './mainInput';
 import ttLogo from './img/TT.png'
 
-//const history = createHashHistory()
-
 class About extends React.Component {
+
+constructor() {
+    super();
+}
+
+state = { 
+    q1: false,
+    q2: false
+};
+
+toggleQ1 = () => {
+    this.setState({ q1: !this.state.q1 });  
+};
+
+toggleQ2 = () => {
+    this.setState({ q2: !this.state.q2 });  
+};
 
 render(){
     return (
@@ -26,6 +40,7 @@ render(){
 
             <p>
                 Threat total is a threat intelligence service which allows you to get a quick overlook over the safety of using a particular website, domain or application.
+                We retrieve data from the NTNU soc database, as well as external sources such as: ....
 
                 Tincidunt eget nullam non nisi est sit amet facilisis. 
                 Eu turpis egestas pretium aenean. Suspendisse potenti nullam ac tortor vitae purus faucibus ornare. 
@@ -39,19 +54,27 @@ render(){
             </p>
         </div>
 
-        <div className='container p-6 sm:p-12'>
+        <div className='container p-6 sm:p-12 text-center'>
             <h1> Frequently asked questions: </h1>    
-
-            <ul>
-                <li>
-                    Q: What is the difference between a domain and a url?
+            <br></br>
+            <ul className='w-full'>
+                <li className='w-full pl-4 pr-4 m-0'>
+                    <button className='w-full border-2 border-gray-600 p-2' onClick={this.toggleQ1}>Q: What is the difference between a domain and a url?</button>
                 </li>
-                <li>
-                    Q: What information sources do you use?
+                {this.state.q1 && (<li className='w-full  pl-4 pr-4'>
+                    <p className='border border-gray-600 p-2'>
+                    A url is a specific webpage, for example this page threat-total.edu/about. While a domain covers the broader website 
+                    "threat-total.edu" and all pages under the domain, such as threat-total.edu/about.
+                    </p>
+                </li>) }
+                <li className='w-full pl-4 pr-4 m-0'>
+                    <button className='w-full border-2 border-gray-600 p-2' onClick={this.toggleQ2}>Q: What information sources do you use?</button>
                 </li>
-                <li>
-                    
-                </li>
+                {this.state.q2 && (<li className='w-full  pl-4 pr-4'>
+                    <p className='border border-gray-600 p-2'>
+                    Our main information source is the NTNU soc, but we also retrieve information from ....
+                    </p>
+                </li>) }
             </ul>
         </div>
 
