@@ -13,9 +13,8 @@ const MainInput = props => {
 				<button className=" w-full p-2 ">Search</button></a>
 			</div>
 			<div className="flex justify-center place-items-center w-full h-full overflow-hidden"> 
-				<a href="/upload" className="w-full h-full">
-					<button className="w-full p-2 rounded hover:bg-blue-500
-							bg-blue-400">
+				<a href="/upload" className="w-full h-full"> 
+					<button className="w-full p-2 rounded hover:bg-blue-500">
 							Upload File
 					</button>
 				</a>
@@ -25,5 +24,7 @@ const MainInput = props => {
 	</>
 	)
 };
-
+/*
+figure out proper button highlightning when selected search or upload
+*/
 export default MainInput;
