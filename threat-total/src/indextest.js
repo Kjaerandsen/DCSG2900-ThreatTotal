@@ -34,9 +34,7 @@ render(){
 		<Navbar />
 		
         <div>
-            <a href="/" className="w-full">
-                <img src={ttLogo} className="h-auto" alt="Threat Total Logo"/>
-            </a>
+                <img src={ttLogo} className="" alt="NTNU Logo"/>
         </div>
 		
 		<MainInput />
