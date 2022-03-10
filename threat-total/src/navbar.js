@@ -1,6 +1,6 @@
 import React from "react";
 import logo from './img/logo.png'
-
+/*comment*/
 const Navbar = () => {
 	return (
 	<>
