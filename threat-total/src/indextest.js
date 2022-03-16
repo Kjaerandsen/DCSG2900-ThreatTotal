@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import Navbar from './navbar';
-import MainInput from './mainInput';
+import Navbar from './Navbar';
+import MainInput from './MainInput';
 import ttLogo from './img/TT.png'
 import App from './App';
 import { createHashHistory } from 'history'
