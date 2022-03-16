@@ -4,17 +4,46 @@ import { useParams } from "react-router-dom";
 
 // look in the url, url decode and write to client
 
+
+
 function Result() {
     
     const queryParams = new URLSearchParams(window.location.search);
     const hash = queryParams.get('hash');
     const url = queryParams.get('url');
 
+    
+    /*const handleSubmit = (event) => {
+        fetch('localhost:8080/result?hash='+hash, {
+            method: 'GET',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json'
+                }
+        })
+          .then((response) => response.json())
+          .then((json) => {
+            console.log(json)
+            window.location.reload()
+          })
+        return ""
+    }*/
+    //https://stackoverflow.com/questions/61120455/typeerror-networkerror-when-attempting-to-fetch-resource-on-form-submit-react
+
     useEffect(() => {
         if (hash != null) {
             console.log({hash})
             // Send an api request to the backend with hash data
-
+            fetch('http://localhost:8081/result?hash=dwdwadawdaw', {
+                method: 'GET',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json'
+                }
+            }).then((response) => response.json())
+            .then((json) => {
+              console.log(json)
+            })
             // Show the results
         } else if (url != null){
             // Send an api request to the backend with url data
@@ -26,6 +55,7 @@ function Result() {
             console.log("Invalid parameter")
         }
     });
+
 
     return (
         <>
