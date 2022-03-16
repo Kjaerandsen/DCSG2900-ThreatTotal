@@ -12,24 +12,6 @@ function Result() {
     const hash = queryParams.get('hash');
     const url = queryParams.get('url');
 
-    
-    /*const handleSubmit = (event) => {
-        fetch('localhost:8080/result?hash='+hash, {
-            method: 'GET',
-                headers: {
-                    Accept: 'application/json',
-                    'Content-Type': 'application/json'
-                }
-        })
-          .then((response) => response.json())
-          .then((json) => {
-            console.log(json)
-            window.location.reload()
-          })
-        return ""
-    }*/
-    //https://stackoverflow.com/questions/61120455/typeerror-networkerror-when-attempting-to-fetch-resource-on-form-submit-react
-
     useEffect(() => {
         if (hash != null) {
             console.log({hash})
