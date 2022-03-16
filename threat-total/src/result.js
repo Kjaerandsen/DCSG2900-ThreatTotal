@@ -1,10 +1,7 @@
 import React, { useEffect} from "react";
-import Navbar from "./Navbar";
-import { useParams } from "react-router-dom";
+import Navbar from "./navbar";
 
 // look in the url, url decode and write to client
-
-
 
 function Result() {
     
@@ -16,7 +13,7 @@ function Result() {
         if (hash != null) {
             console.log({hash})
             // Send an api request to the backend with hash data
-            fetch('http://localhost:8081/result?hash=dwdwadawdaw', {
+            fetch('http://localhost:8081/result?hash=' + hash, {
                 method: 'GET',
                 headers: {
                     Accept: 'application/json',
@@ -29,7 +26,16 @@ function Result() {
             // Show the results
         } else if (url != null){
             // Send an api request to the backend with url data
-
+            fetch('http://localhost:8081/result?url=' + url, {
+                method: 'GET',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json'
+                }
+            }).then((response) => response.json())
+            .then((json) => {
+              console.log(json)
+            })
             // Show the results
             console.log({url})
         } else {

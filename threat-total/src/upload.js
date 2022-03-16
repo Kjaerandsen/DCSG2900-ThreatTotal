@@ -1,6 +1,6 @@
 import React from 'react';
-import Navbar from './Navbar';
-import MainInput from './MainInput';
+import Navbar from './navbar';
+import MainInput from './mainInput';
 import ttLogo from './img/TT.png'
   
 const Upload = () => {
