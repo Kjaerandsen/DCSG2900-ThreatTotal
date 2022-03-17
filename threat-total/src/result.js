@@ -1,6 +1,8 @@
 import React, { useEffect} from "react";
 import Navbar from "./navbar";
 import Display from "./display";
+import Sources from "./sources";
+import Data from "../src/testData/data.json"
 
 // look in the url, url decode and write to client
 
@@ -38,11 +40,11 @@ function Result() {
               console.log(json)
             })
             // Show the results
-            console.log({url})
         } else {
             // Show an error message, and show a redirect to search page button
             console.log("Invalid parameter")
         }
+        // Need error handling when the backend is unavailable
     });
 
 
@@ -57,10 +59,9 @@ function Result() {
             <h1 className="text-3xl font-bold p-0 mt-8 mb-8 sm:mt-12 sm:mb-12 w-auto">
                 Results
             </h1>
-            <p className="w-auto green-400">
-                
-                <Display />
-            </p>
+            <div className="container">
+                <Sources sourceData = {Data}/>
+            </div>
         </div>
             
         <div className= "bg-green-300 container w-full mt-1.5 mb-3 sm:pl-36 sm:pr-36 flex justify-center overflow-hidden">
