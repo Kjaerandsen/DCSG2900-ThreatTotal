@@ -59,6 +59,14 @@ function Result() {
             <h1 className="text-3xl font-bold p-0 mt-8 mb-8 sm:mt-12 sm:mb-12 w-auto">
                 Results
             </h1>
+            <p className="text-left m-2">
+            Purus gravida quis blandit turpis cursus in hac habitasse. Aliquet nibh praesent 
+            tristique magna sit amet purus gravida. Ac auctor augue mauris augue neque. Sit 
+            amet mauris commodo quis imperdiet massa tincidunt. Tincidunt ornare massa eget 
+            egestas purus viverra accumsan in. Aliquam faucibus purus in massa tempor nec. 
+            <br></br>
+            <br></br>
+            </p>
             <div className="container">
                 <Sources sourceData = {Data}/>
             </div>
