@@ -2,7 +2,7 @@ package main
 
 import (
 	"bytes"
-	"context"
+	//"context"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
@@ -11,38 +11,62 @@ import (
 
 	//"net/url"
 	// External
-	webrisk "cloud.google.com/go/webrisk/apiv1"
+	//webrisk "cloud.google.com/go/webrisk/apiv1"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
-	"google.golang.org/api/option"
-	webriskpb "google.golang.org/genproto/googleapis/cloud/webrisk/v1"
+	//"google.golang.org/api/option"
+	//webriskpb "google.golang.org/genproto/googleapis/cloud/webrisk/v1"
 	//"google.golang.org/api/webrisk/v1"
 	//"google.golang.org/api/option"
 )
 
-func callGoogleApi(URL string) {
-	ctx := context.Background()
-	c, err := webrisk.NewClient(ctx, option.WithCredentialsFile("./APIKey/quiet-stacker-343514-4576275229b2.json"))
-	if err != nil {
-		log.Fatalln(err)
-	}
-	defer c.Close()
+func callGoogleApi(url string) (response string){
+	
+	content, err := ioutil.ReadFile("./APIKey/Apikey.txt")
+		if err != nil {
+			log.Fatal(err)
+		}
 
-	req := &webriskpb.SearchUrisRequest{
-		Uri:         URL,
-		ThreatTypes: []webriskpb.ThreatType{1},
-		// TODO: Fill request struct fields.
-		// See https://pkg.go.dev/google.golang.org/genproto/googleapis/cloud/webrisk/v1#SearchUrisRequest.
+		// Convert []byte to string and print to screen
+		APIKey := string(content)
 
-	}
-	resp, err := c.SearchUris(ctx, req)
-	if err != nil {
-		log.Fatalln(err)
-	}
+		postURL := "https://safebrowsing.googleapis.com/v4/threatMatches:find?key=" + APIKey
 
-	//fmt.Print(resp)
-	// TODO: Use resp.
-	_ = resp
+		var jsonData = []byte(`
+		{
+			"client": {
+			  "clientId":      "threattotal",
+			  "clientVersion": "1.5.2"
+			},
+			"threatInfo": {
+			  "threatTypes":      ["MALWARE", "SOCIAL_ENGINEERING"],
+			  "platformTypes":    ["WINDOWS"],
+			  "threatEntryTypes": ["URL"],
+			  "threatEntries": [
+				{"url": "https://` + url + `" },
+				{"url": "http://` + url + `"}
+			  ]
+			}
+		}`)
+
+		req, err := http.NewRequest("POST", postURL, bytes.NewBuffer(jsonData))
+		req.Header.Set("Content-Type", "application/json; charset=UTF-8")
+
+		client := &http.Client{}
+
+		res, err := client.Do(req)
+		if err != nil {
+			panic(err)
+		}
+		defer res.Body.Close()
+
+		//fmt.Println("response Status:", res.Status)
+		//fmt.Print("Response Headers:", res.Header)
+		body, _ := ioutil.ReadAll(res.Body)
+		//fmt.Println("response Body:", string(body))
+		response = string(body)
+
+		return 
 }
 
 func main() {
@@ -135,8 +159,7 @@ func main() {
 
 	/**
 	* Function should gather DATA from public intelligence sources
-	* Implementing functionality for OTX.
-	*
+	* Implementing functionality for OTX, SafeBrowser API.
 	*
 	 */
 
@@ -146,80 +169,12 @@ func main() {
 		fmt.Println(c.Query("url"))
 
 		url := c.Query("url")
-		/**
-		id := c.Param("id")
-		fmt.Println(id);
 
-		decodedURL, err := url.QueryUnescape(id)
-		if err != nil{
-			log.Fatal(err)
-		}
-		fmt.Println(decodedURL)
-		*/
+		safebrowserResponse := callGoogleApi(url)
 
-		//callGoogleApi(id)
-
-		content, err := ioutil.ReadFile("./APIKey/Apikey.txt")
-		if err != nil {
-			log.Fatal(err)
-		}
-
-		// Convert []byte to string and print to screen
-		APIKey := string(content)
-
-		postURL := "https://safebrowsing.googleapis.com/v4/threatMatches:find?key=" + APIKey
-
-		var jsonData = []byte(`
-		{
-			"client": {
-			  "clientId":      "threattotal",
-			  "clientVersion": "1.5.2"
-			},
-			"threatInfo": {
-			  "threatTypes":      ["MALWARE", "SOCIAL_ENGINEERING"],
-			  "platformTypes":    ["WINDOWS"],
-			  "threatEntryTypes": ["URL"],
-			  "threatEntries": [
-				{"url": "https://` + url + `" },
-				{"url": "http://` + url + `"}
-			  ]
-			}
-		}`)
-
-		req, err := http.NewRequest("POST", postURL, bytes.NewBuffer(jsonData))
-		req.Header.Set("Content-Type", "application/json; charset=UTF-8")
-
-		client := &http.Client{}
-
-		res, err := client.Do(req)
-		if err != nil {
-			panic(err)
-		}
-		defer res.Body.Close()
-
-		fmt.Println("response Status:", res.Status)
-		fmt.Print("Response Headers:", res.Header)
-		body, _ := ioutil.ReadAll(res.Body)
-		fmt.Println("response Body:", string(body))
-
-		/**
-			resp, err :=http.Post(https://safebrowsing.googleapis.com/v4/threatMatches:find?key=API_KEY)
-			if err!= nil{
-				log.Fatalln(err)
-			}
-
-			resp.Header = http.Header{
-				"Authorization": []string{"Bearer Token"},
-			}
-
-			body, err := ioutil.ReadAll(resp.Body)
-		   if err != nil {
-		      log.Fatalln(err)
-		   }
-
-		   sb := string(body)
-		   log.Printf(sb)
-		*/
+		fmt.Println("safebrowser response::",safebrowserResponse)
+		
+		
 
 	})
 	/*
