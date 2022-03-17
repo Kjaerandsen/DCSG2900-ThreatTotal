@@ -1,6 +1,5 @@
 import React, { useEffect} from "react";
 import Navbar from "./navbar";
-import Display from "./display";
 import Sources from "./sources";
 import Data from "../src/testData/data.json"
 
