@@ -60,15 +60,12 @@ function Result() {
                 Results
             </h1>
             <p className="text-left m-2">
-            Purus gravida quis blandit turpis cursus in hac habitasse. Aliquet nibh praesent 
-            tristique magna sit amet purus gravida. Ac auctor augue mauris augue neque. Sit 
-            amet mauris commodo quis imperdiet massa tincidunt. Tincidunt ornare massa eget 
-            egestas purus viverra accumsan in. Aliquam faucibus purus in massa tempor nec. 
+            This page poses a risk or potential risk to visit according to 2/3 of our sources. 
+            Please use proper caution and avoid visiting at all if possible.
             <br></br>
             <br></br>
             </p>
             <div className="container">
-            <div className='bg-yellow-500 bg-red-600 bg-green-600'></div>
                 <Sources sourceData = {Data}/>
             </div>
         </div>

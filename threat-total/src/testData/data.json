@@ -5,8 +5,7 @@
         "content": "Unsafe: potentially unwanted software.",
 		"tags": ["PUA", "Windows", "Social Engineering", "URL"],
 		"description": "Potentially unwanted software, might be used for lorem ipsum dolor sin amet.",
-        "status": "Potentially unsafe",
-		"bg": "bg-red-600"
+        "status": "Potentially unsafe"
     },
     {
         "id":2,
@@ -14,8 +13,7 @@
         "content": "Unsafe: Malware.",
 		"tags": ["Malware", "Windows", "URL"],
 		"description": "Malware found at he location, might be used for lorem ipsum dolor sin amet.",
-        "status": "Risk",
-		"bg": "bg-yellow-500"
+        "status": "Risk"
     },
 	{
 		"id":3,
@@ -23,7 +21,6 @@
         "content": "Safe: No known risks at this location.",
 		"tags": ["URL","Safe"],
 		"description": "No known risks at this location. The data source has no information on this url.",
-        "status": "Safe",
-		"bg": "bg-green-600"
+        "status": "Safe"
 	}
 ]

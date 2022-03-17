@@ -528,6 +528,10 @@ Ensure the default browser behavior of the `hidden` attribute.
   margin: 1rem;
 }
 
+.m-auto {
+  margin: auto;
+}
+
 .mt-3 {
   margin-top: 0.75rem;
 }
@@ -574,6 +578,10 @@ Ensure the default browser behavior of the `hidden` attribute.
 
 .mb-8 {
   margin-bottom: 2rem;
+}
+
+.mb-2 {
+  margin-bottom: 0.5rem;
 }
 
 .block {
@@ -659,6 +667,10 @@ Ensure the default browser behavior of the `hidden` attribute.
 
 .grid-cols-3 {
   grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.place-content-center {
+  place-content: center;
 }
 
 .place-items-center {
