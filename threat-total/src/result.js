@@ -1,6 +1,8 @@
 import React, { useEffect} from "react";
 import Navbar from "./navbar";
-import { useParams } from "react-router-dom";
+import Display from "./display";
+import Sources from "./sources";
+import Data from "../src/testData/data.json"
 
 // look in the url, url decode and write to client
 
@@ -14,18 +16,37 @@ function Result() {
         if (hash != null) {
             console.log({hash})
             // Send an api request to the backend with hash data
-
+            fetch('http://localhost:8081/result?hash=' + hash, {
+                method: 'GET',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json'
+                }
+            }).then((response) => response.json())
+            .then((json) => {
+              console.log(json)
+            })
             // Show the results
         } else if (url != null){
             // Send an api request to the backend with url data
-
+            fetch('http://localhost:8081/result?url=' + url, {
+                method: 'GET',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json'
+                }
+            }).then((response) => response.json())
+            .then((json) => {
+              console.log(json)
+            })
             // Show the results
-            console.log({url})
         } else {
             // Show an error message, and show a redirect to search page button
             console.log("Invalid parameter")
         }
+        // Need error handling when the backend is unavailable
     });
+
 
     return (
         <>
@@ -38,10 +59,17 @@ function Result() {
             <h1 className="text-3xl font-bold p-0 mt-8 mb-8 sm:mt-12 sm:mb-12 w-auto">
                 Results
             </h1>
-            <p className="w-auto green-400">
-                
-                display results here
+            <p className="text-left m-2">
+            Purus gravida quis blandit turpis cursus in hac habitasse. Aliquet nibh praesent 
+            tristique magna sit amet purus gravida. Ac auctor augue mauris augue neque. Sit 
+            amet mauris commodo quis imperdiet massa tincidunt. Tincidunt ornare massa eget 
+            egestas purus viverra accumsan in. Aliquam faucibus purus in massa tempor nec. 
+            <br></br>
+            <br></br>
             </p>
+            <div className="container">
+                <Sources sourceData = {Data}/>
+            </div>
         </div>
             
         <div className= "bg-green-300 container w-full mt-1.5 mb-3 sm:pl-36 sm:pr-36 flex justify-center overflow-hidden">
@@ -49,6 +77,7 @@ function Result() {
                 <button className="bg-orange-500 p-2 rounded justify-center">Submit for Manual Analysis</button>
             </a>
         </div>
+
 
         </div> 
         </>
