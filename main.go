@@ -93,7 +93,7 @@ func main() {
 	})
 
 	r.GET("/result", func(c *gin.Context) {
-		fmt.Println(c.Query("request"))
+		fmt.Println(c.Query("url"))
 		fmt.Println(c.Query("hash"))
 		c.JSON(http.StatusOK, `"exampleJsonData":[
 			{"name":"John", "occupation":"Chef"},
