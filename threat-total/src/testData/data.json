@@ -1,0 +1,14 @@
+[
+    {
+        "id":1,
+        "title": "hello world",
+        "content": "first post",
+        "status": "nice"
+    },
+    {
+        "id":1,
+        "title": "hello world2",
+        "content": "second post",
+        "status": "nicer"
+    }
+]

@@ -1,5 +1,6 @@
 import React, { useEffect} from "react";
 import Navbar from "./navbar";
+import Display from "./display";
 
 // look in the url, url decode and write to client
 
@@ -58,7 +59,7 @@ function Result() {
             </h1>
             <p className="w-auto green-400">
                 
-                display results here
+                <Display />
             </p>
         </div>
             
@@ -67,6 +68,7 @@ function Result() {
                 <button className="bg-orange-500 p-2 rounded justify-center">Submit for Manual Analysis</button>
             </a>
         </div>
+
 
         </div> 
         </>
