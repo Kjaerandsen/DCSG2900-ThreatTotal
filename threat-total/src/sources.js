@@ -1,4 +1,5 @@
 import React from 'react'
+import Source from './source.js'
 
 // reactjs component that iterates through provided json data and displays it via render
 // inspired by https://www.youtube.com/watch?v=9C85o8jIgUU
@@ -8,24 +9,19 @@ export default function Sources(props) {
 return (
     <div>
         <h1 className="text-2xl font-bold">Source data:</h1>
+        <div className='bg-yellow-500 bg-red-600 bg-green-600'></div>
         <div className='grid grid-cols-1 p-2 md:grid-cols-2 xl:grid-cols-3'>
         {props.sourceData.map((Data, index ) => {
-        return <div key={index} className='bg-white border-2 m-2 border-gray-400 rounded-lg p-1 text-left'>
-            <div className='flex'> 
-                <div className='border-r-2 grid place-items-center pr-1'>
-                    <div className={`rounded-full ${Data.bg} w-10 h-10`}></div>
-                </div>
-                <div className="p-1"> 
-                    <h1 className='font-bold'>Source: {Data.sourceName}</h1>
-                    <p>Assessment: {Data.status}</p>
-                </div>
-            </div>
-            <div className="">
-                <p>Tags: {Data.tags}</p>
-                <p>Shortform: {Data.content}</p>
-            </div>
-            
-        </div>
+            if (Data.status == "Safe") {
+                var BG = "bg-green-600"
+            } else if (Data.status == "Risk") {
+                var BG = "bg-red-600"
+            } else {
+                var BG = "bg-yellow-500"
+            }
+            return (
+            <Source Data = {Data} key = {index} BG = {BG}/>
+            )
         })}
         </div>
     </div>
