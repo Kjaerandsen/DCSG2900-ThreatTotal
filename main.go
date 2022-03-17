@@ -2,36 +2,24 @@ package main
 
 import (
 	"bytes"
+	"context"
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"log"
 	"net/http"
 
 	//"net/url"
-
-	//"net/http"
-
-	"fmt"
-
+	// External
+	webrisk "cloud.google.com/go/webrisk/apiv1"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
-
-	webrisk "cloud.google.com/go/webrisk/apiv1"
 	"google.golang.org/api/option"
 	webriskpb "google.golang.org/genproto/googleapis/cloud/webrisk/v1"
-
 	//"google.golang.org/api/webrisk/v1"
 	//"google.golang.org/api/option"
-	"context"
-	//"log"
 )
 
-/**func main() {
-
-	http.Handle("/", http.FileServer(http.Dir("./Tailwind/html/")))
-	log.Fatal(http.ListenAndServe(":80", nil))
-}
-*/
 func callGoogleApi(URL string) {
 	ctx := context.Background()
 	c, err := webrisk.NewClient(ctx, option.WithCredentialsFile("./APIKey/quiet-stacker-343514-4576275229b2.json"))
@@ -61,12 +49,6 @@ func main() {
 	r := gin.Default()
 
 	r.Use(cors.Default())
-
-	//r.LoadHTMLGlob("./Tailwind/html/**/*.html")
-	// CSS files
-	//r.Static("/dist", "./Tailwind/dist")
-	// Images
-	//r.Static("/img", "./Tailwind/img")
 
 	r.GET("/", func(c *gin.Context) {
 		//c.HTML(http.StatusOK, hello world, gin.H{
