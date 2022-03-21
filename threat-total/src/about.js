@@ -1,5 +1,5 @@
 import React from 'react';
-import Navbar from './navbar';
+import Navbar from './Navbar';
 import ttLogo from './img/TT.png'
 
 class About extends React.Component {

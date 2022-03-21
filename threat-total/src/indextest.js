@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import Navbar from './navbar';
+import Navbar from './Navbar';
 import MainInput from './mainInput';
 import ttLogo from './img/TT.png'
 import App from './App';
