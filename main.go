@@ -93,20 +93,21 @@ func main() {
 	})
 
 	r.GET("/result", func(c *gin.Context) {
-		fmt.Println(c.Query("request"))
+		fmt.Println(c.Query("inputFile"))
 	})
 
 	// Upload a file TODO
 	// figure out routing here, where are we supposted to have/deliver a file?
 	// do we make a new route that says "search" instead? discuss this tomorrow
 	// https://github.com/gin-gonic/gin#single-file
-	r.POST("/uploadFile", func(c *gin.Context) {
+	r.POST("/upload", func(c *gin.Context) {
+
 		// for a single file
-		file, _ := c.FormFile("Filename")
+		file, _ := c.FormFile("inputFile")
 		log.Println(file.Filename)
 
 		// upload file to the specific destination
-		c.SaveUploadedFile(file, "/investigate")
+		c.SaveUploadedFile(file, "/result")
 
 		c.String(http.StatusOK, fmt.Sprintf("'%s' uploaded!", file.Filename))
 	})
