@@ -48,7 +48,6 @@ function Result() {
         // Need error handling when the backend is unavailable
     }, []);
 
-    console.log("hjellowd")
     console.log(JsonData)
 
     return (
