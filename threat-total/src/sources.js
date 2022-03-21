@@ -5,7 +5,6 @@ import Source from './source.js'
 // inspired by https://www.youtube.com/watch?v=9C85o8jIgUU
 export default function Sources(props) {
 
-    // Missing changing colour according to assessment, and tags as sub components?
 return (
     <div>
         <h1 className="text-2xl font-bold">Source data:</h1>

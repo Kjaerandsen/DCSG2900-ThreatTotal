@@ -26,8 +26,5 @@ const MainInput = props => {
 	</>
 	)
 };
-/*
-figure out proper button highlightning when selected search or upload
-comment
-*/
+
 export default MainInput;

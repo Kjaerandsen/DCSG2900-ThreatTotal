@@ -3,8 +3,6 @@ import Navbar from './navbar';
 import MainInput from './mainInput';
 import ttLogo from './img/TT.png'
 
-  
-
 const Upload = () => {
 
   const fileUpload = e => {
@@ -27,7 +25,7 @@ const Upload = () => {
 		<Navbar />
 		
         <div>
-                <img src={ttLogo} className="" alt="NTNU Logo"/>
+            <img src={ttLogo} className="" alt="NTNU Logo"/>
         </div>
 		
 		<MainInput />

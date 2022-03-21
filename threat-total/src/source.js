@@ -2,7 +2,6 @@ import React from 'react'
 
 export default function Source(props) {
 
-    // Missing changing colour according to assessment, and tags as sub components?
 return (
     <div className='bg-white border-2 m-2 border-gray-400 rounded-lg p-1 text-left'>
         <div className='flex'>

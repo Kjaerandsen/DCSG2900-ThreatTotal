@@ -8,7 +8,6 @@ function Result() {
     const url = queryParams.get('url');
     const [JsonData, setJsonData] = useState([""])
 
-    
     useEffect(() => {
         if (hash != null) {
             console.log({hash})
@@ -21,10 +20,7 @@ function Result() {
                 }
             }).then((response) => response.json())
             .then((json) => {
-              setJsonData(JSON.parse(json))
-              //console.log(JsonData)
             })
-            // Show the results
         } else if (url != null){
             // Send an api request to the backend with url data
             fetch('http://localhost:8081/result?url=' + url, {
@@ -36,9 +32,7 @@ function Result() {
             }).then((response) => response.json())
             .then((json) => {
                 setJsonData(JSON.parse(json))
-              //console.log(JsonData)
             })
-            // Show the results
         } else {
             // Redirect to error 404 page / 50x for internal issue? or issue diplay?
             setJsonData(JSON.parse("[]"))
@@ -56,7 +50,6 @@ function Result() {
         
             <Navbar />
 
-
         <div className="bg-red-500 container text-center break-words sm:justify-center">
             <h1 className="text-3xl font-bold p-0 mt-8 mb-8 sm:mt-12 sm:mb-12 w-auto">
                 Results
@@ -68,8 +61,9 @@ function Result() {
             <br></br>
             </p>
             <div className="container">
-                {console.log(JsonData)}
+                
                 <Sources sourceData = {JsonData}/>
+
             </div>
         </div>
             
