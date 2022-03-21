@@ -1,8 +1,6 @@
 import React, { useEffect, useState} from "react";
 import Navbar from "./navbar";
 import Sources from "./sources";
-import Data from "../src/testData/data.json"
-// look in the url, url decode and write to client
 
 function Result() {
     const queryParams = new URLSearchParams(window.location.search);
