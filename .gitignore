@@ -1,1 +1,5 @@
 .idea/**
+#key
+/APIKey
+/vendor
+/vscode

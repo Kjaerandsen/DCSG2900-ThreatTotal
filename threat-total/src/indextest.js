@@ -26,7 +26,10 @@ class Indextest extends React.Component {
     }
   }
 
+  
+
 render(){
+    var IsSearch = true
     return (
     <>
 	<div className="grid place-items-center">
@@ -37,7 +40,7 @@ render(){
                 <img src={ttLogo} className="" alt="NTNU Logo"/>
         </div>
 		
-		<MainInput />
+		<MainInput IsSearch/>
 
         <form className='w-full container'>
         <div className= "container w-full mt-3 mb-1.5 pl-2 pr-2 sm:pl-36 sm:pr-36 overflow-hidden">
@@ -53,7 +56,6 @@ render(){
             </input>
             </div>
         </div>
-
         <div className= "container w-full mt-1.5 mb-3 sm:pl-36 sm:pr-36 flex justify-center overflow-hidden">
             <a href="/investigate">
                 <button onClick={this.search} className="bg-orange-500 p-2 rounded justify-center">Investigate</button>
