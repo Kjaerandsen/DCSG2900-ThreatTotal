@@ -1,16 +1,16 @@
-import React, { useEffect} from "react";
+import React, { useEffect, useState} from "react";
 import Navbar from "./navbar";
 import Sources from "./sources";
 import Data from "../src/testData/data.json"
-
 // look in the url, url decode and write to client
 
 function Result() {
-    
     const queryParams = new URLSearchParams(window.location.search);
     const hash = queryParams.get('hash');
     const url = queryParams.get('url');
+    const [JsonData, setJsonData] = useState([""])
 
+    
     useEffect(() => {
         if (hash != null) {
             console.log({hash})
@@ -23,7 +23,8 @@ function Result() {
                 }
             }).then((response) => response.json())
             .then((json) => {
-              console.log(json)
+              setJsonData(JSON.parse(json))
+              //console.log(JsonData)
             })
             // Show the results
         } else if (url != null){
@@ -36,16 +37,21 @@ function Result() {
                 }
             }).then((response) => response.json())
             .then((json) => {
-              console.log(json)
+                setJsonData(JSON.parse(json))
+              //console.log(JsonData)
             })
             // Show the results
         } else {
+            // Redirect to error 404 page / 50x for internal issue? or issue diplay?
+            setJsonData(JSON.parse("[]"))
             // Show an error message, and show a redirect to search page button
             console.log("Invalid parameter")
         }
         // Need error handling when the backend is unavailable
-    });
+    }, []);
 
+    console.log("hjellowd")
+    console.log(JsonData)
 
     return (
         <>
@@ -65,7 +71,8 @@ function Result() {
             <br></br>
             </p>
             <div className="container">
-                <Sources sourceData = {Data}/>
+                {console.log(JsonData)}
+                <Sources sourceData = {JsonData}/>
             </div>
         </div>
             
