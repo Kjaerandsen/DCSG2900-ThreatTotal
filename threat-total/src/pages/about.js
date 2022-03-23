@@ -1,6 +1,6 @@
 import React from 'react';
-import Navbar from './navbar';
-import ttLogo from './img/TT.png'
+import Navbar from '../components/navbar';
+import ttLogo from '../img/TT.png'
 
 class About extends React.Component {
 

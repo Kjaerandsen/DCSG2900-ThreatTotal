@@ -1,6 +1,6 @@
 import React, { useEffect, useState} from "react";
-import Navbar from "./navbar";
-import Sources from "./sources";
+import Navbar from "../components/navbar";
+import Sources from "../components/sources";
 
 function Result() {
     const queryParams = new URLSearchParams(window.location.search);

@@ -1,10 +1,10 @@
 import './output.css';
 import './App.css';
-import Upload from './upload'
-import Indextest from './indextest';
-import Investigate from './investigate';
-import Result from './result';
-import About from './about';
+import Upload from './pages/upload'
+import Indextest from './pages/indextest';
+import Investigate from './pages/investigate';
+import Result from './pages/result';
+import About from './pages/about';
 import { BrowserRouter as Router, Routes, Route}
     from 'react-router-dom';
 

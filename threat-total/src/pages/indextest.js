@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import Navbar from './navbar';
-import MainInput from './mainInput';
-import ttLogo from './img/TT.png'
+import Navbar from '../components/navbar';
+import MainInput from '../components/mainInput';
+import ttLogo from '../img/TT.png'
 
 class Indextest extends React.Component {
 
