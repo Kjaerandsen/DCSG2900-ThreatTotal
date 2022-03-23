@@ -5,6 +5,8 @@ import Source from './source.js'
 // inspired by https://www.youtube.com/watch?v=9C85o8jIgUU
 export default function Sources(props) {
 
+var BG = ""
+
 if (props.sourceData[0] === "") {
     console.log("true")
     return (
@@ -36,5 +38,3 @@ if (props.sourceData[0] === "") {
     );
     }
 }
-var BG = ""
-    
