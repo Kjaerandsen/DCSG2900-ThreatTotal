@@ -22,6 +22,9 @@ function Result() {
             .then((json) => {
                 setJsonData(JSON.parse(json))
             })
+            .catch(function(error){
+                console.log(error)
+            })
         } else if (url != null){
             // Send an api request to the backend with url data
             fetch('http://localhost:8081/result?url=' + url, {
@@ -33,6 +36,9 @@ function Result() {
             }).then((response) => response.json())
             .then((json) => {
                 setJsonData(JSON.parse(json))
+            })
+            .catch(function(error){
+                console.log(error)
             })
         } else {
             // Redirect to error 404 page / 50x for internal issue? or issue diplay?
