@@ -6,7 +6,7 @@ export default function Source(props) {
 if (props.Data === "") {
     return(
         <div className='bg-white border-2 m-2 border-gray-400 rounded-lg p-1 text-left'>
-            <h1>Error: empty input. Please wait a few minutes and refresh the page</h1>
+            <h1>Error: empty input. Please wait a few minutes and refresh the page.</h1>
         </div>
     )
 } else {
