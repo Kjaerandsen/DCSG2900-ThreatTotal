@@ -20,6 +20,7 @@ function Result() {
                 }
             }).then((response) => response.json())
             .then((json) => {
+                setJsonData(JSON.parse(json))
             })
         } else if (url != null){
             // Send an api request to the backend with url data
