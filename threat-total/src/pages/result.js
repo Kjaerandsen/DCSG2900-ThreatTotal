@@ -41,10 +41,8 @@ function Result() {
                 console.log(error)
             })
         } else {
-            // Redirect to error 404 page / 50x for internal issue? or issue diplay?
-            setJsonData(JSON.parse("[]"))
-            // Show an error message, and show a redirect to search page button
-            console.log("Invalid parameter")
+            // Redirect to index if no parameters are provided
+            window.location.href= "/"
         }
         // Need error handling when the backend is unavailable
     }, []);
