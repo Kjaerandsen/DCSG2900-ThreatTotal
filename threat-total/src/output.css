@@ -500,6 +500,10 @@ Ensure the default browser behavior of the `hidden` attribute.
   }
 }
 
+.order-2 {
+  order: 2;
+}
+
 .float-right {
   float: right;
 }
@@ -514,6 +518,14 @@ Ensure the default browser behavior of the `hidden` attribute.
 
 .m-4 {
   margin: 1rem;
+}
+
+.m-1 {
+  margin: 0.25rem;
+}
+
+.m-3 {
+  margin: 0.75rem;
 }
 
 .mt-12 {
@@ -762,6 +774,10 @@ Ensure the default browser behavior of the `hidden` attribute.
 
 .pt-12 {
   padding-top: 3rem;
+}
+
+.pt-3 {
+  padding-top: 0.75rem;
 }
 
 .text-left {

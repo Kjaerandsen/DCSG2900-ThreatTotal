@@ -6,16 +6,6 @@ import Source from './source.js'
 export default function Sources(props) {
 
 var BG = ""
-
-if (props.sourceData[0] === "") {
-    console.log("true")
-    return (
-        <div>
-            <h1 className="text-2xl font-bold">Source data:</h1>
-            <p>Error connecting to backend, please try refreshing the page in a couple of minutes.</p><br></br>
-        </div>
-    )
-} else {
     return (
         <div>
             <h1 className="text-2xl font-bold">Source data:</h1>
@@ -36,5 +26,4 @@ if (props.sourceData[0] === "") {
             </div>
         </div>
     );
-    }
 }
