@@ -11,7 +11,7 @@ var BG = ""
     // Checks if an error has occured while connecting to the backend, if true return an error message
     if (props.err) {
         return (
-            <div className='bg-white border-2 m-2 border-gray-400 rounded-lg p-2 m-4'>
+            <div className='bg-white border-2 border-gray-400 rounded-lg p-2 m-4'>
                 <h1>Error connecting to the backend, please try to refresh in a few minutes.</h1>
             </div>
         );
