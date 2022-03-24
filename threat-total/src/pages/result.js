@@ -7,6 +7,7 @@ function Result() {
     const hash = queryParams.get('hash');
     const url = queryParams.get('url');
     const [JsonData, setJsonData] = useState([""])
+    const [Err, setErr] = useState(false)
 
     useEffect(() => {
         if (hash != null) {
@@ -24,6 +25,7 @@ function Result() {
             })
             .catch(function(error){
                 console.log(error)
+                setErr(true)
             })
         } else if (url != null){
             // Send an api request to the backend with url data
@@ -39,6 +41,7 @@ function Result() {
             })
             .catch(function(error){
                 console.log(error)
+                setErr(true)
             })
         } else {
             // Redirect to index if no parameters are provided
@@ -67,7 +70,7 @@ function Result() {
             </p>
             <div className="container">
                 
-                <Sources sourceData = {JsonData}/>
+                <Sources sourceData = {JsonData} err = {Err}/>
 
             </div>
         </div>

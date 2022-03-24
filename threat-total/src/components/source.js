@@ -2,21 +2,22 @@ import React from 'react'
 
 export default function Source(props) {
 
-    // If the input is empty return an error message instead of the box
+    // If the input is empty return an empty box
+    // add a loading animation?
 if (props.Data === "") {
     return(
         <div className='bg-white border-2 m-2 border-gray-400 rounded-lg p-1 text-left'>
             <div className='flex'>
                 <div className='border-r-2 grid place-items-center pr-1'>
-                    <div className={`rounded-full bg-red-600 w-10 h-10`}></div>
+                    <div className={`rounded-full bg-white w-10 h-10`}></div>
                 </div>
                 <div className="p-1"> 
-                    <h1 className='font-bold'>Error:</h1>
-                    <p>Try refreshing in a couple of minutes.</p>
+                    <br></br>
+                    <br></br>
                 </div>
             </div>
             <div className="">
-                <p>Error type: backend connection</p>
+                <br></br>
                 <br></br>
             </div>   
         </div>
