@@ -8,8 +8,9 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"strings"
 
-	//"net/url"
+	"net/url"
 	// External
 	//webrisk "cloud.google.com/go/webrisk/apiv1"
 	"github.com/gin-contrib/cors"
@@ -20,7 +21,95 @@ import (
 	//"google.golang.org/api/option"
 )
 
+
+func CheckURLHybridAnalyis(url string) (response string){
+
+	//DENNE FUNKSJONENE KAN SCANNE EN URL MEN DETTE BENYTTER SEG AV VIRUS TOTAL/ DETTE ER KANSKJE EN GOD WORK AROUND FOR Å KUNNE BRUKE VT GRATIS SIDEN Hybrid Analysis har lisens.
+	//Problem her kan være at dette må inkomporere en "await - 5-15 sekunder om det ikke er noe cachet result på VirusTotal, fordi den maa kjore ny request.".
+	//Titter på dette. 
+	//Vi har CAP på 2000 request i timen hos Hybrid Analyis, dette burde vell holde??? - 200 max i minuttet. 
+	// https://www.hybrid-analysis.com/docs/api/v2#/Quick%20Scan/post_quick_scan_url Dokumentasjon for dette API endpointet.
+	return
+}
+
+
+
+func CheckFileHashHybridAnalysis(hash string) (response string){
+
+	//API dokumentasjon https://www.hybrid-analysis.com/docs/api/v2#/Search/post_search_hash
+	
+	content, err := ioutil.ReadFile("./APIKey/HybridAnalysisAPI.txt")
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	// Convert []byte to string and print to screen
+	APIKey := string(content)
+
+	postURL := "https://www.hybrid-analysis.com/api/v2/search/hash"
+
+	data := url.Values{}
+    data.Set("hash", hash)
+    
+
+	req, err := http.NewRequest("POST", postURL, strings.NewReader(data.Encode()))
+	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+	req.Header.Set("api-key", APIKey)
+	req.Header.Set("User-Agent", "Falcon Sandbox")
+
+	client := &http.Client{}
+
+	res, err := client.Do(req)
+	if err != nil {
+		panic(err)
+	}
+	defer res.Body.Close()
+
+	//fmt.Println("response Status:", res.Status)
+	//fmt.Print("Response Headers:", res.Header)
+	body, _ := ioutil.ReadAll(res.Body)
+	//fmt.Println("response Body:", string(body))
+	response = string(body)
+
+	return
+
+}
+
+func LookUpFileHashAlienVault(hash string) (response string){
+
+	content, err := ioutil.ReadFile("./APIKey/OTXapikey.txt")
+	if err != nil {
+		log.Fatal(err)
+	}
+	APIKey := string(content)
+
+	getURL := "https://otx.alienvault.com//api/v1/indicators/file/" + hash + "/analysis"
+
+	req, err := http.NewRequest("GET", getURL, nil)
+	req.Header.Set("X-OTX-API-KEY", APIKey)
+
+	fmt.Println(req.Header)
+
+	client := &http.Client{}
+
+	res, err := client.Do(req)
+	if err != nil {
+		panic(err)
+	}
+	defer res.Body.Close()
+
+	body, _ := ioutil.ReadAll(res.Body)
+
+	response = string(body)
+	
+	//HER KAN VI SJEKKE OM "VERDICT feltet er" MALICIOUS, SUSPICIOUS ELLER NOE ANNET. OG Bare returnere det. 
+	return
+}
+
+
 func callAlienVaultAPI(url string) (respone string) {
+
+	//DENNE FUNKSJONEN KAN UTARBEIDES TIL Å BARE RETURNERE MALCICIOUS / SUSPCIOUS OM DET BEFINNER SEG NEVNT I NOEN PULSEES (Problemet her er at ting som er OK kan være i pulse... Må tenke litt her)
 	content, err := ioutil.ReadFile("./APIKey/OTXapikey.txt")
 	if err != nil {
 		log.Fatal(err)
@@ -52,6 +141,8 @@ func callAlienVaultAPI(url string) (respone string) {
 }
 
 func callGoogleApi(url string) (response string) {
+
+	//Google API returnerer [] om den ikke kjenner til domenet / URL. Kan bruke dette til å avgjøre om det er malicious eller ikke. 
 
 	content, err := ioutil.ReadFile("./APIKey/Apikey.txt")
 	if err != nil {
@@ -199,13 +290,31 @@ func main() {
 
 		url := c.Query("url")
 
+		//Google
+
 		safebrowserResponse := callGoogleApi(url)
+
+		//Alienvault
 
 		otxAlienVaultRespone := callAlienVaultAPI(url)
 
 		fmt.Println("safebrowser response::", safebrowserResponse)
 
 		fmt.Println("ALIENVAULT RESPONSE:::", otxAlienVaultRespone)
+
+		filehash:= "a7a665a695ec3c0f862a0d762ad55aff6ce6014359647e7c7f7e3c4dc3be81b7"
+
+		filehashAV := LookUpFileHashAlienVault(filehash)
+
+		fmt.Println("AlienVAULT FILEHASH LOOKUP::::::::::",filehashAV)
+
+		//Hybrid Analysis: 
+
+		filehashHybrid:="77682670694bb1ab1a48091d83672c9005431b6fc731d6c6deb466a16081f4d1"
+
+		ResultHybridA:=CheckFileHashHybridAnalysis(filehashHybrid);
+
+		fmt.Println("\n\n\n\n\n HYBRID ANALYSIS!!!!::::::::!!!\n\n\n",ResultHybridA);
 
 	})
 	/*
