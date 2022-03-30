@@ -88,7 +88,7 @@ func main() {
 		c.JSON(http.StatusOK, `[{"id":1,"sourceName":"Threat Total","content":"Unsafe: potentially unwanted software.","tags":["PUA","Windows","Social Engineering","URL"],"description":"Potentially unwanted software, might be used for lorem ipsum dolor sin amet.","status":"Potentially unsafe"},{"id":2,"sourceName":"Google safebrowsing","content":"Unsafe: Malware.","tags":["Malware","Windows","URL"],"description":"Malware found at he location, might be used for lorem ipsum dolor sin amet.","status":"Risk"},{"id":3,"sourceName":"Source 3","content":"Safe: No known risks at this location.","tags":["URL","Safe"],"description":"No known risks at this location. The data source has no information on this url.","status":"Safe"}]`)
 	})
 
-	// Upload a file TODO
+	// TODO: Upload a file
 	// figure out routing here, where are we supposted to have/deliver a file?
 	// do we make a new route that says "search" instead? discuss this tomorrow
 	// https://github.com/gin-gonic/gin#single-file
@@ -119,11 +119,11 @@ func main() {
 
 		//Google
 
-		safebrowserResponse := api.CallGoogleApi(url)
+		safebrowserResponse := api.CallGoogleUrl(url)
 
 		//Alienvault
 
-		otxAlienVaultRespone := api.CallAlienVaultAPI(url)
+		otxAlienVaultRespone := api.CallAlienVaultUrl(url)
 
 		fmt.Println("safebrowser response::", safebrowserResponse)
 
@@ -131,7 +131,7 @@ func main() {
 
 		filehash := "a7a665a695ec3c0f862a0d762ad55aff6ce6014359647e7c7f7e3c4dc3be81b7"
 
-		filehashAV := api.LookUpFileHashAlienVault(filehash)
+		filehashAV := api.CallAlienVaultHash(filehash)
 
 		fmt.Println("AlienVAULT FILEHASH LOOKUP::::::::::", filehashAV)
 
@@ -139,13 +139,13 @@ func main() {
 
 		filehashHybrid := "77682670694bb1ab1a48091d83672c9005431b6fc731d6c6deb466a16081f4d1"
 
-		ResultHybridA := api.CheckFileHashHybridAnalysis(filehashHybrid)
+		ResultHybridA := api.CallHybridAnalysisHash(filehashHybrid)
 
 		fmt.Println("\n\n\n\n\n HYBRID ANALYSIS!!!!::::::::!!!\n\n\n", ResultHybridA)
 
 		HybridTestURL := "https://testsafebrowsing.appspot.com/s/malware.html"
 
-		ResultURLHybridA := api.CheckURLHybridAnalyis(HybridTestURL)
+		ResultURLHybridA := api.CallHybridAnalyisUrl(HybridTestURL)
 
 		fmt.Println("\n\n\n\n\n HYBRID URL:\n\n", ResultURLHybridA)
 

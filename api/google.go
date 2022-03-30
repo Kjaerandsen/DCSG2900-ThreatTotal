@@ -2,13 +2,14 @@ package api
 
 import (
 	"bytes"
+	"fmt"
 	"io/ioutil"
 	"log"
 	"net/http"
 )
 
-func CallGoogleApi(url string) (response string) {
-
+// CallGoogleUrl function takes a url, returns data on it from the google safebrowsing api
+func CallGoogleUrl(url string) (response string) {
 	//Google API returnerer [] om den ikke kjenner til domenet / URL. Kan bruke dette til å avgjøre om det er malicious eller ikke.
 
 	content, err := ioutil.ReadFile("./APIKey/Apikey.txt")
@@ -51,9 +52,12 @@ func CallGoogleApi(url string) (response string) {
 
 	//fmt.Println("response Status:", res.Status)
 	//fmt.Print("Response Headers:", res.Header)
-	body, _ := ioutil.ReadAll(res.Body)
+	body, err := ioutil.ReadAll(res.Body)
+	if err != nil {
+		fmt.Println("Error: reading google api response")
+	}
 	//fmt.Println("response Body:", string(body))
 	response = string(body)
 
-	return
+	return response
 }

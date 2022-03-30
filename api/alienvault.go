@@ -7,7 +7,8 @@ import (
 	"net/http"
 )
 
-func CallAlienVaultAPI(url string) (response string) {
+// CallAlienVaultUrl function takes a url, returns data on it from the alienvault api
+func CallAlienVaultUrl(url string) (response string) {
 
 	//DENNE FUNKSJONEN KAN UTARBEIDES TIL Å BARE RETURNERE MALCICIOUS / SUSPCIOUS OM DET BEFINNER SEG NEVNT I NOEN PULSEES (Problemet her er at ting som er OK kan være i pulse... Må tenke litt her)
 	content, err := ioutil.ReadFile("./APIKey/OTXapikey.txt")
@@ -37,10 +38,11 @@ func CallAlienVaultAPI(url string) (response string) {
 
 	response = string(body)
 
-	return
+	return response
 }
 
-func LookUpFileHashAlienVault(hash string) (response string) {
+// CallAlienVaultHash function takes a hash, returns data on it from the alienvault api
+func CallAlienVaultHash(hash string) (response string) {
 
 	content, err := ioutil.ReadFile("./APIKey/OTXapikey.txt")
 	if err != nil {
@@ -68,5 +70,5 @@ func LookUpFileHashAlienVault(hash string) (response string) {
 	response = string(body)
 
 	//HER KAN VI SJEKKE OM "VERDICT feltet er" MALICIOUS, SUSPICIOUS ELLER NOE ANNET. OG Bare returnere det.
-	return
+	return response
 }

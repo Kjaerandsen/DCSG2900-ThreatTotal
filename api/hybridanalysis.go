@@ -11,7 +11,8 @@ import (
 	"strings"
 )
 
-func CheckFileHashHybridAnalysis(hash string) (response string) {
+// CallHybridAnalysisHash function takes a hash, returns data on it from the hybridanalysis api
+func CallHybridAnalysisHash(hash string) (response string) {
 
 	//API dokumentasjon https://www.hybrid-analysis.com/docs/api/v2#/Search/post_search_hash
 
@@ -51,7 +52,8 @@ func CheckFileHashHybridAnalysis(hash string) (response string) {
 
 }
 
-func CheckURLHybridAnalyis(URL string) (response string) {
+// CallHybridAnalyisUrl function takes a url, returns data on it from the hybridanalysis api
+func CallHybridAnalyisUrl(URL string) (response string) {
 
 	fmt.Println("HYBRID URL: ", URL)
 	//DENNE FUNKSJONENE KAN SCANNE EN URL MEN DETTE BENYTTER SEG AV VIRUS TOTAL/ DETTE ER KANSKJE EN GOD WORK AROUND FOR Å KUNNE BRUKE VT GRATIS SIDEN Hybrid Analysis har lisens.
@@ -127,6 +129,5 @@ func CheckURLHybridAnalyis(URL string) (response string) {
 	//fmt.Println("response Body:", string(body))
 	response = string(body)
 
-	return
-
+	return response
 }
