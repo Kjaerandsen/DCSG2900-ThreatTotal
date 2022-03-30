@@ -7,7 +7,7 @@ import (
 	"net/http"
 )
 
-func CallAlienVaultAPI(url string) (respone string) {
+func CallAlienVaultAPI(url string) (response string) {
 
 	//DENNE FUNKSJONEN KAN UTARBEIDES TIL Å BARE RETURNERE MALCICIOUS / SUSPCIOUS OM DET BEFINNER SEG NEVNT I NOEN PULSEES (Problemet her er at ting som er OK kan være i pulse... Må tenke litt her)
 	content, err := ioutil.ReadFile("./APIKey/OTXapikey.txt")
@@ -35,7 +35,7 @@ func CallAlienVaultAPI(url string) (respone string) {
 
 	body, _ := ioutil.ReadAll(res.Body)
 
-	respone = string(body)
+	response = string(body)
 
 	return
 }
