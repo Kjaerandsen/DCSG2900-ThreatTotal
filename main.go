@@ -1,16 +1,12 @@
 package main
 
 import (
-	//"context"
-	"bytes"
-	"dcsg2900-threattotal/utils"
+	"dcsg2900-threattotal/api"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"log"
 	"net/http"
-	"net/url"
-	"strings"
 	// External
 	//webrisk "cloud.google.com/go/webrisk/apiv1"
 	"github.com/gin-contrib/cors"
@@ -21,241 +17,6 @@ import (
 	//"google.golang.org/api/webrisk/v1"
 	//"google.golang.org/api/option"
 )
-
-func CheckURLHybridAnalyis(URL string) (response string) {
-
-	fmt.Println("HYBRID URL: ", URL)
-	//DENNE FUNKSJONENE KAN SCANNE EN URL MEN DETTE BENYTTER SEG AV VIRUS TOTAL/ DETTE ER KANSKJE EN GOD WORK AROUND FOR Å KUNNE BRUKE VT GRATIS SIDEN Hybrid Analysis har lisens.
-	//Problem her kan være at dette må inkomporere en "await - 5-15 sekunder om det ikke er noe cachet result på VirusTotal, fordi den maa kjore ny request.".
-	//Titter på dette.
-	//Vi har CAP på 2000 request i timen hos Hybrid Analyis, dette burde vell holde??? - 200 max i minuttet.
-	// https://www.hybrid-analysis.com/docs/api/v2#/Quick%20Scan/post_quick_scan_url Dokumentasjon for dette API endpointet.
-
-	content, err := ioutil.ReadFile("./APIKey/HybridAnalysisAPI.txt")
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	// Convert []byte to string and print to screen
-	APIKey := string(content)
-
-	postURL := "https://www.hybrid-analysis.com/api/v2/quick-scan/url"
-
-	data := url.Values{}
-	data.Set("scan_type", "all")
-	data.Set("url", URL)
-	data.Set("no_share_third_party", "true")
-	data.Set("allow_community_access", "false")
-	//data.Set("submit_name","")
-
-	req, err := http.NewRequest("POST", postURL, strings.NewReader(data.Encode()))
-	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
-	req.Header.Set("api-key", APIKey)
-	req.Header.Set("User-Agent", "Falcon Sandbox")
-
-	client := &http.Client{}
-
-	res, err := client.Do(req)
-	if err != nil {
-		panic(err)
-	}
-	defer res.Body.Close()
-
-	//res.Body.Read("finished") Her skal jeg føre en sjekk som sjekker om "finished = true eller false"
-
-	//Hvis denne er false skal den vente 5 sekunder og kjøre requesten på nytt.
-	//Eventuelt om det er en måte å ikke close requesten før den er finished???????
-
-	//Her kan det sjekkes om VirusTotal - Status er Malicious og om Urlscan.io - status er malicious, suspicious, clean etc. også bare returnere denne responsen.
-
-	//fmt.Println("response Status:", res.Status)
-	//fmt.Print("Response Headers:", res.Header)
-	body, err := ioutil.ReadAll(res.Body)
-	if err != nil {
-		fmt.Println("Ioutil error:", err)
-	}
-
-	//var jsonData map[string]interface{}
-	var jsonData utils.HybridAnalysisUrl
-
-	err = json.Unmarshal(body, &jsonData)
-	if err != nil {
-		panic(err)
-	}
-
-	fmt.Println("\n\nScanners", jsonData.Id)
-
-	fmt.Println("\n\n\n\n\nEverything", jsonData.Scanners[0])
-
-	//ttstr := jsonData["scanners"].(map[string]interface{})["VirusTotal"].(string)
-
-	//fmt.Println("\n\n\nTTSTR ER:", ttstr)
-
-	//json.Unmarshal([]byte(body), &jsonData)
-
-	//fmt.Println("Status is:", jsonData)
-
-	//fmt.Println("response Body:", string(body))
-	response = string(body)
-
-	return
-
-}
-
-func CheckFileHashHybridAnalysis(hash string) (response string) {
-
-	//API dokumentasjon https://www.hybrid-analysis.com/docs/api/v2#/Search/post_search_hash
-
-	content, err := ioutil.ReadFile("./APIKey/HybridAnalysisAPI.txt")
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	// Convert []byte to string and print to screen
-	APIKey := string(content)
-
-	postURL := "https://www.hybrid-analysis.com/api/v2/search/hash"
-
-	data := url.Values{}
-	data.Set("hash", hash)
-
-	req, err := http.NewRequest("POST", postURL, strings.NewReader(data.Encode()))
-	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
-	req.Header.Set("api-key", APIKey)
-	req.Header.Set("User-Agent", "Falcon Sandbox")
-
-	client := &http.Client{}
-
-	res, err := client.Do(req)
-	if err != nil {
-		panic(err)
-	}
-	defer res.Body.Close()
-
-	//fmt.Println("response Status:", res.Status)
-	//fmt.Print("Response Headers:", res.Header)
-	body, _ := ioutil.ReadAll(res.Body)
-	//fmt.Println("response Body:", string(body))
-	response = string(body)
-
-	return
-
-}
-
-func LookUpFileHashAlienVault(hash string) (response string) {
-
-	content, err := ioutil.ReadFile("./APIKey/OTXapikey.txt")
-	if err != nil {
-		log.Fatal(err)
-	}
-	APIKey := string(content)
-
-	getURL := "https://otx.alienvault.com//api/v1/indicators/file/" + hash + "/analysis"
-
-	req, err := http.NewRequest("GET", getURL, nil)
-	req.Header.Set("X-OTX-API-KEY", APIKey)
-
-	fmt.Println(req.Header)
-
-	client := &http.Client{}
-
-	res, err := client.Do(req)
-	if err != nil {
-		panic(err)
-	}
-	defer res.Body.Close()
-
-	body, _ := ioutil.ReadAll(res.Body)
-
-	response = string(body)
-
-	//HER KAN VI SJEKKE OM "VERDICT feltet er" MALICIOUS, SUSPICIOUS ELLER NOE ANNET. OG Bare returnere det.
-	return
-}
-
-func callAlienVaultAPI(url string) (respone string) {
-
-	//DENNE FUNKSJONEN KAN UTARBEIDES TIL Å BARE RETURNERE MALCICIOUS / SUSPCIOUS OM DET BEFINNER SEG NEVNT I NOEN PULSEES (Problemet her er at ting som er OK kan være i pulse... Må tenke litt her)
-	content, err := ioutil.ReadFile("./APIKey/OTXapikey.txt")
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	// Convert []byte to string and print to screen
-	APIKey := string(content)
-
-	getURL := "https://otx.alienvault.com//api/v1/indicators/url/" + url + "/general"
-
-	req, err := http.NewRequest("GET", getURL, nil)
-	req.Header.Set("X-OTX-API-KEY", APIKey)
-
-	fmt.Println(req.Header)
-
-	client := &http.Client{}
-
-	res, err := client.Do(req)
-	if err != nil {
-		panic(err)
-	}
-	defer res.Body.Close()
-
-	body, _ := ioutil.ReadAll(res.Body)
-
-	respone = string(body)
-
-	return
-}
-
-func callGoogleApi(url string) (response string) {
-
-	//Google API returnerer [] om den ikke kjenner til domenet / URL. Kan bruke dette til å avgjøre om det er malicious eller ikke.
-
-	content, err := ioutil.ReadFile("./APIKey/Apikey.txt")
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	// Convert []byte to string and print to screen
-	APIKey := string(content)
-
-	postURL := "https://safebrowsing.googleapis.com/v4/threatMatches:find?key=" + APIKey
-
-	var jsonData = []byte(`
-		{
-			"client": {
-			  "clientId":      "threattotal",
-			  "clientVersion": "1.5.2"
-			},
-			"threatInfo": {
-			  "threatTypes":      ["MALWARE", "SOCIAL_ENGINEERING"],
-			  "platformTypes":    ["WINDOWS"],
-			  "threatEntryTypes": ["URL"],
-			  "threatEntries": [
-				{"url": "https://` + url + `" },
-				{"url": "http://` + url + `"}
-			  ]
-			}
-		}`)
-
-	req, err := http.NewRequest("POST", postURL, bytes.NewBuffer(jsonData))
-	req.Header.Set("Content-Type", "application/json; charset=UTF-8")
-
-	client := &http.Client{}
-
-	res, err := client.Do(req)
-	if err != nil {
-		panic(err)
-	}
-	defer res.Body.Close()
-
-	//fmt.Println("response Status:", res.Status)
-	//fmt.Print("Response Headers:", res.Header)
-	body, _ := ioutil.ReadAll(res.Body)
-	//fmt.Println("response Body:", string(body))
-	response = string(body)
-
-	return
-}
 
 func main() {
 	r := gin.Default()
@@ -358,11 +119,11 @@ func main() {
 
 		//Google
 
-		safebrowserResponse := callGoogleApi(url)
+		safebrowserResponse := api.CallGoogleApi(url)
 
 		//Alienvault
 
-		otxAlienVaultRespone := callAlienVaultAPI(url)
+		otxAlienVaultRespone := api.CallAlienVaultAPI(url)
 
 		fmt.Println("safebrowser response::", safebrowserResponse)
 
@@ -370,7 +131,7 @@ func main() {
 
 		filehash := "a7a665a695ec3c0f862a0d762ad55aff6ce6014359647e7c7f7e3c4dc3be81b7"
 
-		filehashAV := LookUpFileHashAlienVault(filehash)
+		filehashAV := api.LookUpFileHashAlienVault(filehash)
 
 		fmt.Println("AlienVAULT FILEHASH LOOKUP::::::::::", filehashAV)
 
@@ -378,13 +139,13 @@ func main() {
 
 		filehashHybrid := "77682670694bb1ab1a48091d83672c9005431b6fc731d6c6deb466a16081f4d1"
 
-		ResultHybridA := CheckFileHashHybridAnalysis(filehashHybrid)
+		ResultHybridA := api.CheckFileHashHybridAnalysis(filehashHybrid)
 
 		fmt.Println("\n\n\n\n\n HYBRID ANALYSIS!!!!::::::::!!!\n\n\n", ResultHybridA)
 
 		HybridTestURL := "https://testsafebrowsing.appspot.com/s/malware.html"
 
-		ResultURLHybridA := CheckURLHybridAnalyis(HybridTestURL)
+		ResultURLHybridA := api.CheckURLHybridAnalyis(HybridTestURL)
 
 		fmt.Println("\n\n\n\n\n HYBRID URL:\n\n", ResultURLHybridA)
 
