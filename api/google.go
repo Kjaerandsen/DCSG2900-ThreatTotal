@@ -10,7 +10,8 @@ import (
 
 // CallGoogleUrl function takes a url, returns data on it from the google safebrowsing api
 func CallGoogleUrl(url string) (response string) {
-	//Google API returnerer [] om den ikke kjenner til domenet / URL. Kan bruke dette til å avgjøre om det er malicious eller ikke.
+	// Google API returnerer [] om den ikke kjenner til domenet / URL. Kan bruke dette til
+	// å avgjøre om det er malicious eller ikke.
 
 	content, err := ioutil.ReadFile("./APIKey/Apikey.txt")
 	if err != nil {

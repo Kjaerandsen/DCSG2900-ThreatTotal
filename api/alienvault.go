@@ -10,7 +10,8 @@ import (
 // CallAlienVaultUrl function takes a url, returns data on it from the alienvault api
 func CallAlienVaultUrl(url string) (response string) {
 
-	//DENNE FUNKSJONEN KAN UTARBEIDES TIL Å BARE RETURNERE MALCICIOUS / SUSPCIOUS OM DET BEFINNER SEG NEVNT I NOEN PULSEES (Problemet her er at ting som er OK kan være i pulse... Må tenke litt her)
+	//DENNE FUNKSJONEN KAN UTARBEIDES TIL Å BARE RETURNERE MALCICIOUS / SUSPCIOUS OM DET BEFINNER SEG NEVNT I NOEN
+	// PULSEES (Problemet her er at ting som er OK kan være i pulse... Må tenke litt her)
 	content, err := ioutil.ReadFile("./APIKey/OTXapikey.txt")
 	if err != nil {
 		log.Fatal(err)
