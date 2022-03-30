@@ -1,4 +1,4 @@
-module dcsg2900-threattotal/m
+module dcsg2900-threattotal
 
 go 1.15
 

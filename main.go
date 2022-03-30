@@ -3,14 +3,14 @@ package main
 import (
 	//"context"
 	"bytes"
+	"dcsg2900-threattotal/utils"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"log"
 	"net/http"
-	"strings"
-
 	"net/url"
+	"strings"
 	// External
 	//webrisk "cloud.google.com/go/webrisk/apiv1"
 	"github.com/gin-contrib/cors"
@@ -23,27 +23,6 @@ import (
 )
 
 func CheckURLHybridAnalyis(URL string) (response string) {
-
-	type scanners struct {
-		Name               string                   `json:"name"`
-		Status             string                   `json:"status"`
-		Error_message      string                   `json:"error_message"`
-		Progress           int                      `json:"progress"`
-		Total              int                      `json:"total"`
-		Positives          int                      `json:"positives"`
-		Percent            int                      `json:"percent"`
-		Anti_virus_results []map[string]interface{} `json:"anti_virus_results"`
-	}
-
-	type expectedOutput struct {
-		Submission_type string                   `json:"submission_type"`
-		Id              string                   `json:"id"`
-		Sha256          string                   `json:"sha256"`
-		Scanners        []scanners               `json:"scanners"`
-		Whitelist       []map[string]interface{} `json:"whitelist"`
-		Reports         []string                 `json:"reports"`
-		Finished        bool                     `json:"finished"`
-	}
 
 	fmt.Println("HYBRID URL: ", URL)
 	//DENNE FUNKSJONENE KAN SCANNE EN URL MEN DETTE BENYTTER SEG AV VIRUS TOTAL/ DETTE ER KANSKJE EN GOD WORK AROUND FOR Å KUNNE BRUKE VT GRATIS SIDEN Hybrid Analysis har lisens.
@@ -97,7 +76,7 @@ func CheckURLHybridAnalyis(URL string) (response string) {
 	}
 
 	//var jsonData map[string]interface{}
-	var jsonData expectedOutput
+	var jsonData utils.HybridAnalysisUrl
 
 	err = json.Unmarshal(body, &jsonData)
 	if err != nil {
