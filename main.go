@@ -15,6 +15,7 @@ import (
 	//webrisk "cloud.google.com/go/webrisk/apiv1"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
+	//"google.golang.org/grpc/status"
 	//"google.golang.org/api/option"
 	//webriskpb "google.golang.org/genproto/googleapis/cloud/webrisk/v1"
 	//"google.golang.org/api/webrisk/v1"
@@ -23,6 +24,32 @@ import (
 
 
 func CheckURLHybridAnalyis(URL string) (response string){
+
+
+/**
+	type scanners struct{
+		name string
+		status string
+		error_message string
+		progress int
+		total int
+		positives int
+		percent int
+		anti_virus_results string
+	}
+*/
+
+	type expectedOutput struct {
+		All struct {
+		submission_type string `json:"submission_type"`
+		id string `json:"id"`
+		sha256 string `json:"sha256"`
+		scanners map[int]interface{} `json:"scanners"`
+		whitelist map[string]interface{} `json:"whitelist"`
+		reports map[string]interface{} `json:"reports"`
+		finished bool `json:"finished"`
+		}
+	}
 
 	fmt.Println("HYBRID URL: ", URL)
 	//DENNE FUNKSJONENE KAN SCANNE EN URL MEN DETTE BENYTTER SEG AV VIRUS TOTAL/ DETTE ER KANSKJE EN GOD WORK AROUND FOR Å KUNNE BRUKE VT GRATIS SIDEN Hybrid Analysis har lisens.
@@ -62,7 +89,7 @@ func CheckURLHybridAnalyis(URL string) (response string){
     defer res.Body.Close()
 
 	//res.Body.Read("finished") Her skal jeg føre en sjekk som sjekker om "finished = true eller false"
-
+	
 	//Hvis denne er false skal den vente 5 sekunder og kjøre requesten på nytt.
 	//Eventuelt om det er en måte å ikke close requesten før den er finished???????
 	
@@ -72,7 +99,31 @@ func CheckURLHybridAnalyis(URL string) (response string){
 
     //fmt.Println("response Status:", res.Status)
     //fmt.Print("Response Headers:", res.Header)
-    body, _ := ioutil.ReadAll(res.Body)
+    body, err := ioutil.ReadAll(res.Body)
+	if err!= nil{
+		fmt.Println("Ioutil error:", err)
+	}
+
+	//var jsonData map[string]interface{}
+	var jsonData expectedOutput
+
+	err = json.Unmarshal(body, &jsonData.All)
+	if err!=nil{
+		panic(err)
+	}
+
+	fmt.Println("\n\nScanners", jsonData.All.id)
+
+	fmt.Println("\n\n\n\n\nEverything", jsonData.All)
+
+	//ttstr := jsonData["scanners"].(map[string]interface{})["VirusTotal"].(string)
+
+	//fmt.Println("\n\n\nTTSTR ER:", ttstr)
+
+	//json.Unmarshal([]byte(body), &jsonData)
+
+	//fmt.Println("Status is:", jsonData)
+
     //fmt.Println("response Body:", string(body))
     response = string(body)
 
