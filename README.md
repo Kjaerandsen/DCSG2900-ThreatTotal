@@ -17,6 +17,12 @@ The application is developed in react.js + tailwindcss for the frontend and gola
 The backend is in the root directory of the project.
 While the frontend is located in the "threat-total" folder.
 
+## Data sources:
+- Google Safebrowsing Api
+- HybridAnalysis Falcon Sandbox Public Api
+- Alienvault Open Threat Exchange Api
+
+
 ### Frontend structure:
 Relevant files to look at lie in the src directory which is split into:
 - The base directory containing the app files.
@@ -28,6 +34,7 @@ Relevant files to look at lie in the src directory which is split into:
 - The main file is called main.go.
 - Api functions are located in the "api" folder under the "api" package
 - Utilitites such as structs and constants are located in the "utils" folder under the "utils" package
+
 
 # Development:
 
