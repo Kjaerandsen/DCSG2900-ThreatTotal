@@ -24,11 +24,23 @@ type Scanners struct {
 }
 
 // FrontendResponse struct for the response sent to the frontend to be displayed as cards
-type FrontendResponse []struct {
+type FrontendResponse struct {
 	ID          int      `json:"id"`
 	SourceName  string   `json:"sourceName"`
 	Status      string   `json:"status"`
 	Content     string   `json:"content"`
 	Description string   `json:"description"`
 	Tags        []string `json:"tags"`
+}
+
+type GoogleSafeBrowsing struct {
+	Matches []struct {
+		ThreatType   string `json:"threatType"`
+		PlatformType string `json:"platformType"`
+		Threat       struct {
+			URL string `json:"url"`
+		} `json:"threat"`
+		CacheDuration   string `json:"cacheDuration"`
+		ThreatEntryType string `json:"threatEntryType"`
+	} `json:"matches"`
 }

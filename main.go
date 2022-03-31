@@ -2,11 +2,13 @@ package main
 
 import (
 	"dcsg2900-threattotal/api"
+	"dcsg2900-threattotal/utils"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"log"
 	"net/http"
+
 	// External
 	//webrisk "cloud.google.com/go/webrisk/apiv1"
 	"github.com/gin-contrib/cors"
@@ -121,8 +123,12 @@ func main() {
 
 		safebrowserResponse := api.CallGoogleUrl(url)
 
+		fmt.Println("safebrowser response::", safebrowserResponse.Status)
+
+
 		//Alienvault
 
+		/**
 		otxAlienVaultRespone := api.CallAlienVaultUrl(url)
 
 		fmt.Println("safebrowser response::", safebrowserResponse)
@@ -148,7 +154,26 @@ func main() {
 		ResultURLHybridA := api.CallHybridAnalyisUrl(HybridTestURL)
 
 		fmt.Println("\n\n\n\n\n HYBRID URL:\n\n", ResultURLHybridA)
+*/
+	})
 
+	r.GET("/url-intelligence", func(c *gin.Context) {
+		url := c.Query("url")
+
+		var googleVerdict [1]utils.FrontendResponse
+
+		googleVerdict[0] =api.CallGoogleUrl(url)
+
+
+		URLint, err:= json.Marshal(googleVerdict)
+		if(err != nil){
+			fmt.Println(err)
+		}
+
+		fmt.Println("WHERE IS MY CONTENT", googleVerdict)
+
+		c.Data(http.StatusOK, "application/json", URLint)
+		//burde funke det her ja e nok nokka med respons objecte frontend? 
 	})
 
 	log.Fatal(r.Run(":8081"))

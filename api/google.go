@@ -2,6 +2,8 @@ package api
 
 import (
 	"bytes"
+	"dcsg2900-threattotal/utils"
+	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"log"
@@ -9,7 +11,7 @@ import (
 )
 
 // CallGoogleUrl function takes a url, returns data on it from the google safebrowsing api
-func CallGoogleUrl(url string) (response string) {
+func CallGoogleUrl(url string) (response utils.FrontendResponse) {
 	// Google API returnerer [] om den ikke kjenner til domenet / URL. Kan bruke dette til
 	// å avgjøre om det er malicious eller ikke.
 
@@ -30,8 +32,8 @@ func CallGoogleUrl(url string) (response string) {
 			  "clientVersion": "1.5.2"
 			},
 			"threatInfo": {
-			  "threatTypes":      ["MALWARE", "SOCIAL_ENGINEERING"],
-			  "platformTypes":    ["WINDOWS"],
+			  "threatTypes":      ["MALWARE", "SOCIAL_ENGINEERING", "THREAT_TYPE_UNSPECIFIED", "UNWANTED_SOFTWARE","POTENTIALLY_HARMFUL_APPLICATION"],
+			  "platformTypes":    ["ANY_PLATFORM"],
 			  "threatEntryTypes": ["URL"],
 			  "threatEntries": [
 				{"url": "https://` + url + `" },
@@ -57,8 +59,36 @@ func CallGoogleUrl(url string) (response string) {
 	if err != nil {
 		fmt.Println("Error: reading google api response")
 	}
+
+	var jsonResponse utils.GoogleSafeBrowsing
+
+	err = json.Unmarshal(body, &jsonResponse)
+	if err != nil{
+		fmt.Println(err)
+	}
+	output := string(body)
+	fmt.Println("BODY::!", output)
+	//fmt.Println("ThreatType::::",jsonResponse.Matches[0].ThreatType)
 	//fmt.Println("response Body:", string(body))
-	response = string(body)
+	if(len(jsonResponse.Matches)!=0){
+		response.Description = "This URL has been marked as malicious by Google Safebrowsing, visiting is NOT recommended"
+	switch(jsonResponse.Matches[0].ThreatType){
+	case "MALWARE" : response.Status = "Risk"
+
+	case "SOCIAL_ENGINEERING": response.Status = "Risk"
+
+	case "UNWANTED_SOFTWARE" : response.Status = "Risk"
+	
+	default : 
+			response.Status = "potentially unsafe"
+			response.Description = "This URL has been marked as suspicious, not recommended to visit."
+	}
+	}else{
+	response.Status = "Safe"
+	response.Description ="Google safebrowsing has no data that indicates this is an unsafe URL"
+	}
+
+	
 
 	return response
 }
