@@ -117,13 +117,13 @@ func main() {
 	r.GET("/public-intelligence", func(c *gin.Context) {
 		fmt.Println(c.Query("url"))
 
-		url := c.Query("url")
+		//url := c.Query("url")
 
 		//Google
 
-		safebrowserResponse := api.CallGoogleUrl(url)
+		//safebrowserResponse := api.CallGoogleUrl(url)
 
-		fmt.Println("safebrowser response::", safebrowserResponse.Status)
+		//fmt.Println("safebrowser response::", safebrowserResponse.Status)
 
 
 		//Alienvault
@@ -140,7 +140,7 @@ func main() {
 		filehashAV := api.CallAlienVaultHash(filehash)
 
 		fmt.Println("AlienVAULT FILEHASH LOOKUP::::::::::", filehashAV)
-
+*/
 		//Hybrid Analysis:
 
 		filehashHybrid := "77682670694bb1ab1a48091d83672c9005431b6fc731d6c6deb466a16081f4d1"
@@ -148,6 +148,8 @@ func main() {
 		ResultHybridA := api.CallHybridAnalysisHash(filehashHybrid)
 
 		fmt.Println("\n\n\n\n\n HYBRID ANALYSIS!!!!::::::::!!!\n\n\n", ResultHybridA)
+
+/**
 
 		HybridTestURL := "https://testsafebrowsing.appspot.com/s/malware.html"
 
