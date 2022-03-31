@@ -87,7 +87,29 @@ func main() {
 	r.GET("/result", func(c *gin.Context) {
 		fmt.Println(c.Query("url"))
 		fmt.Println(c.Query("hash"))
-		data := `[{"id":1,"sourceName":"Threat Total","content":"Unsafe: potentially unwanted software.","tags":["PUA","Windows","Social Engineering","URL"],"description":"Potentially unwanted software, might be used for lorem ipsum dolor sin amet.","status":"Potentially unsafe"},{"id":2,"sourceName":"Google safebrowsing","content":"Unsafe: Malware.","tags":["Malware","Windows","URL"],"description":"Malware found at he location, might be used for lorem ipsum dolor sin amet.","status":"Risk"},{"id":3,"sourceName":"Source 3","content":"Safe: No known risks at this location.","tags":["URL","Safe"],"description":"No known risks at this location. The data source has no information on this url.","status":"Safe"}]`
+		var data [3]utils.FrontendResponse
+
+		data[0].ID = 1
+		data[0].SourceName = "Threat Total"
+		data[0].Content = "Unsafe: potentially unwanted software."
+		data[0].Tags = []string{"PUA", "Windows", "Social Engineering", "URL"}
+		data[0].Description = "Potentially unwanted software, might be used for lorem ipsum dolor sin amet."
+		data[0].Status = "Potentially unsafe"
+
+		data[1].ID = 2
+		data[1].SourceName = "Google safebrowsing"
+		data[1].Content = "Unsafe: Malware."
+		data[1].Tags = []string{"Malware", "Windows", "URL"}
+		data[1].Description = "Malware found at he location, might be used for lorem ipsum dolor sin amet."
+		data[1].Status = "Risk"
+
+		data[2].ID = 3
+		data[2].SourceName = "Hybrid Analysis"
+		data[2].Content = "Safe: No known risks at this location."
+		data[2].Tags = []string{"URL", "Safe"}
+		data[2].Description = "No known risks at this location. The data source has no information on this url."
+		data[2].Status = "Safe"
+
 		data2, _ := json.Marshal(data)
 
 		c.Data(http.StatusOK, "application/json", data2)
@@ -142,7 +164,7 @@ func main() {
 		filehashAV := api.CallAlienVaultHash(filehash)
 
 		fmt.Println("AlienVAULT FILEHASH LOOKUP::::::::::", filehashAV)
-*/
+		*/
 		//Hybrid Analysis:
 
 		filehashHybrid := "77682670694bb1ab1a48091d83672c9005431b6fc731d6c6deb466a16081f4d1"
@@ -151,7 +173,7 @@ func main() {
 
 		fmt.Println("\n\n\n\n\n HYBRID ANALYSIS!!!!::::::::!!!\n\n\n", ResultHybridA)
 
-/**
+		/**
 
 		HybridTestURL := "https://testsafebrowsing.appspot.com/s/malware.html"
 
@@ -194,9 +216,8 @@ func main() {
 		fmt.Println("WHERE IS MY CONTENT", hybridVerdict)
 
 		c.Data(http.StatusOK, "application/json", Hashint)
-		
-	})
 
+	})
 
 	log.Fatal(r.Run(":8081"))
 }
