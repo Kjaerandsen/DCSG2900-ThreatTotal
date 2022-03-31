@@ -46,7 +46,22 @@ function Result() {
             })
         } else {
             // Redirect to index if no parameters are provided
-            window.location.href= "/"
+            //window.location.href= "/"
+            // Send an api request to the backend with url data
+            fetch('http://localhost:8081/result', {
+                method: 'GET',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json'
+                }
+            }).then((response) => response.json())
+            .then((json) => {
+                setJsonData(json)
+            })
+            .catch(function(error){
+                console.log(error)
+                setErr(true)
+            })
         }
         // Need error handling when the backend is unavailable
     }, []);
