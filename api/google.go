@@ -43,6 +43,9 @@ func CallGoogleUrl(url string) (response utils.FrontendResponse) {
 		}`)
 
 	req, err := http.NewRequest("POST", postURL, bytes.NewBuffer(jsonData))
+	if err != nil {
+		fmt.Println("Error: reading sending google api request")
+	}
 	req.Header.Set("Content-Type", "application/json; charset=UTF-8")
 
 	client := &http.Client{}

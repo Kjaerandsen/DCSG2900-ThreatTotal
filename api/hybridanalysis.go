@@ -9,7 +9,6 @@ import (
 	"net/http"
 	"net/url"
 	"strings"
-
 	//"golang.org/x/tools/go/analysis/passes/nilfunc"
 )
 
@@ -48,29 +47,33 @@ func CallHybridAnalysisHash(hash string) (response utils.FrontendResponse) {
 	//fmt.Print("Response Headers:", res.Header)
 	body, _ := ioutil.ReadAll(res.Body)
 	//fmt.Println("response Body:", string(body))
-	
+
 	var jsonResponse utils.HybridAnalysishash
 
 	err = json.Unmarshal(body, &jsonResponse)
-	if(err != nil){
+	if err != nil {
 		fmt.Println(err)
 	}
 
 	fmt.Println("Something cool", jsonResponse.Verdict)
 
-	if(jsonResponse.Verdict == "malicious"){
+	response.SourceName = "Hybrid Analysis"
+	if jsonResponse.Verdict == "malicious" {
 		response.Status = "Risk"
-		response.Description = "This file is malicious"
-		response.SourceName = jsonResponse.Submissions[0].Filename
-	}else if(jsonResponse.Verdict == "whitelisted"){
+		response.Content = "This file is malicious"
+		//response.SourceName = jsonResponse.Submissions[0].Filename
+	} else if jsonResponse.Verdict == "whitelisted" {
 		response.Status = "Safe"
-		response.Description = "This file is known to be good"
-		response.SourceName = jsonResponse.Submissions[0].Filename
-	}else{
-		response.Status = "Safe"		//Denne må byttes til at den er ukjent // grå farge elns på frontend.
-		response.Description = "This filehash is not known to Hybrid Analysis"
+		response.Content = "This file is known to be good"
+		//response.SourceName = jsonResponse.Submissions[0].Filename
+	} else {
+		response.Status = "Safe" //Denne må byttes til at den er ukjent // grå farge elns på frontend.
+		response.Content = "This filehash is not known to Hybrid Analysis"
 	}
 
+	if jsonResponse.Submissions[0].Filename != "" {
+		response.Content = response.Content + " " + jsonResponse.Submissions[0].Filename
+	}
 
 	return
 

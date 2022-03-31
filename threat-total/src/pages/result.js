@@ -21,7 +21,8 @@ function Result() {
                 }
             }).then((response) => response.json())
             .then((json) => {
-                setJsonData(JSON.parse(json))
+                setJsonData(json)
+                //setJsonData(JSON.parse(json))
             })
             .catch(function(error){
                 console.log(error)
