@@ -71,8 +71,11 @@ func CallHybridAnalysisHash(hash string) (response utils.FrontendResponse) {
 		response.Content = "This filehash is not known to Hybrid Analysis"
 	}
 
-	if jsonResponse.Submissions[0].Filename != "" {
-		response.Content = response.Content + " " + jsonResponse.Submissions[0].Filename
+	// Set the filename field if known
+	if jsonResponse.Submissions != nil {
+		if jsonResponse.Submissions[0].Filename != "" {
+			response.Content = response.Content + " " + jsonResponse.Submissions[0].Filename
+		}
 	}
 
 	return
