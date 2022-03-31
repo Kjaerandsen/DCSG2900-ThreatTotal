@@ -87,7 +87,10 @@ func main() {
 	r.GET("/result", func(c *gin.Context) {
 		fmt.Println(c.Query("url"))
 		fmt.Println(c.Query("hash"))
-		c.JSON(http.StatusOK, `[{"id":1,"sourceName":"Threat Total","content":"Unsafe: potentially unwanted software.","tags":["PUA","Windows","Social Engineering","URL"],"description":"Potentially unwanted software, might be used for lorem ipsum dolor sin amet.","status":"Potentially unsafe"},{"id":2,"sourceName":"Google safebrowsing","content":"Unsafe: Malware.","tags":["Malware","Windows","URL"],"description":"Malware found at he location, might be used for lorem ipsum dolor sin amet.","status":"Risk"},{"id":3,"sourceName":"Source 3","content":"Safe: No known risks at this location.","tags":["URL","Safe"],"description":"No known risks at this location. The data source has no information on this url.","status":"Safe"}]`)
+		data := `[{"id":1,"sourceName":"Threat Total","content":"Unsafe: potentially unwanted software.","tags":["PUA","Windows","Social Engineering","URL"],"description":"Potentially unwanted software, might be used for lorem ipsum dolor sin amet.","status":"Potentially unsafe"},{"id":2,"sourceName":"Google safebrowsing","content":"Unsafe: Malware.","tags":["Malware","Windows","URL"],"description":"Malware found at he location, might be used for lorem ipsum dolor sin amet.","status":"Risk"},{"id":3,"sourceName":"Source 3","content":"Safe: No known risks at this location.","tags":["URL","Safe"],"description":"No known risks at this location. The data source has no information on this url.","status":"Safe"}]`
+		data2, _ := json.Marshal(data)
+
+		c.Data(http.StatusOK, "application/json", data2)
 	})
 
 	// TODO: Upload a file
@@ -125,7 +128,6 @@ func main() {
 
 		//fmt.Println("safebrowser response::", safebrowserResponse.Status)
 
-
 		//Alienvault
 
 		/**
@@ -156,7 +158,7 @@ func main() {
 		ResultURLHybridA := api.CallHybridAnalyisUrl(HybridTestURL)
 
 		fmt.Println("\n\n\n\n\n HYBRID URL:\n\n", ResultURLHybridA)
-*/
+		*/
 	})
 
 	r.GET("/url-intelligence", func(c *gin.Context) {
@@ -164,18 +166,17 @@ func main() {
 
 		var googleVerdict [1]utils.FrontendResponse
 
-		googleVerdict[0] =api.CallGoogleUrl(url)
+		googleVerdict[0] = api.CallGoogleUrl(url)
 
-
-		URLint, err:= json.Marshal(googleVerdict)
-		if(err != nil){
+		URLint, err := json.Marshal(googleVerdict)
+		if err != nil {
 			fmt.Println(err)
 		}
 
 		fmt.Println("WHERE IS MY CONTENT", googleVerdict)
 
 		c.Data(http.StatusOK, "application/json", URLint)
-		//burde funke det her ja e nok nokka med respons objecte frontend? 
+		//burde funke det her ja e nok nokka med respons objecte frontend?
 	})
 
 	log.Fatal(r.Run(":8081"))

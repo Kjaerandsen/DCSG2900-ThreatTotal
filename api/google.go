@@ -63,32 +63,35 @@ func CallGoogleUrl(url string) (response utils.FrontendResponse) {
 	var jsonResponse utils.GoogleSafeBrowsing
 
 	err = json.Unmarshal(body, &jsonResponse)
-	if err != nil{
+	if err != nil {
 		fmt.Println(err)
 	}
 	output := string(body)
 	fmt.Println("BODY::!", output)
 	//fmt.Println("ThreatType::::",jsonResponse.Matches[0].ThreatType)
 	//fmt.Println("response Body:", string(body))
-	if(len(jsonResponse.Matches)!=0){
-		response.Description = "This URL has been marked as malicious by Google Safebrowsing, visiting is NOT recommended"
-	switch(jsonResponse.Matches[0].ThreatType){
-	case "MALWARE" : response.Status = "Risk"
+	if len(jsonResponse.Matches) != 0 {
+		response.Content = "This URL has been marked as malicious by Google Safebrowsing, visiting is NOT recommended"
+		switch jsonResponse.Matches[0].ThreatType {
+		case "MALWARE":
+			response.Status = "Risk"
 
-	case "SOCIAL_ENGINEERING": response.Status = "Risk"
+		case "SOCIAL_ENGINEERING":
+			response.Status = "Risk"
 
-	case "UNWANTED_SOFTWARE" : response.Status = "Risk"
-	
-	default : 
+		case "UNWANTED_SOFTWARE":
+			response.Status = "Risk"
+
+		default:
 			response.Status = "potentially unsafe"
-			response.Description = "This URL has been marked as suspicious, not recommended to visit."
-	}
-	}else{
-	response.Status = "Safe"
-	response.Description ="Google safebrowsing has no data that indicates this is an unsafe URL"
+			response.Content = "This URL has been marked as suspicious, not recommended to visit."
+		}
+	} else {
+		response.Status = "Safe"
+		response.Content = "Google safebrowsing has no data that indicates this is an unsafe URL"
 	}
 
-	
+	response.SourceName = "Google SafeBrowsing Api"
 
 	return response
 }
