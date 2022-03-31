@@ -179,5 +179,24 @@ func main() {
 		//burde funke det her ja e nok nokka med respons objecte frontend?
 	})
 
+	r.GET("/hash-intelligence", func(c *gin.Context) {
+		hash := c.Query("hash")
+
+		var hybridVerdict [1]utils.FrontendResponse
+
+		hybridVerdict[0] = api.CallHybridAnalysisHash(hash)
+
+		Hashint, err := json.Marshal(hybridVerdict)
+		if err != nil {
+			fmt.Println(err)
+		}
+
+		fmt.Println("WHERE IS MY CONTENT", hybridVerdict)
+
+		c.Data(http.StatusOK, "application/json", Hashint)
+		
+	})
+
+
 	log.Fatal(r.Run(":8081"))
 }

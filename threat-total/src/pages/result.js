@@ -13,7 +13,7 @@ function Result() {
         if (hash != null) {
             console.log({hash})
             // Send an api request to the backend with hash data
-            fetch('http://localhost:8081/result?hash=' + hash, {
+            fetch('http://localhost:8081/hash-intelligence?hash=' + hash, {
                 method: 'GET',
                 headers: {
                     Accept: 'application/json',

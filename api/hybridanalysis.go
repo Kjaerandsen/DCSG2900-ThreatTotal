@@ -9,10 +9,12 @@ import (
 	"net/http"
 	"net/url"
 	"strings"
+
+	//"golang.org/x/tools/go/analysis/passes/nilfunc"
 )
 
 // CallHybridAnalysisHash function takes a hash, returns data on it from the hybridanalysis api
-func CallHybridAnalysisHash(hash string) (response string) {
+func CallHybridAnalysisHash(hash string) (response utils.FrontendResponse) {
 
 	// API dokumentasjon https://www.hybrid-analysis.com/docs/api/v2#/Search/post_search_hash
 
@@ -46,7 +48,29 @@ func CallHybridAnalysisHash(hash string) (response string) {
 	//fmt.Print("Response Headers:", res.Header)
 	body, _ := ioutil.ReadAll(res.Body)
 	//fmt.Println("response Body:", string(body))
-	response = string(body)
+	
+	var jsonResponse utils.HybridAnalysishash
+
+	err = json.Unmarshal(body, &jsonResponse)
+	if(err != nil){
+		fmt.Println(err)
+	}
+
+	fmt.Println("Something cool", jsonResponse.Verdict)
+
+	if(jsonResponse.Verdict == "malicious"){
+		response.Status = "Risk"
+		response.Description = "This file is malicious"
+		response.SourceName = jsonResponse.Submissions[0].Filename
+	}else if(jsonResponse.Verdict == "whitelisted"){
+		response.Status = "Safe"
+		response.Description = "This file is known to be good"
+		response.SourceName = jsonResponse.Submissions[0].Filename
+	}else{
+		response.Status = "Safe"		//Denne må byttes til at den er ukjent // grå farge elns på frontend.
+		response.Description = "This filehash is not known to Hybrid Analysis"
+	}
+
 
 	return
 
