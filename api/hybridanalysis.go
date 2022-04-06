@@ -9,6 +9,7 @@ import (
 	"net/http"
 	"net/url"
 	"strings"
+	"time"
 	//"golang.org/x/tools/go/analysis/passes/nilfunc"
 )
 
@@ -83,7 +84,7 @@ func CallHybridAnalysisHash(hash string) (response utils.FrontendResponse) {
 }
 
 // CallHybridAnalyisUrl function takes a url, returns data on it from the hybridanalysis api
-func CallHybridAnalyisUrl(URL string) (response string) {
+func CallHybridAnalyisUrl(URL string) (VirusTotal utils.FrontendResponse, urlscanio utils.FrontendResponse) {
 
 	fmt.Println("HYBRID URL: ", URL)
 	//DENNE FUNKSJONENE KAN SCANNE EN URL MEN DETTE BENYTTER SEG AV VIRUS TOTAL/
@@ -140,27 +141,43 @@ func CallHybridAnalyisUrl(URL string) (response string) {
 	}
 
 	//var jsonData map[string]interface{}
-	var jsonData utils.HybridAnalysisUrl
+	var jsonResponse utils.HybridAnalysisURL
 
-	err = json.Unmarshal(body, &jsonData)
+	err = json.Unmarshal(body, &jsonResponse)
 	if err != nil {
-		panic(err)
+		fmt.Println(err)
 	}
 
-	fmt.Println("\n\nScanners", jsonData.Id)
+	if jsonResponse.Finished != true {
+		time.Sleep(20 * time.Second) //Får prøve å finne en bedre løsning enn dette men det er det jeg har for now.
 
-	fmt.Println("\n\n\n\n\nEverything", jsonData.Scanners[0])
+		res, err := client.Do(req)
+		if err != nil {
+			panic(err)
+		}
+		defer res.Body.Close()
 
-	//ttstr := jsonData["scanners"].(map[string]interface{})["VirusTotal"].(string)
+		body, err := ioutil.ReadAll(res.Body)
+		if err != nil {
+			fmt.Println("Ioutil error:", err)
+		}
 
-	//fmt.Println("\n\n\nTTSTR ER:", ttstr)
+		var jsonResponse utils.HybridAnalysisURL
 
-	//json.Unmarshal([]byte(body), &jsonData)
+		err = json.Unmarshal(body, &jsonResponse)
+		if err != nil {
+			fmt.Println(err)
+		}
+	}
 
-	//fmt.Println("Status is:", jsonData)
+	VirusTotal.SourceName = jsonResponse.Scanners[0].Name
+	VirusTotal.Status = jsonResponse.Scanners[0].Status
 
-	//fmt.Println("response Body:", string(body))
-	response = string(body)
+	urlscanio.SourceName = jsonResponse.Scanners[1].Name
+	urlscanio.Status = jsonResponse.Scanners[1].Status
+	
+	fmt.Println("Attempted HybridAnalysisURL output VT:", VirusTotal.SourceName, "   Status:", VirusTotal.Status)
+	fmt.Println("\n\nAttempted HybridAnalysisURL output VT:", urlscanio.SourceName, "   Status:", urlscanio.Status)
 
-	return response
+	return VirusTotal, urlscanio
 }

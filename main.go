@@ -184,11 +184,15 @@ func main() {
 	})
 
 	r.GET("/url-intelligence", func(c *gin.Context) {
+		
 		url := c.Query("url")
+		fmt.Println(url)
 
-		var googleVerdict [1]utils.FrontendResponse
+		var googleVerdict [3]utils.FrontendResponse
 
 		googleVerdict[0] = api.CallGoogleUrl(url)
+
+		googleVerdict[1], googleVerdict[2] = api.CallHybridAnalyisUrl(url)
 
 		URLint, err := json.Marshal(googleVerdict)
 		if err != nil {

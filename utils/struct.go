@@ -109,3 +109,22 @@ type HybridAnalysishash struct {
 	NetworkMode           string        `json:"network_mode"`
 	MachineLearningModels []interface{} `json:"machine_learning_models"`
 }
+
+type HybridAnalysisURL struct {
+	SubmissionType string `json:"submission_type"`
+	ID             string `json:"id"`
+	Sha256         string `json:"sha256"`
+	Scanners       []struct {
+		Name             string        `json:"name"`
+		Status           string        `json:"status"`
+		ErrorMessage     interface{}   `json:"error_message"`
+		Progress         int           `json:"progress"`
+		Total            int           `json:"total"`
+		Positives        int           `json:"positives"`
+		Percent          int           `json:"percent"`
+		AntiVirusResults []interface{} `json:"anti_virus_results"`
+	} `json:"scanners"`
+	Whitelist []interface{} `json:"whitelist"`
+	Reports   []string      `json:"reports"`
+	Finished  bool          `json:"finished"`
+}
