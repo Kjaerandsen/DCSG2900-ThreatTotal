@@ -34,7 +34,7 @@ render(){
             </div>
         </div>
 		
-        <div className='container p-6 sm:p-12'>
+        <div className='container pt-6 pb-6 sm:pt-12 sm:pb-12 pl-2 pr-2 sm:pl-16 sm:pr-16 xl:pl-36 xl:pr-36'>
             <h1 className='text-center'> About: </h1>
             <br></br>
 

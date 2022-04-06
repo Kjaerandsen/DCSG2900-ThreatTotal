@@ -18,7 +18,7 @@ var BG = ""
     // Else return the source data
     } else {
         return (
-            <div>
+            <div className="bg-gray-200">
                 <h1 className="text-2xl font-bold">Source data:</h1>
                 <div className='bg-yellow-500 bg-red-600 bg-green-600'></div>
                 <div className='grid grid-cols-1 p-2 md:grid-cols-2 xl:grid-cols-3'>

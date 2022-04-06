@@ -50,7 +50,7 @@ render(){
                 </div>
             </div>
             <div className= "container w-full mt-1.5 mb-3 sm:pl-36 sm:pr-36 flex justify-center overflow-hidden">
-                <a href="/investigate">
+                <a href="/result">
                     <button onClick={this.search} className="bg-orange-500 p-2 rounded justify-center">Investigate</button>
                 </a>
             </div>

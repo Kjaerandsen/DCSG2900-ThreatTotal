@@ -500,10 +500,6 @@ Ensure the default browser behavior of the `hidden` attribute.
   }
 }
 
-.order-2 {
-  order: 2;
-}
-
 .float-right {
   float: right;
 }
@@ -512,20 +508,12 @@ Ensure the default browser behavior of the `hidden` attribute.
   margin: 0.5rem;
 }
 
-.m-0 {
-  margin: 0px;
-}
-
 .m-4 {
   margin: 1rem;
 }
 
-.m-1 {
-  margin: 0.25rem;
-}
-
-.m-3 {
-  margin: 0.75rem;
+.m-0 {
+  margin: 0px;
 }
 
 .mt-12 {
@@ -736,6 +724,11 @@ Ensure the default browser behavior of the `hidden` attribute.
   background-color: rgb(134 239 172 / var(--tw-bg-opacity));
 }
 
+.bg-gray-300 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(209 213 219 / var(--tw-bg-opacity));
+}
+
 .p-2 {
   padding: 0.5rem;
 }
@@ -776,8 +769,12 @@ Ensure the default browser behavior of the `hidden` attribute.
   padding-top: 3rem;
 }
 
-.pt-3 {
-  padding-top: 0.75rem;
+.pt-6 {
+  padding-top: 1.5rem;
+}
+
+.pb-6 {
+  padding-bottom: 1.5rem;
 }
 
 .text-left {
@@ -970,16 +967,48 @@ Ensure the default browser behavior of the `hidden` attribute.
   .sm\:pr-36 {
     padding-right: 9rem;
   }
+
+  .sm\:pl-16 {
+    padding-left: 4rem;
+  }
+
+  .sm\:pr-16 {
+    padding-right: 4rem;
+  }
+
+  .sm\:pt-12 {
+    padding-top: 3rem;
+  }
+
+  .sm\:pb-12 {
+    padding-bottom: 3rem;
+  }
 }
 
 @media (min-width: 768px) {
   .md\:grid-cols-2 {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
+
+  .md\:pl-36 {
+    padding-left: 9rem;
+  }
+
+  .md\:pr-36 {
+    padding-right: 9rem;
+  }
 }
 
 @media (min-width: 1280px) {
   .xl\:grid-cols-3 {
     grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .xl\:pl-36 {
+    padding-left: 9rem;
+  }
+
+  .xl\:pr-36 {
+    padding-right: 9rem;
   }
 }
