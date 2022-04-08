@@ -10,6 +10,10 @@ i18n
     resources,
     fallbackLng: "en", // default language
     debug: true,
+    detector: {
+      order: ['queryString', 'localStorage', 'cookie'],
+      caches: ['localStorage', 'cookie']
+    },
     interpolation: {
         escapeValue: false // Not needed in react
     }
