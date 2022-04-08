@@ -5,23 +5,23 @@ import ttLogo from '../img/TT.png'
 
 class Indextest extends React.Component {
 
-  search(e){
-      e.preventDefault();
-    var formData = new FormData(e.target.form);
-    var object={};
-    // eslint-disable-next-line
-    const regex = /[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()!@:%_\+.~#?&\/\/=]*)/;
+    search(e){
+        e.preventDefault();
+        var formData = new FormData(e.target.form);
+        var object={};
+        // eslint-disable-next-line
+        const regex = /[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()!@:%_\+.~#?&\/\/=]*)/;
 
-    formData.forEach((value, key) => object[key] = value);
-    // Also check if empty and return an error, or invalid on both hash and url
-    if (object["inputText"].match(regex) ) {
-        // if user input matches regex, send to url
-        window.location.href= "/result?url="+encodeURIComponent(object["inputText"])
-    } else {
-        // if user input does not match regex, send to backend and do checks there
-        window.location.href= "/result?hash="+encodeURIComponent(object["inputText"])
+        formData.forEach((value, key) => object[key] = value);
+        // Also check if empty and return an error, or invalid on both hash and url
+        if (object["inputText"].match(regex) ) {
+            // if user input matches regex, send to url
+            window.location.href= "/result?url="+encodeURIComponent(object["inputText"])
+        } else {
+            // if user input does not match regex, send to backend and do checks there
+            window.location.href= "/result?hash="+encodeURIComponent(object["inputText"])
+        }
     }
-}
 
 render(){
     return (
