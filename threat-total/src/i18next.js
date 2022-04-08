@@ -8,7 +8,7 @@ i18n
   .use(LanguageDetector)
   .init({
     resources,
-    fallbackLng: "no", // default
+    fallbackLng: "en", // default language
     debug: true,
     interpolation: {
         escapeValue: false // Not needed in react
