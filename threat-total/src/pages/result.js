@@ -1,6 +1,8 @@
 import React, { useEffect, useState} from "react";
 import Navbar from "../components/navbar";
 import Sources from "../components/sources";
+import { useTranslation } from 'react-i18next';
+import i18n from "../i18next";
 
 function Result() {
     const queryParams = new URLSearchParams(window.location.search);
@@ -8,7 +10,8 @@ function Result() {
     const url = queryParams.get('url');
     const [JsonData, setJsonData] = useState([""])
     const [Err, setErr] = useState(false)
-
+    const { t } = useTranslation();
+    
     useEffect(() => {
         if (hash != null) {
             console.log({hash})
@@ -75,11 +78,12 @@ function Result() {
 
         <div className="container text-center break-words sm:justify-center">
             <h1 className="text-3xl font-bold p-0 mt-8 mb-8 sm:mt-12 sm:mb-12 w-auto">
-                Results
+                {t("resultTitle")}
             </h1>
             <p className="text-left m-2 pl-2 pr-2 sm:pl-16 sm:pr-16 xl:pl-36 xl:pr-36">
             This page poses a risk or potential risk to visit according to 2/3 of our sources. 
-            Please use proper caution and avoid visiting at all if possible.
+            Please use proper caution and avoid visiting at all if possible. 
+            <br></br><br></br>Forandre denne til en api respons?
             <br></br>
             <br></br>
             </p>
@@ -92,7 +96,7 @@ function Result() {
             
         <div className= "container w-full mt-1.5 mb-3 sm:pl-36 sm:pr-36 flex justify-center overflow-hidden">
             <a href="./investigate">
-                <button className="bg-orange-500 p-2 rounded justify-center">Submit for Manual Analysis</button>
+                <button className="bg-orange-500 p-2 rounded justify-center">{t("manualAnalysisBtn")}</button>
             </a>
         </div>
 

@@ -1,6 +1,9 @@
 import React from "react";
+import { useTranslation } from 'react-i18next';
 
 const MainInput = props => {
+	const { t } = useTranslation();
+
 	return (
 	<>
 	<div className= "container w-full h-auto p-2">
@@ -10,14 +13,16 @@ const MainInput = props => {
 				<a href="/" className={`w-full h-full
 				${props.IsSearch ? "bg-blue-300" : "bg-white"}
 				hover:bg-blue-500 rounded`}>
-				<button className=" w-full p-2 ">Search</button></a>
+				<button className=" w-full p-2 ">
+					{t("search")}
+				</button></a>
 			</div>
 			<div className="flex justify-center place-items-center w-full h-full overflow-hidden"> 
 				<a href="/upload" className="w-full h-full"> 
 					<button className={`w-full p-2 rounded 
 					${props.IsSearch ? "bg-white" : "bg-blue-300"}
 			  	  hover:bg-blue-500`}>
-							Upload File
+							{t('upload')}
 					</button>
 				</a>
 			</div>

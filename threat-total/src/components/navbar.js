@@ -1,7 +1,21 @@
 import React from "react";
 import logo from '../img/logo.png'
+import { useTranslation } from 'react-i18next';
+import i18n from '../i18next'
 
 const Navbar = () => {
+	const { t } = useTranslation();
+
+	const changeLanguage = () => {
+		if (i18n.language === "no") {
+			localStorage.setItem('i18nextLng', 'en');
+			i18n.changeLanguage("en")
+		} else {
+			localStorage.setItem('i18nextLng', 'no');
+			i18n.changeLanguage("no")
+		}
+	  };
+	
 	return (
 	<>
 	<nav className="container h-auto ">
@@ -13,7 +27,7 @@ const Navbar = () => {
 			</div>
 			<div className="float float-right w-full h-12 sm:h-full sm:pr-3">
 				<div className="float-right place-items-center h-12 mt-2 sm:mt-3">
-					&#127760; <a href="./" className="hover:underline" title="Norsk versjon her: https://www.url.domene/"> Norsk </a>
+					&#127760; <button onClick={() => changeLanguage()} className="hover:underline" title={t("languageDescr")}> {t("language")} </button>
 				</div>
 			</div>
 		</div>
