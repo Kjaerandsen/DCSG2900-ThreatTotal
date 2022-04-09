@@ -128,3 +128,129 @@ type HybridAnalysisURL struct {
 	Reports   []string      `json:"reports"`
 	Finished  bool          `json:"finished"`
 }
+
+type AlienVaultURL struct {
+	Sections      []string      `json:"sections"`
+	Indicator     string        `json:"indicator"`
+	Type          string        `json:"type"`
+	TypeTitle     string        `json:"type_title"`
+	Validation    []interface{} `json:"validation"`
+	BaseIndicator struct {
+	} `json:"base_indicator"`
+	PulseInfo struct {
+		Count      int           `json:"count"`
+		Pulses     []interface{} `json:"pulses"`
+		References []interface{} `json:"references"`
+		Related    struct {
+			Alienvault struct {
+				Adversary        []interface{} `json:"adversary"`
+				MalwareFamilies  []interface{} `json:"malware_families"`
+				Industries       []interface{} `json:"industries"`
+				UniqueIndicators int           `json:"unique_indicators"`
+			} `json:"alienvault"`
+			Other struct {
+				Adversary        []interface{} `json:"adversary"`
+				MalwareFamilies  []interface{} `json:"malware_families"`
+				Industries       []interface{} `json:"industries"`
+				UniqueIndicators int           `json:"unique_indicators"`
+			} `json:"other"`
+		} `json:"related"`
+	} `json:"pulse_info"`
+	FalsePositive []interface{} `json:"false_positive"`
+	Alexa         string        `json:"alexa"`
+	Whois         string        `json:"whois"`
+	Domain        string        `json:"domain"`
+	Hostname      string        `json:"hostname"`
+}
+
+type AlienVaultHash struct {
+	Sections      []string      `json:"sections"`
+	Type          string        `json:"type"`
+	TypeTitle     string        `json:"type_title"`
+	Indicator     string        `json:"indicator"`
+	Validation    []interface{} `json:"validation"`
+	BaseIndicator struct {
+		ID           int64  `json:"id"`
+		Indicator    string `json:"indicator"`
+		Type         string `json:"type"`
+		Title        string `json:"title"`
+		Description  string `json:"description"`
+		Content      string `json:"content"`
+		AccessType   string `json:"access_type"`
+		AccessReason string `json:"access_reason"`
+	} `json:"base_indicator"`
+	PulseInfo struct {
+		Count  int `json:"count"`
+		Pulses []struct {
+			ID                string        `json:"id"`
+			Name              string        `json:"name"`
+			Description       string        `json:"description"`
+			Modified          string        `json:"modified"`
+			Created           string        `json:"created"`
+			Tags              []interface{} `json:"tags"`
+			References        []string      `json:"references"`
+			Public            int           `json:"public"`
+			Adversary         string        `json:"adversary"`
+			TargetedCountries []interface{} `json:"targeted_countries"`
+			MalwareFamilies   []struct {
+				ID          string      `json:"id"`
+				DisplayName string      `json:"display_name"`
+				Target      interface{} `json:"target"`
+			} `json:"malware_families"`
+			AttackIds []struct {
+				ID          string `json:"id"`
+				Name        string `json:"name"`
+				DisplayName string `json:"display_name"`
+			} `json:"attack_ids"`
+			Industries     []interface{} `json:"industries"`
+			Tlp            string        `json:"TLP"`
+			ClonedFrom     interface{}   `json:"cloned_from"`
+			ExportCount    int           `json:"export_count"`
+			UpvotesCount   int           `json:"upvotes_count"`
+			DownvotesCount int           `json:"downvotes_count"`
+			VotesCount     int           `json:"votes_count"`
+			Locked         bool          `json:"locked"`
+			PulseSource    string        `json:"pulse_source"`
+			ValidatorCount int           `json:"validator_count"`
+			CommentCount   int           `json:"comment_count"`
+			FollowerCount  int           `json:"follower_count"`
+			Vote           int           `json:"vote"`
+			Author         struct {
+				Username     string `json:"username"`
+				ID           string `json:"id"`
+				AvatarURL    string `json:"avatar_url"`
+				IsSubscribed bool   `json:"is_subscribed"`
+				IsFollowing  bool   `json:"is_following"`
+			} `json:"author"`
+			IndicatorTypeCounts struct {
+				FileHashSHA256 int `json:"FileHash-SHA256"`
+			} `json:"indicator_type_counts"`
+			IndicatorCount           int           `json:"indicator_count"`
+			IsAuthor                 bool          `json:"is_author"`
+			IsSubscribing            interface{}   `json:"is_subscribing"`
+			SubscriberCount          int           `json:"subscriber_count"`
+			ModifiedText             string        `json:"modified_text"`
+			IsModified               bool          `json:"is_modified"`
+			Groups                   []interface{} `json:"groups"`
+			InGroup                  bool          `json:"in_group"`
+			ThreatHunterScannable    bool          `json:"threat_hunter_scannable"`
+			ThreatHunterHasAgents    int           `json:"threat_hunter_has_agents"`
+			RelatedIndicatorType     string        `json:"related_indicator_type"`
+			RelatedIndicatorIsActive int           `json:"related_indicator_is_active"`
+		} `json:"pulses"`
+		References []string `json:"references"`
+		Related    struct {
+			Alienvault struct {
+				Adversary       []interface{} `json:"adversary"`
+				MalwareFamilies []interface{} `json:"malware_families"`
+				Industries      []interface{} `json:"industries"`
+			} `json:"alienvault"`
+			Other struct {
+				Adversary       []interface{} `json:"adversary"`
+				MalwareFamilies []string      `json:"malware_families"`
+				Industries      []interface{} `json:"industries"`
+			} `json:"other"`
+		} `json:"related"`
+	} `json:"pulse_info"`
+	FalsePositive []interface{} `json:"false_positive"`
+}

@@ -140,7 +140,7 @@ func main() {
 	//GOLANG API STUFF:
 
 	r.GET("/public-intelligence", func(c *gin.Context) {
-		fmt.Println(c.Query("url"))
+		//fmt.Println(c.Query("url"))
 
 		//url := c.Query("url")
 
@@ -151,27 +151,28 @@ func main() {
 		//fmt.Println("safebrowser response::", safebrowserResponse.Status)
 
 		//Alienvault
+		//var otxAlienVaultRespone [1]utils.FrontendResponse
+		
+		//otxAlienVaultRespone[0] = api.CallAlienVaultUrl(url)
 
-		/**
-		otxAlienVaultRespone := api.CallAlienVaultUrl(url)
+		//fmt.Println("safebrowser response::", safebrowserResponse)
 
-		fmt.Println("safebrowser response::", safebrowserResponse)
+		//fmt.Println("ALIENVAULT RESPONSE:::", otxAlienVaultRespone[0].Status)
 
-		fmt.Println("ALIENVAULT RESPONSE:::", otxAlienVaultRespone)
-
+		
 		filehash := "a7a665a695ec3c0f862a0d762ad55aff6ce6014359647e7c7f7e3c4dc3be81b7"
 
 		filehashAV := api.CallAlienVaultHash(filehash)
 
 		fmt.Println("AlienVAULT FILEHASH LOOKUP::::::::::", filehashAV)
-		*/
+		
 		//Hybrid Analysis:
 
-		filehashHybrid := "77682670694bb1ab1a48091d83672c9005431b6fc731d6c6deb466a16081f4d1"
+		//filehashHybrid := "77682670694bb1ab1a48091d83672c9005431b6fc731d6c6deb466a16081f4d1"
 
-		ResultHybridA := api.CallHybridAnalysisHash(filehashHybrid)
+		//ResultHybridA := api.CallHybridAnalysisHash(filehashHybrid)
 
-		fmt.Println("\n\n\n\n\n HYBRID ANALYSIS!!!!::::::::!!!\n\n\n", ResultHybridA)
+		//fmt.Println("\n\n\n\n\n HYBRID ANALYSIS!!!!::::::::!!!\n\n\n", ResultHybridA)
 
 		/**
 
@@ -188,11 +189,13 @@ func main() {
 		url := c.Query("url")
 		fmt.Println(url)
 
-		var googleVerdict [3]utils.FrontendResponse
+		var googleVerdict [4]utils.FrontendResponse
 
 		googleVerdict[0] = api.CallGoogleUrl(url)
 
 		googleVerdict[1], googleVerdict[2] = api.CallHybridAnalyisUrl(url)
+
+		googleVerdict[3] = api.CallAlienVaultUrl(url)
 
 		URLint, err := json.Marshal(googleVerdict)
 		if err != nil {
@@ -208,9 +211,11 @@ func main() {
 	r.GET("/hash-intelligence", func(c *gin.Context) {
 		hash := c.Query("hash")
 
-		var hybridVerdict [1]utils.FrontendResponse
+		var hybridVerdict [2]utils.FrontendResponse
 
 		hybridVerdict[0] = api.CallHybridAnalysisHash(hash)
+
+		hybridVerdict[1] = api.CallAlienVaultHash(hash)
 
 		Hashint, err := json.Marshal(hybridVerdict)
 		if err != nil {
