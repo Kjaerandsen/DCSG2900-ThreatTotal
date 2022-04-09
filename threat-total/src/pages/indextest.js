@@ -1,7 +1,7 @@
 import React from 'react';
 import Navbar from '../components/navbar';
 import MainInput from '../components/mainInput';
-import ttLogo from '../img/TT.png'
+import ntnuLogo from '../img/ntnuLogoUtenSlagOrd.svg'
 import { useTranslation } from 'react-i18next';
 
 function search(e){
@@ -35,6 +35,8 @@ function search(e){
                 </input>
 */
 
+// Possibly cleaner to use an svg image for the headline text
+
 
 function Indextest() {
     const { t } = useTranslation();
@@ -43,9 +45,10 @@ function Indextest() {
         <div className="grid place-items-center">
             
             <Navbar />
-            
-            <div>
-                    <img src={ttLogo} className="" alt="NTNU Logo"/>
+
+            <div className='flex justify-center mt-6 sm:mt-8'>
+                <img src={ntnuLogo} className="h-20 sm:h-40 w-auto" alt="NTNU Logo"/>
+                <h1 className="text-4xl sm:text-8xl font-bold sm:ml-4 ml-2 pt-2 sm:pt-4 w-auto"> Threat Total </h1>
             </div>
             
             <MainInput IsSearch/>
