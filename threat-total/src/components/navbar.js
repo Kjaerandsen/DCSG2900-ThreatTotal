@@ -18,12 +18,15 @@ const Navbar = () => {
 	
 	return (
 	<>
-	<nav className="container h-auto ">
+	<nav className="container h-auto pl-2 pr-2 sm:pl-36 sm:pr-36">
 		<div className="flex h-12 sm:h-14 p-1">
-			<div className="h-full ml-3 w-full">
+			<div className="h-full ml-3 w-full flex items-center">
 				<a href="./">
-				<img src={logo} className="sm:h-10 h-8 w-auto mt-1" alt="NTNU Logo" />
+				<img src={logo} className="sm:h-6 h-4 w-auto" alt="NTNU Logo" />
 				</a>
+			</div>
+			<div className="h-full ml-3 w-full flex items-center">
+				<a href="/about" className="p-2 text-gray-500 font-semibold m-auto">About</a>
 			</div>
 			<div className="float float-right w-full h-12 sm:h-full sm:pr-3">
 				<div className="float-right place-items-center h-12 mt-2 sm:mt-3">
@@ -32,7 +35,7 @@ const Navbar = () => {
 			</div>
 		</div>
 	</nav>
-	<div className="border-b-2 border-gray-400 h-1 w-full"> </div>
+	<div className="border-b-2 border-gray-200 h-1 w-full"> </div>
 	</>
 	)
 };
