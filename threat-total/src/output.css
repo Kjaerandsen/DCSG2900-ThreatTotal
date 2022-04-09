@@ -1174,11 +1174,33 @@ Ensure the default browser behavior of the `hidden` attribute.
     font-size: 6rem;
     line-height: 1;
   }
+
+  .sm\:text-6xl {
+    font-size: 3.75rem;
+    line-height: 1;
+  }
 }
 
 @media (min-width: 768px) {
+  .md\:h-40 {
+    height: 10rem;
+  }
+
   .md\:grid-cols-2 {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .md\:pl-36 {
+    padding-left: 9rem;
+  }
+
+  .md\:pr-36 {
+    padding-right: 9rem;
+  }
+
+  .md\:text-8xl {
+    font-size: 6rem;
+    line-height: 1;
   }
 }
 

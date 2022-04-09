@@ -18,7 +18,7 @@ const Navbar = () => {
 	
 	return (
 	<>
-	<nav className="container h-auto pl-2 pr-2 sm:pl-36 sm:pr-36">
+	<nav className="container h-auto pl-2 pr-2 sm:pl-18 sm:pr-18 md:pl-36 md:pr-36">
 		<div className="flex h-12 sm:h-14 p-1">
 			<div className="h-full ml-3 w-full flex items-center">
 				<a href="./">

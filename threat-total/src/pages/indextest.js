@@ -48,8 +48,8 @@ function Indextest() {
             <Navbar />
 
             <div className='flex justify-center mt-6 sm:mt-8'>
-                <img src={ntnuLogo} className="h-20 sm:h-40 w-auto" alt="NTNU Logo"/>
-                <h1 className="text-4xl sm:text-8xl font-bold sm:ml-4 ml-2 pt-2 sm:pt-4 w-auto"> Threat Total </h1>
+                <img src={ntnuLogo} className="h-20 sm:h-35 md:h-40 w-auto" alt="NTNU Logo"/>
+                <h1 className="text-4xl sm:text-6xl md:text-8xl font-bold sm:ml-4 ml-2 pt-2 sm:pt-4 w-auto"> Threat Total </h1>
             </div>
             
             <MainInput IsSearch/>
