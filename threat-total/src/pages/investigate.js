@@ -1,5 +1,6 @@
 import React from 'react';
 import Navbar from '../components/navbar';
+import CookieDisclosure from '../components/cookieDisclosure';
   
 const Investigate = () => {
   return (
@@ -38,6 +39,9 @@ const Investigate = () => {
                 </button>
             </a>
         </div>
+
+        <CookieDisclosure />
+
     </div>
 	</>
   );

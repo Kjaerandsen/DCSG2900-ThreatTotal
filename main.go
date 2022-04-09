@@ -25,6 +25,11 @@ func main() {
 
 	r.Use(cors.Default())
 
+	/*
+		redisPool := Storage.InitPool()
+		conn := redisPool.Get()
+	*/
+
 	r.GET("/", func(c *gin.Context) {
 		//c.HTML(http.StatusOK, hello world, gin.H{
 		//	"isSelected": true,
@@ -84,36 +89,67 @@ func main() {
 		c.Data(http.StatusOK, "application/json", outputData)
 	})
 
-	r.GET("/result", func(c *gin.Context) {
-		fmt.Println(c.Query("url"))
-		fmt.Println(c.Query("hash"))
-		var data [3]utils.FrontendResponse
+	/*
+		r.GET("/result", func(c *gin.Context) {
+			fmt.Println(c.Query("url"))
+			fmt.Println(c.Query("hash"))
+			var data [3]utils.FrontendResponse
+			var Data2 []byte
 
-		data[0].ID = 1
-		data[0].SourceName = "Threat Total"
-		data[0].Content = "Unsafe: potentially unwanted software."
-		data[0].Tags = []string{"PUA", "Windows", "Social Engineering", "URL"}
-		data[0].Description = "Potentially unwanted software, might be used for lorem ipsum dolor sin amet."
-		data[0].Status = "Potentially unsafe"
+			value, err := conn.Do("GET", "key")
+			if value == nil {
+				if err != nil {
+					fmt.Println("Error:" + err.Error())
+				}
+				fmt.Println("No Cache hit")
+				data[0].ID = 1
+				data[0].SourceName = "Threat Total"
+				data[0].Content = "Unsafe: potentially unwanted software."
+				data[0].Tags = []string{"PUA", "Windows", "Social Engineering", "URL"}
+				data[0].Description = "Potentially unwanted software, might be used for lorem ipsum dolor sin amet."
+				data[0].Status = "Potentially unsafe"
 
-		data[1].ID = 2
-		data[1].SourceName = "Google safebrowsing"
-		data[1].Content = "Unsafe: Malware."
-		data[1].Tags = []string{"Malware", "Windows", "URL"}
-		data[1].Description = "Malware found at he location, might be used for lorem ipsum dolor sin amet."
-		data[1].Status = "Risk"
+				data[1].ID = 2
+				data[1].SourceName = "Google safebrowsing"
+				data[1].Content = "Unsafe: Malware."
+				data[1].Tags = []string{"Malware", "Windows", "URL"}
+				data[1].Description = "Malware found at he location, might be used for lorem ipsum dolor sin amet."
+				data[1].Status = "Risk"
 
-		data[2].ID = 3
-		data[2].SourceName = "Hybrid Analysis"
-		data[2].Content = "Safe: No known risks at this location."
-		data[2].Tags = []string{"URL", "Safe"}
-		data[2].Description = "No known risks at this location. The data source has no information on this url."
-		data[2].Status = "Safe"
+				data[2].ID = 3
+				data[2].SourceName = "Hybrid Analysis"
+				data[2].Content = "Safe: No known risks at this location."
+				data[2].Tags = []string{"URL", "Safe"}
+				data[2].Description = "No known risks at this location. The data source has no information on this url."
+				data[2].Status = "Safe"
 
-		data2, _ := json.Marshal(data)
+				Data2, _ = json.Marshal(data)
 
-		c.Data(http.StatusOK, "application/json", data2)
-	})
+				// Add the data to the cache
+				// Set the key to Data2 with a timeout (auto purge) of x seconds
+				response, err := conn.Do("SETEX", "key", 10, Data2)
+				if err != nil {
+					fmt.Println("Error:" + err.Error())
+				}
+				// Print the response to adding the data (should be "OK"
+				fmt.Println(response)
+
+				// Cache hit
+			} else {
+				fmt.Println("Cache hit")
+				fmt.Println("Value is:\n", value)
+				responseBytes, err := json.Marshal(value)
+				if err != nil {
+					fmt.Println("Error handling redis response:" + err.Error())
+				}
+				err = json.Unmarshal(responseBytes, &Data2)
+				if err != nil {
+					fmt.Println("Error handling redis response:" + err.Error())
+				}
+			}
+
+			c.Data(http.StatusOK, "application/json", Data2)
+		})*/
 
 	// TODO: Upload a file
 	// figure out routing here, where are we supposted to have/deliver a file?
@@ -229,4 +265,9 @@ func main() {
 	})
 
 	log.Fatal(r.Run(":8081"))
+	// These don't do anything, and can't be placed above the line above as they stop the connections prematurely then.
+	/*
+		conn.Close()      // Close the connection
+		redisPool.Close() // Close the pool
+	*/
 }
