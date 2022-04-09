@@ -2,6 +2,7 @@ import React, { useEffect, useState} from "react";
 import Navbar from "../components/navbar";
 import Sources from "../components/sources";
 import { useTranslation } from 'react-i18next';
+import CookieDisclosure from "../components/cookieDisclosure";
 
 function Result() {
     const queryParams = new URLSearchParams(window.location.search);
@@ -99,6 +100,7 @@ function Result() {
             </a>
         </div>
 
+        <CookieDisclosure />
 
         </div>
         );

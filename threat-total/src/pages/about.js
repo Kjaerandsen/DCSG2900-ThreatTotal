@@ -1,6 +1,7 @@
 import React from 'react';
 import Navbar from '../components/navbar';
 import ttLogo from '../img/TT.png'
+import CookieDisclosure from '../components/cookieDisclosure';
 
 class About extends React.Component {
 
@@ -77,6 +78,8 @@ render(){
                 </li>) }
             </ul>
         </div>
+
+        <CookieDisclosure />
 
     </div >
 	</>

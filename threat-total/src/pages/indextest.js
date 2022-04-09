@@ -2,6 +2,7 @@ import React from 'react';
 import Navbar from '../components/navbar';
 import MainInput from '../components/mainInput';
 import ntnuLogo from '../img/ntnuLogoUtenSlagOrd.svg'
+import CookieDisclosure from '../components/cookieDisclosure'
 import { useTranslation } from 'react-i18next';
 
 function search(e){
@@ -70,6 +71,9 @@ function Indextest() {
                 </a>
             </div>
             </form>
+
+            <CookieDisclosure />
+
         </div>
     )
 }
