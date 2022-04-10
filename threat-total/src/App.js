@@ -7,7 +7,7 @@ import Result from './pages/result';
 import About from './pages/about';
 import { BrowserRouter as Router, Routes, Route}
     from 'react-router-dom';
-//import "react-loader-spinner/dist/loader/css/react-spinner-loader.css"
+import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
 //const domain = process.env.REACT_APP_OAUTH_DOMAIN
 //const clientID = process.env.REACT_APP_OAUTH_CLIENT_ID
 
