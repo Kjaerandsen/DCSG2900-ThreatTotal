@@ -85,7 +85,7 @@ function Result() {
     const renderResult = (
         <div className="container text-center break-words sm:justify-center">
         
-            <h1 className="text-3xl font-bold p-0 mt-8 mb-8 sm:mt-12 sm:mb-12 w-auto">
+            <h1 className="text-3xl font-bold p-0 mb-8 sm:mt-12 sm:mb-12 w-auto">
                 {t("resultTitle")}
             </h1>
             <p className="text-left m-2 pl-2 pr-2 sm:pl-16 sm:pr-16 xl:pl-36 xl:pr-36">
@@ -108,9 +108,11 @@ function Result() {
         
             <Navbar />
 
+            <div className="pt-10 pb-10">
             {isLoading ? <Oval height="100" width="100" color="grey"/> : renderResult}
+            </div>
             
-        <div className= "container w-full mt-1.5 mb-3 sm:pl-36 sm:pr-36 flex justify-center overflow-hidden">
+        <div className= "container w-full mb-3 sm:pl-36 sm:pr-36 flex justify-center overflow-hidden">
             <a href="./investigate">
                 <button className="bg-orange-500 p-2 rounded justify-center">{t("manualAnalysisBtn")}</button>
             </a>
