@@ -15,7 +15,10 @@
 		"sourceTitle": "Source data:",
 		"backendError": "Error connecting to the backend, please try to refresh in a few minutes.",
 		"cookieDisclosure": "This website uses cookies. For more information visit: ",
-		"cookieDisclosureLink": "our information page"
+		"cookieDisclosureLink": "our information page",
+		"logoutMessage": "You have been successfully logged out",
+		"loginButton": "Click here to log in again",
+		"about": "About"
 	}
 },
 "no":{
@@ -34,7 +37,10 @@
 		"sourceTitle": "Kilde data:",
 		"backendError": "Feil ved tilknytting til serveren, vennligst forsøk å laste inn siden på nytt om noen minutter.",
 		"cookieDisclosure": "Denne nettsiden bruker informasjonskapsler. For mer informasjon besøk: ",
-		"cookieDisclosureLink": "informasjonssiden vår"
+		"cookieDisclosureLink": "informasjonssiden vår",
+		"logoutMessage": "Du har blitt logget ut.",
+		"loginButton": "Trykk her for å logge inn igjen",
+		"about": "Om oss"
 	}
 }
 }

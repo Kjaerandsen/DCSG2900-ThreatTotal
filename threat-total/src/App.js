@@ -5,6 +5,7 @@ import Indextest from './pages/indextest';
 import Investigate from './pages/investigate';
 import Result from './pages/result';
 import About from './pages/about';
+import Logout from './pages/logout'
 import { BrowserRouter as Router, Routes, Route}
     from 'react-router-dom';
 //const domain = process.env.REACT_APP_OAUTH_DOMAIN
@@ -19,6 +20,7 @@ function App() {
     <Route path='/investigate' element={<Investigate />} />
     <Route path='/result' element={<Result />} />
     <Route path='/about' element={<About />} />
+    <Route path='/logout' element={<Logout />} />
 	  </Routes>
 	</Router>
   );
