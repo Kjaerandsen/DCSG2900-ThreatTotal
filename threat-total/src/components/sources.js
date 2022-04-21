@@ -23,13 +23,14 @@ export default function Sources(props) {
                 <div className='bg-yellow-500 bg-red-600 bg-green-600'></div>
                 <div className='grid grid-cols-1 p-2 md:grid-cols-2 xl:grid-cols-3'>
                 {props.sourceData.map((Data, index ) => {
-                    if (Data.status === "Safe") {
+                    if (Data.status === "Safe" || Data.status === "Trygg") {
                         BG = "bg-green-600"
-                    } else if (Data.status === "Risk") {
+                    } else if (Data.status === "Risk" || Data.status === "Risiko") {
                         BG = "bg-red-600"
                     } else {
                         BG = "bg-yellow-500"
                     }
+                    // Ha en "Assessment guide" som forklarer fargene på siden / på "about" siden?
                     return (
                     <Source Data = {Data} key = {index} BG = {BG}/>
                     )

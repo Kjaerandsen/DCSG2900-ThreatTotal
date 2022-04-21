@@ -173,9 +173,14 @@ func CallHybridAnalyisUrl(URL string) (VirusTotal utils.FrontendResponse, urlsca
 	VirusTotal.SourceName = jsonResponse.Scanners[0].Name
 	VirusTotal.Status = jsonResponse.Scanners[0].Status
 
+	// Set the clean value to safe instead for frontend display.
+	if VirusTotal.Status == "clean" {
+		VirusTotal.Status = "Safe"
+	}
+
 	urlscanio.SourceName = jsonResponse.Scanners[1].Name
 	urlscanio.Status = jsonResponse.Scanners[1].Status
-	
+
 	fmt.Println("Attempted HybridAnalysisURL output VT:", VirusTotal.SourceName, "   Status:", VirusTotal.Status)
 	fmt.Println("\n\nAttempted HybridAnalysisURL output VT:", urlscanio.SourceName, "   Status:", urlscanio.Status)
 

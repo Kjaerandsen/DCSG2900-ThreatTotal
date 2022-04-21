@@ -2,6 +2,7 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 
 export default function Source(props) {
+    const { t } = useTranslation();
 
     // If the input is empty return an empty box
     // add a loading animation?

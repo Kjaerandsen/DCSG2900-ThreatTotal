@@ -222,6 +222,12 @@ func main() {
 	r.GET("/url-intelligence", func(c *gin.Context) {
 
 		url := c.Query("url")
+		//lng := c.Query("lng")
+
+		//if lng != "no" {
+		//	fmt.Println("Language english")
+		//}
+
 		fmt.Println(url)
 
 		var responseData [4]utils.FrontendResponse
@@ -245,6 +251,11 @@ func main() {
 
 	r.GET("/hash-intelligence", func(c *gin.Context) {
 		hash := c.Query("hash")
+		lng := c.Query("lng")
+
+		if lng != "no" {
+			fmt.Println("Language english")
+		}
 
 		var responseData [2]utils.FrontendResponse
 
