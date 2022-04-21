@@ -1,4 +1,5 @@
-import React from 'react'
+import React from 'react';
+import { useTranslation } from 'react-i18next';
 
 export default function Source(props) {
 
@@ -30,13 +31,13 @@ if (props.Data === "") {
                     <div className={`rounded-full ${props.BG} w-10 h-10`}></div>
                 </div>
                 <div className="p-1"> 
-                    <h1 className='font-bold'>Source: {props.Data.sourceName}</h1>
-                    <p>Assessment: {props.Data.status}</p>
+                    <h1 className='font-bold'>{t("source")} {props.Data.sourceName}</h1>
+                    <p>{t("assessment")} {props.Data.status}</p>
                 </div>
             </div>
             <div className="">
                 <p>Tags: {props.Data.tags}</p>
-                <p>Shortform: {props.Data.content}</p>
+                <p>{t("shortForm")} {props.Data.content}</p>
             </div>   
         </div>
     );

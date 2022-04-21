@@ -18,7 +18,10 @@
 		"cookieDisclosureLink": "our information page",
 		"logoutMessage": "You have been successfully logged out",
 		"loginButton": "Click here to log in again",
-		"about": "About"
+		"about": "About",
+		"source": "Source: ",
+		"shortForm": "Shortform: ",
+		"assessment": "Assessment: "
 	}
 },
 "no":{
@@ -40,7 +43,10 @@
 		"cookieDisclosureLink": "informasjonssiden vår",
 		"logoutMessage": "Du har blitt logget ut.",
 		"loginButton": "Trykk her for å logge inn igjen",
-		"about": "Om oss"
+		"about": "Om oss",
+		"source": "Kilde: ",
+		"shortForm": "Kortform: ",
+		"assessment": "Vurdering: "
 	}
 }
 }
