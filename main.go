@@ -188,20 +188,19 @@ func main() {
 
 		//Alienvault
 		//var otxAlienVaultRespone [1]utils.FrontendResponse
-		
+
 		//otxAlienVaultRespone[0] = api.CallAlienVaultUrl(url)
 
 		//fmt.Println("safebrowser response::", safebrowserResponse)
 
 		//fmt.Println("ALIENVAULT RESPONSE:::", otxAlienVaultRespone[0].Status)
 
-		
 		filehash := "a7a665a695ec3c0f862a0d762ad55aff6ce6014359647e7c7f7e3c4dc3be81b7"
 
 		filehashAV := api.CallAlienVaultHash(filehash)
 
 		fmt.Println("AlienVAULT FILEHASH LOOKUP::::::::::", filehashAV)
-		
+
 		//Hybrid Analysis:
 
 		//filehashHybrid := "77682670694bb1ab1a48091d83672c9005431b6fc731d6c6deb466a16081f4d1"
@@ -221,44 +220,44 @@ func main() {
 	})
 
 	r.GET("/url-intelligence", func(c *gin.Context) {
-		
+
 		url := c.Query("url")
 		fmt.Println(url)
 
-		var googleVerdict [4]utils.FrontendResponse
+		var responseData [4]utils.FrontendResponse
 
-		googleVerdict[0] = api.CallGoogleUrl(url)
+		responseData[0] = api.CallGoogleUrl(url)
 
-		googleVerdict[1], googleVerdict[2] = api.CallHybridAnalyisUrl(url)
+		responseData[1], responseData[2] = api.CallHybridAnalyisUrl(url)
 
-		googleVerdict[3] = api.CallAlienVaultUrl(url)
+		responseData[3] = api.CallAlienVaultUrl(url)
 
-		URLint, err := json.Marshal(googleVerdict)
+		URLint, err := json.Marshal(responseData)
 		if err != nil {
 			fmt.Println(err)
 		}
 
-		fmt.Println("WHERE IS MY CONTENT", googleVerdict)
+		fmt.Println("WHERE IS MY CONTENT", responseData)
 
 		c.Data(http.StatusOK, "application/json", URLint)
-		//burde funke det her ja e nok nokka med respons objecte frontend?
+
 	})
 
 	r.GET("/hash-intelligence", func(c *gin.Context) {
 		hash := c.Query("hash")
 
-		var hybridVerdict [2]utils.FrontendResponse
+		var responseData [2]utils.FrontendResponse
 
-		hybridVerdict[0] = api.CallHybridAnalysisHash(hash)
+		responseData[0] = api.CallHybridAnalysisHash(hash)
 
-		hybridVerdict[1] = api.CallAlienVaultHash(hash)
+		responseData[1] = api.CallAlienVaultHash(hash)
 
-		Hashint, err := json.Marshal(hybridVerdict)
+		Hashint, err := json.Marshal(responseData)
 		if err != nil {
 			fmt.Println(err)
 		}
 
-		fmt.Println("WHERE IS MY CONTENT", hybridVerdict)
+		fmt.Println("WHERE IS MY CONTENT", responseData)
 
 		c.Data(http.StatusOK, "application/json", Hashint)
 
