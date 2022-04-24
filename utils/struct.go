@@ -33,6 +33,23 @@ type FrontendResponse struct {
 	Tags        []string `json:"tags"`
 }
 
+type FrontendResponse2 struct {
+	ID         int    `json:"id"`
+	SourceName string `json:"sourceName"`
+	EN         struct {
+		Status      string   `json:"status"`
+		Content     string   `json:"content"`
+		Description string   `json:"description"`
+		Tags        []string `json:"tags"`
+	} `json:"en"`
+	NO struct {
+		Status      string   `json:"status"`
+		Content     string   `json:"content"`
+		Description string   `json:"description"`
+		Tags        []string `json:"tags"`
+	} `json:"no"`
+}
+
 type GoogleSafeBrowsing struct {
 	Matches []struct {
 		ThreatType   string `json:"threatType"`
@@ -66,7 +83,7 @@ type HybridAnalysishash struct {
 	AvDetect                int           `json:"av_detect"`
 	VxFamily                string        `json:"vx_family"`
 	URLAnalysis             bool          `json:"url_analysis"`
-	AnalysisStartTime       string     `json:"analysis_start_time"`
+	AnalysisStartTime       string        `json:"analysis_start_time"`
 	ThreatScore             int           `json:"threat_score"`
 	Interesting             bool          `json:"interesting"`
 	ThreatLevel             int           `json:"threat_level"`
@@ -104,7 +121,7 @@ type HybridAnalysishash struct {
 		SubmissionID string      `json:"submission_id"`
 		Filename     string      `json:"filename"`
 		URL          interface{} `json:"url"`
-		CreatedAt    string   `json:"created_at"`
+		CreatedAt    string      `json:"created_at"`
 	} `json:"submissions"`
 	NetworkMode           string        `json:"network_mode"`
 	MachineLearningModels []interface{} `json:"machine_learning_models"`

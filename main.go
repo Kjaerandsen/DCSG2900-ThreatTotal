@@ -238,6 +238,20 @@ func main() {
 
 		responseData[3] = api.CallAlienVaultUrl(url)
 
+		responseData2 := FR122(responseData[:])
+
+		URLint, err := json.Marshal(responseData2)
+		if err != nil {
+			fmt.Println(err)
+		}
+
+		fmt.Println("WHERE IS MY CONTENT 1", responseData)
+		fmt.Println("WHERE IS MY CONTENT 2", responseData2)
+
+		c.Data(http.StatusOK, "application/json", URLint)
+
+		/* Backup of old code
+
 		URLint, err := json.Marshal(responseData)
 		if err != nil {
 			fmt.Println(err)
@@ -246,7 +260,50 @@ func main() {
 		fmt.Println("WHERE IS MY CONTENT", responseData)
 
 		c.Data(http.StatusOK, "application/json", URLint)
+		*/
+	})
 
+	r.GET("/url-intelligence2", func(c *gin.Context) {
+
+		responseData := make([]utils.FrontendResponse2, 2)
+
+		responseData[0].SourceName = "Test"
+		responseData[1].SourceName = "test2"
+		responseData[0].ID = 0
+		responseData[1].ID = 1
+		responseData[0].EN.Status = "risk1"
+		responseData[0].EN.Description = "risk1"
+		responseData[0].EN.Content = "risk1"
+		responseData[0].NO.Description = "riskno1"
+		responseData[0].NO.Status = "riskno1"
+		responseData[0].NO.Content = "riskno1"
+		responseData[1].EN.Status = "risk2"
+		responseData[1].EN.Description = "risk2"
+		responseData[1].EN.Content = "risk2"
+		responseData[1].NO.Description = "riskno2"
+		responseData[1].NO.Status = "riskno2"
+		responseData[1].NO.Content = "riskno2"
+
+		URLint, err := json.Marshal(responseData)
+		if err != nil {
+			fmt.Println(err)
+		}
+
+		fmt.Println("WHERE IS MY CONTENT 2", responseData)
+
+		c.Data(http.StatusOK, "application/json", URLint)
+
+		/* Backup of old code
+
+		URLint, err := json.Marshal(responseData)
+		if err != nil {
+			fmt.Println(err)
+		}
+
+		fmt.Println("WHERE IS MY CONTENT", responseData)
+
+		c.Data(http.StatusOK, "application/json", URLint)
+		*/
 	})
 
 	r.GET("/hash-intelligence", func(c *gin.Context) {
@@ -280,4 +337,30 @@ func main() {
 		conn.Close()      // Close the connection
 		redisPool.Close() // Close the pool
 	*/
+}
+
+// Temporary helper function to create translations from the input
+func FR122(input []utils.FrontendResponse) (output []utils.FrontendResponse2) {
+	length := len(input)
+
+	fmt.Println("input: ", input)
+
+	output = make([]utils.FrontendResponse2, 4)
+
+	for i := 0; i < length; i++ {
+		output[i].ID = input[i].ID
+		output[i].SourceName = input[i].SourceName
+		output[i].EN.Content = input[i].Content
+		output[i].EN.Description = input[i].Description
+		output[i].EN.Status = input[i].Status
+		output[i].EN.Tags = input[i].Tags
+		output[i].NO.Content = input[i].Content + "norsk"
+		output[i].NO.Description = input[i].Description + "norsk"
+		output[i].NO.Status = input[i].Status + "norsk"
+		output[i].NO.Tags = input[i].Tags
+	}
+
+	fmt.Println()
+
+	return output
 }

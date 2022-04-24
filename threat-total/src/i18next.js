@@ -8,6 +8,7 @@ i18n
   .use(LanguageDetector)
   .init({
     resources,
+    ns: ['translation', 'translation2'],
     fallbackLng: "en", // default language
     debug: true,
     detector: {
