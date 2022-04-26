@@ -1,6 +1,6 @@
 import React from 'react';
 import Navbar from '../components/navbar';
-import ttLogo from '../img/TT.png'
+import ntnuLogo from '../img/ntnuLogoUtenSlagOrd.svg';
 import CookieDisclosure from '../components/cookieDisclosure';
 
 class About extends React.Component {
@@ -29,10 +29,9 @@ render(){
 		
 		<Navbar />
         
-        <div>
-            <div className="w-full">
-                <img src={ttLogo} className="h-auto" alt="Threat Total Logo"/>
-            </div>
+        <div className='flex justify-center mt-6 sm:mt-8'>
+            <img src={ntnuLogo} className="h-20 sm:h-35 md:h-40 w-auto" alt="NTNU Logo"/>
+            <h1 className="text-4xl sm:text-6xl md:text-8xl font-bold sm:ml-4 ml-2 pt-2 sm:pt-4 w-auto"> Threat Total </h1>
         </div>
 		
         <div className='container pt-6 pb-6 sm:pt-12 sm:pb-12 pl-2 pr-2 sm:pl-16 sm:pr-16 xl:pl-36 xl:pr-36'>
