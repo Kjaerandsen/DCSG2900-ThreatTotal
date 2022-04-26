@@ -1,0 +1,52 @@
+{
+	"en":{
+		"translation":{
+			"upload": "upload file",
+			"search": "search",
+			"investigate": "investigate",
+			"language": "Norsk",
+			"languageDescr": "Skift til den norske versjonen av siden",
+			"inputUrl": "https://www.ntnu.edu",
+			"inputDescr": "Input a domain, url or a file hash:",
+			"fileSelect": "Choose file",
+			"fileSelectIndicator": "No file selected",
+			"resultTitle": "Results",
+			"manualAnalysisBtn": "Submit for manual analysis",
+			"sourceTitle": "Source data:",
+			"backendError": "Error connecting to the backend, please try to refresh in a few minutes.",
+			"cookieDisclosure": "This website uses cookies. For more information visit: ",
+			"cookieDisclosureLink": "our information page",
+			"logoutMessage": "You have been successfully logged out",
+			"loginButton": "Click here to log in again",
+			"about": "About",
+			"source": "Source: ",
+			"shortForm": "Shortform: ",
+			"assessment": "Assessment: "
+		}
+	},
+	"no":{
+		"translation":{
+			"upload": "last opp fil",
+			"search": "søk",
+			"investigate": "undersøk",
+			"language": "English",
+			"languageDescr": "Swap to the english version of the page",
+			"inputUrl": "https://www.ntnu.no",
+			"inputDescr": "Skriv inn et domene, en url eller en fil hash:",
+			"fileSelect": "Velg fil",
+			"fileSelectIndicator": "Ingen fil valgt",
+			"resultTitle": "Resultater",
+			"manualAnalysisBtn": "Send inn til manuell analyse",
+			"sourceTitle": "Kilde data:",
+			"backendError": "Feil ved tilknytting til serveren, vennligst forsøk å laste inn siden på nytt om noen minutter.",
+			"cookieDisclosure": "Denne nettsiden bruker informasjonskapsler. For mer informasjon besøk: ",
+			"cookieDisclosureLink": "informasjonssiden vår",
+			"logoutMessage": "Du har blitt logget ut.",
+			"loginButton": "Trykk her for å logge inn igjen",
+			"about": "Om oss",
+			"source": "Kilde: ",
+			"shortForm": "Kortform: ",
+			"assessment": "Vurdering: "
+		}
+	}
+}
