@@ -53,8 +53,8 @@ render(){
                 using a particular website, domain or application.
                 We retrieve data from the NTNU soc, as well as external sources described below in the questions and answers. 
                 <br></br>
-                The threat total application is open source and the source code is available at 
-                <a href="https://git.gvk.idi.ntnu.no/Johannesb/dcsg2900-threattotal" className='text-blue-500'> our gitlab instance.</a>
+                The threat total application is open source software written in Golang and Reactjs. The source code freely is available at 
+                <a href="https://git.gvk.idi.ntnu.no/Johannesb/dcsg2900-threattotal" className='text-blue-500'> the NTNU in Gjøvik gitlab instance</a>.
                 <br></br>
                 <br id='cookie'></br>We use cookies. Which is text stored in the browser, we use this to store authentication data and language choices.
                 Specifically cookies are used to save your login information to keep you logged in, if the cookie prompt has been closed, as well as the language selected.
