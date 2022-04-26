@@ -1,38 +1,31 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Navbar from '../components/navbar';
 import ntnuLogo from '../img/ntnuLogoUtenSlagOrd.svg';
 import CookieDisclosure from '../components/cookieDisclosure';
+import { useTranslation } from 'react-i18next';
 
-class About extends React.Component {
+function About() {
 
-constructor() {
-    super();
-}
+const { t } = useTranslation();
 
-state = { 
-    q1: false,
-    q2: false,
-    q3: false,
-    q4: false
+const [q1, setQ1] = useState(false);
+const [q2, setQ2] = useState(false);
+const [q3, setQ3] = useState(false);
+const [q4, setQ4] = useState(false);
+
+function toggleQ1 () {
+    setQ1(!q1);
+};
+function toggleQ2 () {
+    setQ2(!q2);
+};
+function toggleQ3 () {
+    setQ3(!q3);
+};
+function toggleQ4 () {
+    setQ4(!q4);
 };
 
-toggleQ1 = () => {
-    this.setState({ q1: !this.state.q1 });  
-};
-
-toggleQ2 = () => {
-    this.setState({ q2: !this.state.q2 });  
-};
-
-toggleQ3 = () => {
-    this.setState({ q3: !this.state.q3 });  
-};
-
-toggleQ4 = () => {
-    this.setState({ q4: !this.state.q4 });  
-};
-
-render(){
     return (
     <>
 	<div className="grid place-items-center">
@@ -45,84 +38,79 @@ render(){
         </div>
 		
         <div className='container pt-6 pb-6 sm:pt-12 sm:pb-8 pl-2 pr-2 sm:pl-16 sm:pr-16 xl:pl-36 xl:pr-36'>
-            <h1 className='text-center'> About: </h1>
+            <h1 className='text-center'> {t("about:about")} </h1>
             <br></br>
 
             <p>
-                Threat total is a threat intelligence service which allows you to get a quick overlook over the safety of 
-                using a particular website, domain or application.
-                We retrieve data from the NTNU soc, as well as external sources described below in the questions and answers. 
+                {t("about:text1")}
                 <br></br>
-                The threat total application is open source software written in Golang and Reactjs. The source code freely is available at 
-                <a href="https://git.gvk.idi.ntnu.no/Johannesb/dcsg2900-threattotal" className='text-blue-500'> the NTNU in Gjøvik gitlab instance</a>.
+                {t("about:text2")}
+                <a href="https://git.gvk.idi.ntnu.no/Johannesb/dcsg2900-threattotal" className='text-blue-500'> 
+                    {t("about:textUrl")} 
+                </a>.
                 <br></br>
-                <br id='cookie'></br>We use cookies. Which is text stored in the browser, we use this to store authentication data and language choices.
-                Specifically cookies are used to save your login information to keep you logged in, if the cookie prompt has been closed, as well as the language selected.
-                For more information on the cookies used view the questions and answers below.
+                <br id='cookie'></br>
+                {t("about:text3")}
             </p>          
         </div>
 
         <div className='container p-6 sm:p-12 text-center'>
-            <h1> Frequently asked questions: </h1>    
+            <h1> {t("about:faq")} </h1>    
             <br></br>
             <ul className='w-full'>
                 <li className='w-full pl-4 pr-4 m-0'>
-                    <button className='w-full border-2 border-gray-400 rounded-lg p-2' onClick={this.toggleQ1}>Q: What is the difference between a domain and a url?</button>
+                    <button className='w-full border-2 border-gray-400 rounded-lg p-2' onClick={toggleQ1}>{t("about:q1")}</button>
                 </li>
-                {this.state.q1 && (<li className='w-full  pl-4 pr-4'>
+                {q1 ? (<li className='w-full  pl-4 pr-4'>
                     <p className='border border-gray-400 rounded-lg p-2 sm:break-normal'>
-                    A url is a specific webpage, for example this page <i>"threat-total.edu/about"</i>. While a domain covers the broader website 
-                    <i>"threat-total.edu"</i> and all pages under the domain, such as <i>"threat-total.edu/about"</i>.
+                    {t("about:q1text1")}<i>"{t("about:q1text2")}"</i>. {t("about:q1text3")} 
+                    <i>"{t("about:q1text4")}"</i> {t("about:q1text5")} <i>"{t("about:q1text6")}"</i>.
+                    </p>
+                </li>) : <div></div> }
+                <li className='w-full pl-4 pr-4 m-0'>
+                    <button className='w-full border-2 border-gray-400 rounded-lg p-2' onClick={toggleQ2}>{t("about:q2")}</button>
+                </li>
+                {q2 && (<li className='w-full  pl-4 pr-4'>
+                    <p className='border border-gray-400 rounded-lg p-2 sm:break-normal'>
+                    {t("about:q2text")}
                     </p>
                 </li>) }
                 <li className='w-full pl-4 pr-4 m-0'>
-                    <button className='w-full border-2 border-gray-400 rounded-lg p-2' onClick={this.toggleQ2}>Q: What is a filehash?</button>
+                    <button className='w-full border-2 border-gray-400 rounded-lg p-2' onClick={toggleQ3}>{t("about:q3")}</button>
                 </li>
-                {this.state.q2 && (<li className='w-full  pl-4 pr-4'>
+                {q3 && (<li className='w-full  pl-4 pr-4'>
                     <p className='border border-gray-400 rounded-lg p-2 sm:break-normal'>
-                    A filehash is a hash of a file. A hash is a function which turns an input into a unique output of a defined length. This makes
-                    it possible to uniquely identify files for searches without uploading the whole file. Which saves time and resources if the
-                    file is already known.
+                    {t("about:q3text")}
                     </p>
                 </li>) }
                 <li className='w-full pl-4 pr-4 m-0'>
-                    <button className='w-full border-2 border-gray-400 rounded-lg p-2' onClick={this.toggleQ3}>Q: Which information sources do you use?</button>
+                    <button className='w-full border-2 border-gray-400 rounded-lg p-2' onClick={toggleQ4}>{t("about:q4")}</button>
                 </li>
-                {this.state.q3 && (<li className='w-full  pl-4 pr-4'>
-                    <p className='border border-gray-400 rounded-lg p-2 sm:break-normal'>
-                    Our main information source is the NTNU soc, but we also retrieve information from google safebrowsing,
-                    Alienvault open threat exchange and Hybrid Analysis Falcon Public API.
-                    </p>
-                </li>) }
-                <li className='w-full pl-4 pr-4 m-0'>
-                    <button className='w-full border-2 border-gray-400 rounded-lg p-2' onClick={this.toggleQ4}>Q: What do you use cookies for?</button>
-                </li>
-                {this.state.q4 && (<li className='w-full pl-4 pr-4'>
+                {q4 && (<li className='w-full pl-4 pr-4'>
                     <div className="border border-gray-400 rounded-lg">
                     <p className='p-2 sm:break-normal'>
-                    Cookies are used to save your login information to keep you logged in, if the cookie prompt has been closed, as well as the language selected.
-                    The cookies we use are listed in the table below:
+                    {t("about:q4text")}
                     </p>
                     <div className='flex flex-col sm:pl-16 sm:pr-16 xl:pl-36 xl:pr-36 mb-2'>
                         <table className="table-auto border-2">
                             <thead>
                                 <tr className='bg-gray-100'>
                                 <th className='border-r-2 p-1'>
-                                    Name
+                                    {t("about:q4table1")}
                                 </th>
                                 <th>
-                                    Description
+                                    {t("about:q4table2")}
                                 </th>
                                 </tr>
                             </thead>
                             <tbody>
                             <tr className=''>
-                                <td className='border-r-2 p-1'>i18nextLng </td>
-                                <td>Language selection, only valid for norwegian and english languages</td>
+                                <td className='border-r-2 p-1'>{t("about:q4table3")}</td>
+                                <td>{t("about:q4table4")}</td>
                             </tr>
                             <tr className='bg-gray-100'>
-                                <td className='border-r-2 p-1'>cookiesEnabled </td>
-                                <td>Cookie for the cookie prompt, saves the prompt as closed.</td>
+                                <td className='border-r-2 p-1'>{t("about:q4table5")}</td>
+                                <td>{t("about:q4table6")}</td>
                             </tr>
                             </tbody>
                         </table>
@@ -137,6 +125,5 @@ render(){
     </div >
 	</>
     );}
-}
 
 export default About
