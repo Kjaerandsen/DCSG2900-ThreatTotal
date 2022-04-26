@@ -1,6 +1,6 @@
 import i18n from "i18next";
 import { initReactI18next } from "react-i18next";
-import resources from './translations/mainInput.json'
+import resources from './translations/translationData.json'
 import LanguageDetector from 'i18next-browser-languagedetector'
 
 i18n
