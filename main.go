@@ -8,7 +8,6 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
-
 	// External
 	//webrisk "cloud.google.com/go/webrisk/apiv1"
 	"github.com/gin-contrib/cors"
