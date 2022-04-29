@@ -1,80 +1,121 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Navbar from '../components/navbar';
-import ttLogo from '../img/TT.png'
+import ntnuLogo from '../img/ntnuLogoUtenSlagOrd.svg';
 import CookieDisclosure from '../components/cookieDisclosure';
+import { useTranslation } from 'react-i18next';
 
-class About extends React.Component {
+function About() {
 
-constructor() {
-    super();
-}
+const { t } = useTranslation();
 
-state = { 
-    q1: false,
-    q2: false
+const [q1, setQ1] = useState(false);
+const [q2, setQ2] = useState(false);
+const [q3, setQ3] = useState(false);
+const [q4, setQ4] = useState(false);
+
+function toggleQ1 () {
+    setQ1(!q1);
+};
+function toggleQ2 () {
+    setQ2(!q2);
+};
+function toggleQ3 () {
+    setQ3(!q3);
+};
+function toggleQ4 () {
+    setQ4(!q4);
 };
 
-toggleQ1 = () => {
-    this.setState({ q1: !this.state.q1 });  
-};
-
-toggleQ2 = () => {
-    this.setState({ q2: !this.state.q2 });  
-};
-
-render(){
     return (
     <>
 	<div className="grid place-items-center">
 		
 		<Navbar />
         
-        <div>
-            <div className="w-full">
-                <img src={ttLogo} className="h-auto" alt="Threat Total Logo"/>
-            </div>
+        <div className='flex justify-center mt-6 sm:mt-8'>
+            <img src={ntnuLogo} className="h-20 sm:h-35 md:h-40 w-auto" alt="NTNU Logo"/>
+            <h1 className="text-4xl sm:text-6xl md:text-8xl font-bold sm:ml-4 ml-2 pt-2 sm:pt-4 w-auto"> Threat Total </h1>
         </div>
 		
-        <div className='container pt-6 pb-6 sm:pt-12 sm:pb-12 pl-2 pr-2 sm:pl-16 sm:pr-16 xl:pl-36 xl:pr-36'>
-            <h1 className='text-center'> About: </h1>
+        <div className='container pt-6 pb-6 sm:pt-12 sm:pb-8 pl-2 pr-2 sm:pl-16 sm:pr-16 xl:pl-36 xl:pr-36'>
+            <h1 className='text-center'> {t("about:about")} </h1>
             <br></br>
 
             <p>
-                Threat total is a threat intelligence service which allows you to get a quick overlook over the safety of using a particular website, domain or application.
-                We retrieve data from the NTNU soc database, as well as external sources such as: ....
-
-                Tincidunt eget nullam non nisi est sit amet facilisis. 
-                Eu turpis egestas pretium aenean. Suspendisse potenti nullam ac tortor vitae purus faucibus ornare. 
-                Varius vel pharetra vel turpis. Sit amet luctus venenatis lectus magna fringilla urna. 
-                Amet consectetur adipiscing elit ut aliquam purus. Nunc pulvinar sapien et ligula. 
-                Diam donec adipiscing tristique risus nec feugiat in fermentum posuere. Odio morbi quis commodo odio aenean. 
-                Commodo viverra maecenas accumsan lacus vel facilisis volutpat est velit. Eleifend mi in nulla posuere sollicitudin aliquam. 
-                Pulvinar pellentesque habitant morbi tristique senectus. In eu mi bibendum neque egestas congue. Aliquet enim tortor at auctor. 
-                At quis risus sed vulputate odio ut. Purus ut faucibus pulvinar elementum. Blandit libero volutpat sed cras ornare arcu dui vivamus. 
-                Vel risus commodo viverra maecenas accumsan.
-            </p>
+                {t("about:text1")}
+                <br></br>
+                {t("about:text2")}
+                <a href="https://git.gvk.idi.ntnu.no/Johannesb/dcsg2900-threattotal" className='text-blue-500'> 
+                    {t("about:textUrl")} 
+                </a>.
+                <br></br>
+                <br id='cookie'></br>
+                {t("about:text3")}
+            </p>          
         </div>
 
         <div className='container p-6 sm:p-12 text-center'>
-            <h1> Frequently asked questions: </h1>    
+            <h1> {t("about:faq")} </h1>    
             <br></br>
             <ul className='w-full'>
                 <li className='w-full pl-4 pr-4 m-0'>
-                    <button className='w-full border-2 border-gray-400 rounded-lg p-2' onClick={this.toggleQ1}>Q: What is the difference between a domain and a url?</button>
+                    <button className='w-full border-2 border-gray-400 rounded-lg p-2' onClick={toggleQ1}>{t("about:q1")}</button>
                 </li>
-                {this.state.q1 && (<li className='w-full  pl-4 pr-4'>
+                {q1 ? (<li className='w-full  pl-4 pr-4'>
                     <p className='border border-gray-400 rounded-lg p-2 sm:break-normal'>
-                    A url is a specific webpage, for example this page <i>"threat-total.edu/about"</i>. While a domain covers the broader website 
-                    <i>"threat-total.edu"</i> and all pages under the domain, such as <i>"threat-total.edu/about"</i>.
+                    {t("about:q1text1")}<i>"{t("about:q1text2")}"</i>. {t("about:q1text3")} 
+                    <i>"{t("about:q1text4")}"</i> {t("about:q1text5")} <i>"{t("about:q1text6")}"</i>.
+                    </p>
+                </li>) : <div></div> }
+                <li className='w-full pl-4 pr-4 m-0'>
+                    <button className='w-full border-2 border-gray-400 rounded-lg p-2' onClick={toggleQ2}>{t("about:q2")}</button>
+                </li>
+                {q2 && (<li className='w-full  pl-4 pr-4'>
+                    <p className='border border-gray-400 rounded-lg p-2 sm:break-normal'>
+                    {t("about:q2text")}
                     </p>
                 </li>) }
                 <li className='w-full pl-4 pr-4 m-0'>
-                    <button className='w-full border-2 border-gray-400 rounded-lg p-2' onClick={this.toggleQ2}>Q: Which information sources do you use?</button>
+                    <button className='w-full border-2 border-gray-400 rounded-lg p-2' onClick={toggleQ3}>{t("about:q3")}</button>
                 </li>
-                {this.state.q2 && (<li className='w-full  pl-4 pr-4'>
+                {q3 && (<li className='w-full  pl-4 pr-4'>
                     <p className='border border-gray-400 rounded-lg p-2 sm:break-normal'>
-                    Our main information source is the NTNU soc, but we also retrieve information from ....
+                    {t("about:q3text")}
                     </p>
+                </li>) }
+                <li className='w-full pl-4 pr-4 m-0'>
+                    <button className='w-full border-2 border-gray-400 rounded-lg p-2' onClick={toggleQ4}>{t("about:q4")}</button>
+                </li>
+                {q4 && (<li className='w-full pl-4 pr-4'>
+                    <div className="border border-gray-400 rounded-lg">
+                    <p className='p-2 sm:break-normal'>
+                    {t("about:q4text")}
+                    </p>
+                    <div className='flex flex-col sm:pl-16 sm:pr-16 xl:pl-36 xl:pr-36 mb-2'>
+                        <table className="table-auto border-2">
+                            <thead>
+                                <tr className='bg-gray-100'>
+                                <th className='border-r-2 p-1'>
+                                    {t("about:q4table1")}
+                                </th>
+                                <th>
+                                    {t("about:q4table2")}
+                                </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            <tr className=''>
+                                <td className='border-r-2 p-1'>{t("about:q4table3")}</td>
+                                <td>{t("about:q4table4")}</td>
+                            </tr>
+                            <tr className='bg-gray-100'>
+                                <td className='border-r-2 p-1'>{t("about:q4table5")}</td>
+                                <td>{t("about:q4table6")}</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    </div>
                 </li>) }
             </ul>
         </div>
@@ -84,6 +125,5 @@ render(){
     </div >
 	</>
     );}
-}
 
 export default About

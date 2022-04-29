@@ -24,7 +24,7 @@ function CookieDisclosure () {
         <>
         <footer id="cookieDisclosure" className="w-full h-auto place-items-center fixed bottom-0 hidden">
         <div className="border-b-2 border-gray-400 h-1 w-full"> </div>
-		<div className="flex h-8 sm:h-10 p-1 bg-blue-200">
+		<div className="flex h-auto sm:h-10 p-1 bg-blue-200">
 			<div className="h-full ml-3 w-full flex items-center">
                 <p> {t("cookieDisclosure")}
                 <a href="/about#cookie" className="underline">{t("cookieDisclosureLink")}</a>

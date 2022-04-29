@@ -9,7 +9,7 @@ export default function Sources(props) {
     const { t } = useTranslation();
     var BG = ""
     // Checks if an error has occured while connecting to the backend, if true return an error message
-    if (props.err) {
+    if (props.err || props.sourceData == undefined || props.sourceData == "") {
         return (
             <div className='bg-white border-2 border-gray-400 rounded-lg p-2 m-4'>
                 <h1>{t("backendError")}</h1>
@@ -17,15 +17,16 @@ export default function Sources(props) {
         );
     // Else return the source data
     } else {
+        console.log ("sourceData: " + props.sourceData)
         return (
             <div className="bg-gray-200">
                 <h1 className="text-2xl font-bold">{t("sourceTitle")}</h1>
                 <div className='bg-yellow-500 bg-red-600 bg-green-600'></div>
                 <div className='grid grid-cols-1 p-2 md:grid-cols-2 xl:grid-cols-3'>
                 {props.sourceData.map((Data, index ) => {
-                    if (Data.status === "Safe" || Data.status === "Trygg") {
+                    if (Data.en.status === "Safe") {
                         BG = "bg-green-600"
-                    } else if (Data.status === "Risk" || Data.status === "Risiko") {
+                    } else if (Data.en.status === "Risk") {
                         BG = "bg-red-600"
                     } else {
                         BG = "bg-yellow-500"
