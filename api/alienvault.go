@@ -122,7 +122,7 @@ func CallAlienVaultHash(hash string) (response utils.FrontendResponse) {
 	return response
 }
 
-func TestAlienVaultUrl(url string, response *utils.FrontendResponse, wg *sync.WaitGroup) {
+func TestAlienVaultUrl(url string, response *utils.FrontendResponse2, wg *sync.WaitGroup) {
 
 	defer wg.Done()
 	//DENNE FUNKSJONEN KAN UTARBEIDES TIL Å BARE RETURNERE MALCICIOUS / SUSPCIOUS OM DET BEFINNER SEG NEVNT I NOEN
@@ -163,6 +163,7 @@ func TestAlienVaultUrl(url string, response *utils.FrontendResponse, wg *sync.Wa
 		fmt.Println("UNMARSHAL ERROR:\n\n", err)
 	}
 
+	/*
 	//output:= string(body)
 	//fmt.Println(output)
 	//fmt.Println("\n\nAMOUNT OF PULSES:::::: ", jsonResponse.PulseInfo.Count)
@@ -173,6 +174,8 @@ func TestAlienVaultUrl(url string, response *utils.FrontendResponse, wg *sync.Wa
 	}
 
 	response.SourceName="AlienVault"
+	*/
 
 	//response = string(body)
+	utils.SetResponeObjectAlienVault(jsonResponse , response)
 }

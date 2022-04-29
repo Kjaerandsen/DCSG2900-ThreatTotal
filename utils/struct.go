@@ -45,13 +45,15 @@ type FrontendResponse2 struct {
 		Status      string   `json:"status"`
 		Content     string   `json:"content"`
 		Description string   `json:"description"`
-		Tags        []string `json:"tags"`
+		Tags        string `json:"tags"`					//fjerner denne fra å være []string for now.
+		Result 		string
 	} `json:"en"`
 	NO struct {
 		Status      string   `json:"status"`
 		Content     string   `json:"content"`
 		Description string   `json:"description"`
-		Tags        []string `json:"tags"`
+		Tags        string `json:"tags"`
+		Result 		string
 	} `json:"no"`
 }
 

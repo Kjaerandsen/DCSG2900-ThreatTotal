@@ -188,9 +188,11 @@ func CallHybridAnalyisUrl(URL string) (VirusTotal utils.FrontendResponse, urlsca
 	return VirusTotal, urlscanio
 }
 
-func TestHybridAnalyisUrl(URL string, VirusTotal *utils.FrontendResponse, urlscanio *utils.FrontendResponse, wg *sync.WaitGroup) {
+func TestHybridAnalyisUrl(URL string, VirusTotal *utils.FrontendResponse2, urlscanio *utils.FrontendResponse2, wg *sync.WaitGroup) {
 
 	defer wg.Done()
+	
+
 	fmt.Println("HYBRID URL: ", URL)
 	//DENNE FUNKSJONENE KAN SCANNE EN URL MEN DETTE BENYTTER SEG AV VIRUS TOTAL/
 	// DETTE ER KANSKJE EN GOD WORK AROUND FOR Å KUNNE BRUKE VT GRATIS SIDEN Hybrid Analysis har lisens.
@@ -278,6 +280,8 @@ func TestHybridAnalyisUrl(URL string, VirusTotal *utils.FrontendResponse, urlsca
 		}
 		fmt.Println(jsonResponse)
 		VirusTotal.SourceName = jsonResponse.Scanners[0].Name
+		urlscanio.SourceName = jsonResponse.Scanners[1].Name
+		/*
 		VirusTotal.Status = jsonResponse.Scanners[0].Status
 
 		// Set the clean value to safe instead for frontend display.
@@ -297,4 +301,21 @@ func TestHybridAnalyisUrl(URL string, VirusTotal *utils.FrontendResponse, urlsca
 		urlscanio.SourceName = "urlscan.io"
 		urlscanio.Status = "Error"
 	}
+	*/
+	fmt.Println("WHAT IS THIS \n\n\n", jsonResponse.Finished)
+	fmt.Println("URLSCANIO STATUS:", jsonResponse.Scanners[1].Status)
+
+	utils.SetResponeObjectVirusTotal(jsonResponse, VirusTotal)
+	utils.SetResponeObjectUrlscanio(jsonResponse, urlscanio)
+}else {
+	VirusTotal.SourceName = "VirusTotal"
+	VirusTotal.EN.Status = "Error"
+	VirusTotal.NO.Status = "Error"
+
+	urlscanio.SourceName = "urlscan.io"
+	urlscanio.EN.Status = "Error"
+	urlscanio.NO.Status = "Error"
+
 }
+}
+

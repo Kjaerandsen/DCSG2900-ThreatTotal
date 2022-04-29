@@ -42,13 +42,13 @@ func main() {
 		url := c.Query("url")
 		lng := c.Query("lng")
 
-		var responseData [4]utils.FrontendResponse
+		var responseData [4]utils.FrontendResponse2
 
 		if lng != "no" {
 			fmt.Println("Language english")
 		}
 
-		var p, VirusTotal, urlscanio, alienvault *utils.FrontendResponse
+		var p, VirusTotal, urlscanio, alienvault *utils.FrontendResponse2
 			p = &responseData[0]
 			VirusTotal = &responseData[1]
 			urlscanio  = &responseData[2]
@@ -62,16 +62,16 @@ func main() {
 			go api.TestAlienVaultUrl(url, alienvault, &wg)
 		wg.Wait()
 		
-		responseData2 := FR122(responseData[:])
+		//responseData2 := FR122(responseData[:])
 
-		URLint, err := json.Marshal(responseData2)
+		URLint, err := json.Marshal(responseData)
 
 		if err != nil {
 			fmt.Println(err)
 		}
 
 		fmt.Println("WHERE IS MY CONTENT 1", responseData)
-		fmt.Println("WHERE IS MY CONTENT 2", responseData2)
+		//fmt.Println("WHERE IS MY CONTENT 2", responseData2)
 
 		c.Data(http.StatusOK, "application/json", URLint)
 
@@ -375,6 +375,7 @@ func main() {
 }
 
 // Temporary helper function to create translations from the input
+
 func FR122(input []utils.FrontendResponse) (output []utils.FrontendResponse2) {
 	length := len(input)
 
@@ -388,11 +389,11 @@ func FR122(input []utils.FrontendResponse) (output []utils.FrontendResponse2) {
 		output[i].EN.Content = input[i].Content
 		output[i].EN.Description = input[i].Description
 		output[i].EN.Status = input[i].Status
-		output[i].EN.Tags = input[i].Tags
+		//output[i].EN.Tags = input[i].Tags
 		output[i].NO.Content = input[i].Content + "norsk"
 		output[i].NO.Description = input[i].Description + "norsk"
 		output[i].NO.Status = input[i].Status + "norsk"
-		output[i].NO.Tags = input[i].Tags
+		//output[i].NO.Tags = input[i].Tags
 	}
 
 	fmt.Println()

@@ -101,7 +101,7 @@ func CallGoogleUrl(url string) (response utils.FrontendResponse) {
 	return response
 }
 
-func TestGoGoogleUrl(url string, response *utils.FrontendResponse, wg *sync.WaitGroup) {
+func TestGoGoogleUrl(url string, response *utils.FrontendResponse2, wg *sync.WaitGroup) {
 	// Google API returnerer [] om den ikke kjenner til domenet / URL. Kan bruke dette til
 	// å avgjøre om det er malicious eller ikke.
 	defer wg.Done()
@@ -163,6 +163,7 @@ func TestGoGoogleUrl(url string, response *utils.FrontendResponse, wg *sync.Wait
 	fmt.Println("BODY::!", output)
 	//fmt.Println("ThreatType::::",jsonResponse.Matches[0].ThreatType)
 	//fmt.Println("response Body:", string(body))
+	/*
 	if len(jsonResponse.Matches) != 0 {
 		response.Content = "This URL has been marked as malicious by Google Safebrowsing, visiting is NOT recommended"
 		switch jsonResponse.Matches[0].ThreatType {
@@ -185,5 +186,6 @@ func TestGoGoogleUrl(url string, response *utils.FrontendResponse, wg *sync.Wait
 	}
 
 	response.SourceName = "Google SafeBrowsing Api"
-
+	*/
+	utils.SetResponeObjectGoogle(jsonResponse, response)
 }
