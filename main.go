@@ -8,6 +8,7 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+
 	// External
 	//webrisk "cloud.google.com/go/webrisk/apiv1"
 	"github.com/gin-contrib/cors"
@@ -156,14 +157,18 @@ func main() {
 	// https://github.com/gin-gonic/gin#single-file
 	r.POST("/upload", func(c *gin.Context) {
 
-		// for a single file
-		file, _ := c.FormFile("inputFile")
-		log.Println(file.Filename)
+		log.Println("Fileupload worked")
 
-		// upload file to the specific destination
-		c.SaveUploadedFile(file, "/result")
+		/*
+			// for a single file
+			file, _ := c.FormFile("inputFile")
+			log.Println(file.Filename)
 
-		c.String(http.StatusOK, fmt.Sprintf("'%s' uploaded!", file.Filename))
+			// upload file to the specific destination
+			c.SaveUploadedFile(file, "/result")
+
+			c.String(http.StatusOK, fmt.Sprintf("'%s' uploaded!", file.Filename))
+		*/
 	})
 
 	/**
