@@ -2,6 +2,7 @@ package main
 
 import (
 	"github.com/gin-gonic/gin"
+	"log"
 	"net/http"
 	"net/http/httputil"
 	"net/url"
@@ -38,5 +39,5 @@ func main() {
 	r.Any("/*proxyPath", proxy)
 
 	// Start server on port 8080
-	r.Run(":8080")
+	log.Fatal(r.Run(":8080"))
 }
