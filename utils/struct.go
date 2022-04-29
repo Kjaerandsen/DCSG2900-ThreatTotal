@@ -23,6 +23,11 @@ type Scanners struct {
 	AntiVirusResults []map[string]interface{} `json:"anti_virus_results"`
 }
 
+type APIresponseResult struct {
+	Result		string
+	ResponseData []FrontendResponse2
+}
+
 // FrontendResponse struct for the response sent to the frontend to be displayed as cards
 type FrontendResponse struct {
 	ID          int      `json:"id"`

@@ -13,7 +13,6 @@ const Upload = () => {
         console.log("loaded file, is in fact a file.")
         console.log(object["inputFile"])
 
-
         formData.append('file', object["inputFile"]);
         
         const options = {
@@ -24,6 +23,9 @@ const Upload = () => {
           //   'Content-Type': 'multipart/form-data',
           // }
         };
+
+        // WORKAROUND did not work, however we discovered that the content type is likely to break the request
+        // attempt to figure way to send file to backend, and only use api key as header
         
         fetch('http://localhost:8081/upload', options);
 

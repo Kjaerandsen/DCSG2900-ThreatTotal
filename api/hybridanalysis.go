@@ -9,6 +9,7 @@ import (
 	"net/http"
 	"net/url"
 	"strings"
+	"sync"
 	"time"
 	//"golang.org/x/tools/go/analysis/passes/nilfunc"
 )
@@ -185,4 +186,115 @@ func CallHybridAnalyisUrl(URL string) (VirusTotal utils.FrontendResponse, urlsca
 	fmt.Println("\n\nAttempted HybridAnalysisURL output VT:", urlscanio.SourceName, "   Status:", urlscanio.Status)
 
 	return VirusTotal, urlscanio
+}
+
+func TestHybridAnalyisUrl(URL string, VirusTotal *utils.FrontendResponse, urlscanio *utils.FrontendResponse, wg *sync.WaitGroup) {
+
+	defer wg.Done()
+	fmt.Println("HYBRID URL: ", URL)
+	//DENNE FUNKSJONENE KAN SCANNE EN URL MEN DETTE BENYTTER SEG AV VIRUS TOTAL/
+	// DETTE ER KANSKJE EN GOD WORK AROUND FOR Å KUNNE BRUKE VT GRATIS SIDEN Hybrid Analysis har lisens.
+	// Problem her kan være at dette må inkomporere en "await - 5-15 sekunder
+	// om det ikke er noe cachet result på VirusTotal, fordi den maa kjore ny request.".
+	// Titter på dette.
+	// Vi har CAP på 2000 request i timen hos Hybrid Analyis, dette burde vell holde??? - 200 max i minuttet.
+	// https://www.hybrid-analysis.com/docs/api/v2#/Quick%20Scan/post_quick_scan_url Dokumentasjon for dette API endpointet.
+
+	content, err := ioutil.ReadFile("./APIKey/HybridAnalysisAPI.txt")
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	// Convert []byte to string and print to screen
+	APIKey := string(content)
+
+	postURL := "https://www.hybrid-analysis.com/api/v2/quick-scan/url"
+
+	data := url.Values{}
+	data.Set("scan_type", "all")
+	data.Set("url", URL)
+	data.Set("no_share_third_party", "true")
+	data.Set("allow_community_access", "false")
+	//data.Set("submit_name","")
+
+	req, err := http.NewRequest("POST", postURL, strings.NewReader(data.Encode()))
+	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+	req.Header.Set("api-key", APIKey)
+	req.Header.Set("User-Agent", "Falcon Sandbox")
+
+	client := &http.Client{}
+
+	res, err := client.Do(req)
+	if err != nil {
+		panic(err)
+	}
+	defer res.Body.Close()
+
+	fmt.Println("response Status:", res.Status)
+	if res.StatusCode == http.StatusOK{
+
+		// res.Body.Read("finished") Her skal jeg føre en sjekk som sjekker om "finished = true eller false"
+
+		// Hvis denne er false skal den vente 5 sekunder og kjøre requesten på nytt.
+		// Eventuelt om det er en måte å ikke close requesten før den er finished???????
+
+		// Her kan det sjekkes om VirusTotal - Status er Malicious og om Urlscan.io
+		// - status er malicious, suspicious, clean etc. også bare returnere denne responsen.
+
+		//fmt.Print("Response Headers:", res.Header)
+		body, err := ioutil.ReadAll(res.Body)
+		if err != nil {
+			fmt.Println("Ioutil error:", err)
+		}
+
+		//var jsonData map[string]interface{}
+		var jsonResponse utils.HybridAnalysisURL
+
+		err = json.Unmarshal(body, &jsonResponse)
+		if err != nil {
+			fmt.Println(err)
+		}
+
+		if jsonResponse.Finished != true {
+			time.Sleep(20 * time.Second) //Får prøve å finne en bedre løsning enn dette men det er det jeg har for now.
+
+			res, err := client.Do(req)
+			if err != nil {
+				panic(err)
+			}
+			defer res.Body.Close()
+
+			body, err := ioutil.ReadAll(res.Body)
+			if err != nil {
+				fmt.Println("Ioutil error:", err)
+			}
+
+			var jsonResponse utils.HybridAnalysisURL
+
+			err = json.Unmarshal(body, &jsonResponse)
+			if err != nil {
+				fmt.Println(err)
+			}
+		}
+		fmt.Println(jsonResponse)
+		VirusTotal.SourceName = jsonResponse.Scanners[0].Name
+		VirusTotal.Status = jsonResponse.Scanners[0].Status
+
+		// Set the clean value to safe instead for frontend display.
+		if VirusTotal.Status == "clean" {
+			VirusTotal.Status = "Safe"
+		}
+
+		urlscanio.SourceName = jsonResponse.Scanners[1].Name
+		urlscanio.Status = jsonResponse.Scanners[1].Status
+
+		fmt.Println("Attempted HybridAnalysisURL output VT:", VirusTotal.SourceName, "   Status:", VirusTotal.Status)
+		fmt.Println("\n\nAttempted HybridAnalysisURL output VT:", urlscanio.SourceName, "   Status:", urlscanio.Status)
+	} else {
+		VirusTotal.SourceName = "VirusTotal"
+		VirusTotal.Status = "Error"
+
+		urlscanio.SourceName = "urlscan.io"
+		urlscanio.Status = "Error"
+	}
 }
