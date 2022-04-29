@@ -1,37 +1,42 @@
 package main
 
 import (
-	"log"
+	"github.com/gin-gonic/gin"
 	"net/http"
 	"net/http/httputil"
 	"net/url"
 )
 
-//// Inspiration taken from: https://blog.joshsoftware.com/2021/05/25/simple-and-powerful-reverseproxy-in-go/
+//// Inspiration taken from: https://le-gall.bzh/post/go/a-reverse-proxy-in-go-using-gin/
 
-// NewProxy takes target host and creates a reverse proxy
-func NewProxy(targetHost string) (*httputil.ReverseProxy, error) {
-	URL, err := url.Parse(targetHost)
-	if err != nil {
-		return nil, err
-	}
-	return httputil.NewSingleHostReverseProxy(URL), nil
-}
-
-// ProxyRequestHandler handles the http request using proxy
-func ProxyRequestHandler(proxy *httputil.ReverseProxy) func(w http.ResponseWriter, r *http.Request) {
-	return func(w http.ResponseWriter, r *http.Request) {
-		proxy.ServeHTTP(w, r)
-	}
-}
-
-func main() {
-	// All traffic to "http://localhost:8081" goes through this proxy-server at "http://localhost:8080" first
-	proxy, err := NewProxy("http://localhost:8081")
+// proxy is a reverse proxy which routes traffic to "remote" through localhost:8080
+func proxy(c *gin.Context) {
+	remote, err := url.Parse("http://localhost:3000")
 	if err != nil {
 		panic(err)
 	}
-	http.HandleFunc("/", ProxyRequestHandler(proxy))
-	log.Println("Listening on port 8080...")
-	log.Fatal(http.ListenAndServe(":8080", nil))
+
+	proxy := httputil.NewSingleHostReverseProxy(remote)
+
+	// Sets request parameters
+	proxy.Director = func(req *http.Request) {
+		req.Header = c.Request.Header
+		req.Host = remote.Host
+		req.URL.Scheme = remote.Scheme
+		req.URL.Host = remote.Host
+		req.URL.Path = c.Param("proxyPath")
+	}
+
+	// Start proxy
+	proxy.ServeHTTP(c.Writer, c.Request)
+}
+
+func main() {
+	r := gin.Default()
+
+	// Define catch all path
+	r.Any("/*proxyPath", proxy)
+
+	// Start server on port 8080
+	r.Run(":8080")
 }
