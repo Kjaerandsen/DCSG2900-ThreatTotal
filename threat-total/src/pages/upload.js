@@ -22,18 +22,12 @@ const Upload = () => {
           // headers: {
           //   'Content-Type': 'multipart/form-data',
           // }
-          headers: {
-            'x-apikey': '4062c07a4340e4f8fe5f647412ef936d99d53aa793e1cebfc4b31e43ae801ed0',
-          }
         };
 
-        // WORKAROUND: fetching request from frontend, easier to send file from where we're getting it
-        // then fetch virus total ID to backend
+        // WORKAROUND did not work, however we discovered that the content type is likely to break the request
+        // attempt to figure way to send file to backend, and only use api key as header
         
-        fetch('https://www.virustotal.com/api/v3/files', options)
-        .then(response => response.json())
-        .then(response => console.log(response))
-        .catch(err => console.error(err));
+        fetch('http://localhost:8081/upload', options);
 
         
         // TODO, can find file, though dont know where to forward it
