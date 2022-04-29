@@ -159,16 +159,15 @@ func main() {
 
 		log.Println("Fileupload worked")
 
-		/*
-			// for a single file
-			file, _ := c.FormFile("inputFile")
-			log.Println(file.Filename)
+		file, _ := c.FormFile("file")
+		log.Println(file.Filename)
+		log.Println(file.Header)
 
-			// upload file to the specific destination
-			c.SaveUploadedFile(file, "/result")
+		// Upload the file to specific dst.
+		// c.SaveUploadedFile(file, dst)
 
-			c.String(http.StatusOK, fmt.Sprintf("'%s' uploaded!", file.Filename))
-		*/
+		//c.String(http.StatusOK, fmt.Sprintf("'%s' uploaded!", file.Filename))
+
 	})
 
 	/**

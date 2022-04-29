@@ -13,7 +13,6 @@ const Upload = () => {
         console.log("loaded file, is in fact a file.")
         console.log(object["inputFile"])
 
-
         formData.append('file', object["inputFile"]);
         
         const options = {
@@ -23,9 +22,18 @@ const Upload = () => {
           // headers: {
           //   'Content-Type': 'multipart/form-data',
           // }
+          headers: {
+            'x-apikey': '4062c07a4340e4f8fe5f647412ef936d99d53aa793e1cebfc4b31e43ae801ed0',
+          }
         };
+
+        // WORKAROUND: fetching request from frontend, easier to send file from where we're getting it
+        // then fetch virus total ID to backend
         
-        fetch('http://localhost:8081/upload', options);
+        fetch('https://www.virustotal.com/api/v3/files', options)
+        .then(response => response.json())
+        .then(response => console.log(response))
+        .catch(err => console.error(err));
 
         
         // TODO, can find file, though dont know where to forward it
