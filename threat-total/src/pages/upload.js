@@ -5,7 +5,6 @@ import ntnuLogo from '../img/ntnuLogoUtenSlagOrd.svg'
 import CookieDisclosure from '../components/cookieDisclosure';
 
 const Upload = () => {
-
   const fileUpload = e => {
     var formData = new FormData(e.target.form);
     var object={};
@@ -13,6 +12,22 @@ const Upload = () => {
     if (object["inputFile"] instanceof File) {
         console.log("loaded file, is in fact a file.")
         console.log(object["inputFile"])
+
+
+        formData.append('file', object["inputFile"]);
+        
+        const options = {
+          method: 'POST',
+          body: formData,
+          // If you add this, upload won't work
+          // headers: {
+          //   'Content-Type': 'multipart/form-data',
+          // }
+        };
+        
+        fetch('http://localhost:8081/upload', options);
+
+        
         // TODO, can find file, though dont know where to forward it
     }
     else {
