@@ -8,6 +8,7 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"strings"
 
 	// External
 	//webrisk "cloud.google.com/go/webrisk/apiv1"
@@ -159,6 +160,35 @@ func main() {
 
 		log.Println("Fileupload worked")
 
+		file, _ := c.FormFile("file")
+		inputFile, _ := file.Open()
+
+		log.Println(file.Filename)
+		log.Println(file.Header)
+		log.Println(inputFile)
+
+		url := "https://www.virustotal.com/api/v3/files"
+
+		//var buf bytes.Buffer
+		//payload, _ := io.Copy(&buf, inputFile)
+
+		payload := strings.NewReader("-----011000010111000001101001\r\nContent-Disposition: form-data; name=\"file\"\r\n\r\ndata:text/plain;name=asdf.txt;base64,YXNkYQ==\r\n-----011000010111000001101001--\r\n\r\n")
+
+		req, _ := http.NewRequest("POST", url, payload)
+		log.Println(req)
+
+		req.Header.Add("x-apikey", "4062c07a4340e4f8fe5f647412ef936d99d53aa793e1cebfc4b31e43ae801ed0")
+		req.Header.Add("Content-Type", "multipart/form-data; boundary=---011000010111000001101001")
+
+		res, _ := http.DefaultClient.Do(req)
+
+		defer res.Body.Close()
+
+		body, _ := ioutil.ReadAll(res.Body)
+
+		log.Println(res)
+
+		log.Println(string(body))
 	})
 
 	/**
