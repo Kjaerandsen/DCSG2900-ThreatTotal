@@ -9,6 +9,7 @@ import (
 	"log"
 	"net/http"
 	"strings"
+	"sync"
 
 	// External
 	//webrisk "cloud.google.com/go/webrisk/apiv1"
@@ -20,6 +21,8 @@ import (
 	//"google.golang.org/api/webrisk/v1"
 	//"google.golang.org/api/option"
 )
+
+var wg sync.WaitGroup //Vente gruppe for goroutiner
 
 func main() {
 	r := gin.Default()
@@ -35,6 +38,46 @@ func main() {
 		//c.HTML(http.StatusOK, hello world, gin.H{
 		//	"isSelected": true,
 		log.Println("Messsage")
+	})
+
+	r.GET("/url-testing", func(c *gin.Context) {
+
+		url := c.Query("url")
+		lng := c.Query("lng")
+
+		var responseData [4]utils.FrontendResponse
+
+		if lng != "no" {
+			fmt.Println("Language english")
+		}
+
+		var p, VirusTotal, urlscanio, alienvault *utils.FrontendResponse
+		p = &responseData[0]
+		VirusTotal = &responseData[1]
+		urlscanio = &responseData[2]
+		alienvault = &responseData[3]
+
+		fmt.Println(url)
+
+		wg.Add(3)
+		go api.TestGoGoogleUrl(url, p, &wg)
+		go api.TestHybridAnalyisUrl(url, VirusTotal, urlscanio, &wg)
+		go api.TestAlienVaultUrl(url, alienvault, &wg)
+		wg.Wait()
+
+		responseData2 := FR122(responseData[:])
+
+		URLint, err := json.Marshal(responseData2)
+
+		if err != nil {
+			fmt.Println(err)
+		}
+
+		fmt.Println("WHERE IS MY CONTENT 1", responseData)
+		fmt.Println("WHERE IS MY CONTENT 2", responseData2)
+
+		c.Data(http.StatusOK, "application/json", URLint)
+
 	})
 
 	/**
@@ -168,9 +211,6 @@ func main() {
 		log.Println(inputFile)
 
 		url := "https://www.virustotal.com/api/v3/files"
-
-		//var buf bytes.Buffer
-		//payload, _ := io.Copy(&buf, inputFile)
 
 		payload := strings.NewReader("-----011000010111000001101001\r\nContent-Disposition: form-data; name=\"file\"\r\n\r\ndata:text/plain;name=asdf.txt;base64,YXNkYQ==\r\n-----011000010111000001101001--\r\n\r\n")
 
