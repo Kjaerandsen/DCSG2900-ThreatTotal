@@ -53,6 +53,8 @@ func main() {
 		log.Fatal(err)
 	}
 
+	//_, _ = auth.CodeToToken("")
+
 	// move to init function?
 	RedisPool := storage.InitPool()
 	utils.Conn = RedisPool.Get()
