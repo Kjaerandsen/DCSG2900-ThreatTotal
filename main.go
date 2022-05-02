@@ -10,7 +10,6 @@ import (
 	"log"
 	"net/http"
 	"strings"
-	"sync"
 
 	// External
 	//webrisk "cloud.google.com/go/webrisk/apiv1"
@@ -22,8 +21,6 @@ import (
 	//"google.golang.org/api/webrisk/v1"
 	//"google.golang.org/api/option"
 )
-
-var wg sync.WaitGroup //Vente gruppe for goroutiner
 
 func main() {
 	r := gin.Default()
@@ -41,65 +38,7 @@ func main() {
 	})
 
 	r.GET("/url-testing", func(c *gin.Context) {
-
-		url := c.Query("url")
-
-		var URLint []byte
-		var responseData [4]utils.FrontendResponse2
-
-		value, err := utils.Conn.Do("GET", url)
-		if value == nil {
-			if err != nil {
-				fmt.Println("Error:" + err.Error())
-			}
-			fmt.Println("No Cache hit")
-
-			var p, VirusTotal, urlscanio, alienvault *utils.FrontendResponse2
-			p = &responseData[0]
-			VirusTotal = &responseData[1]
-			urlscanio = &responseData[2]
-			alienvault = &responseData[3]
-
-			fmt.Println(url)
-
-			wg.Add(3)
-			go api.TestGoGoogleUrl(url, p, &wg)
-			go api.TestHybridAnalyisUrl(url, VirusTotal, urlscanio, &wg)
-			go api.TestAlienVaultUrl(url, alienvault, &wg)
-			wg.Wait()
-
-			//responseData2 := FR122(responseData[:])
-
-			URLint, err = json.Marshal(responseData)
-			if err != nil {
-				fmt.Println(err)
-			}
-
-			response, err := utils.Conn.Do("SETEX", url, 60, URLint)
-			if err != nil {
-				fmt.Println("Error adding data to redis:" + err.Error())
-			}
-			// Print the response to adding the data (should be "OK"
-			fmt.Println(response)
-
-			fmt.Println("WHERE IS MY CONTENT 1", responseData)
-			//fmt.Println("WHERE IS MY CONTENT 2", responseData2)
-			// Cache hit
-		} else {
-			fmt.Println("Cache hit")
-			responseBytes, err := json.Marshal(value)
-			if err != nil {
-				fmt.Println("Error handling redis response:" + err.Error())
-			}
-			err = json.Unmarshal(responseBytes, &URLint)
-			if err != nil {
-				fmt.Println("Error handling redis response:" + err.Error())
-			}
-			fmt.Println("Value is:\n", URLint)
-		}
-
-		c.Data(http.StatusOK, "application/json", URLint)
-
+		api.UrlIntelligence(c)
 	})
 
 	/**
