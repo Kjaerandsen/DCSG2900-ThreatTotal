@@ -46,14 +46,12 @@ type FrontendResponse2 struct {
 		Content     string   `json:"content"`
 		Description string   `json:"description"`
 		Tags        string `json:"tags"`					//fjerner denne fra å være []string for now.
-		Result 		string
 	} `json:"en"`
 	NO struct {
 		Status      string   `json:"status"`
 		Content     string   `json:"content"`
 		Description string   `json:"description"`
 		Tags        string `json:"tags"`
-		Result 		string
 	} `json:"no"`
 }
 
@@ -278,3 +276,15 @@ type AlienVaultHash struct {
 	} `json:"pulse_info"`
 	FalsePositive []interface{} `json:"false_positive"`
 }
+
+type ResultFrontendResponse struct {
+	EN struct{
+		Result string
+	}
+	
+	NO struct {
+		Result string
+		}
+	
+	FrontendResponse []FrontendResponse2
+	} 

@@ -66,8 +66,16 @@ func main() {
 		wg.Wait()
 		
 		//responseData2 := FR122(responseData[:])
+		var resultResponse utils.ResultFrontendResponse
 
-		URLint, err := json.Marshal(responseData)
+		resultResponse.FrontendResponse = responseData[:]
+
+		var setResults *utils.ResultFrontendResponse
+		setResults = &resultResponse
+
+		utils.SetResultURL(setResults, len(responseData))
+
+		URLint, err := json.Marshal(resultResponse)
 
 		if err != nil {
 			fmt.Println(err)
@@ -239,6 +247,7 @@ func main() {
 
 	//GOLANG API STUFF:
 
+	/**
 	r.GET("/public-intelligence", func(c *gin.Context) {
 		//fmt.Println(c.Query("url"))
 
@@ -280,8 +289,8 @@ func main() {
 		ResultURLHybridA := api.CallHybridAnalyisUrl(HybridTestURL)
 
 		fmt.Println("\n\n\n\n\n HYBRID URL:\n\n", ResultURLHybridA)
-		*/
-	})
+		
+	})*/
 
 	r.GET("/url-intelligence", func(c *gin.Context) {
 
@@ -378,18 +387,33 @@ func main() {
 			fmt.Println("Language english")
 		}
 
-		var responseData [2]utils.FrontendResponse
+		var responseData [2]utils.FrontendResponse2
+		
+		var hybridApointer, AlienVaultpointer *utils.FrontendResponse2
 
-		responseData[0] = api.CallHybridAnalysisHash(hash)
+		hybridApointer = &responseData[0]
+		AlienVaultpointer = &responseData[1]
 
-		responseData[1] = api.CallAlienVaultHash(hash)
+		wg.Add(2)
+		go	api.CallHybridAnalysisHash(hash, hybridApointer, &wg)
+		go	api.CallAlienVaultHash(hash, AlienVaultpointer, &wg)
+		wg.Wait()
+		 
 
-		Hashint, err := json.Marshal(responseData)
+		var resultResponse utils.ResultFrontendResponse
+		
+		resultResponse.FrontendResponse = responseData[:]
+		var resultPointer = &resultResponse
+
+		utils.SetResultHash(resultPointer, len(responseData))
+
+		Hashint, err := json.Marshal(resultResponse)
 		if err != nil {
 			fmt.Println(err)
+			//c.Data(http.StatusInternalServerError, "application/json", )
 		}
 
-		fmt.Println("WHERE IS MY CONTENT", responseData)
+		//fmt.Println("WHERE IS MY CONTENT", responseData)
 
 		c.Data(http.StatusOK, "application/json", Hashint)
 

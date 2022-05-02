@@ -15,9 +15,13 @@ import (
 )
 
 // CallHybridAnalysisHash function takes a hash, returns data on it from the hybridanalysis api
-func CallHybridAnalysisHash(hash string) (response utils.FrontendResponse) {
+func CallHybridAnalysisHash(hash string, response *utils.FrontendResponse2, wg *sync.WaitGroup) {
 
 	// API dokumentasjon https://www.hybrid-analysis.com/docs/api/v2#/Search/post_search_hash
+
+	defer wg.Done()
+
+	response.SourceName = "Hybrid Analysis"
 
 	content, err := ioutil.ReadFile("./APIKey/HybridAnalysisAPI.txt")
 	if err != nil {
@@ -41,47 +45,40 @@ func CallHybridAnalysisHash(hash string) (response utils.FrontendResponse) {
 
 	res, err := client.Do(req)
 	if err != nil {
-		panic(err)
+		fmt.Println("Request error HybridA", err)
+		utils.SetGenericError(response)
 	}
 	defer res.Body.Close()
 
+	fmt.Println("\nStatus paa request", res.Status)
+	if(res.StatusCode == 200){
+
 	//fmt.Println("response Status:", res.Status)
 	//fmt.Print("Response Headers:", res.Header)
-	body, _ := ioutil.ReadAll(res.Body)
+		body, _ := ioutil.ReadAll(res.Body)
+		fmt.Println("\nBody", string(body))
 	//fmt.Println("response Body:", string(body))
 
-	var jsonResponse utils.HybridAnalysishash
+		var jsonResponse utils.HybridAnalysishash
 
-	err = json.Unmarshal(body, &jsonResponse)
-	if err != nil {
-		fmt.Println(err)
-	}
-
-	fmt.Println("Something cool", jsonResponse.Verdict)
-
-	response.SourceName = "Hybrid Analysis"
-	if jsonResponse.Verdict == "malicious" {
-		response.Status = "Risk"
-		response.Content = "This file is malicious"
-		//response.SourceName = jsonResponse.Submissions[0].Filename
-	} else if jsonResponse.Verdict == "whitelisted" {
-		response.Status = "Safe"
-		response.Content = "This file is known to be good"
-		//response.SourceName = jsonResponse.Submissions[0].Filename
-	} else {
-		response.Status = "Safe" //Denne må byttes til at den er ukjent // grå farge elns på frontend.
-		response.Content = "This filehash is not known to Hybrid Analysis"
-	}
-
-	// Set the filename field if known
-	if jsonResponse.Submissions != nil {
-		if jsonResponse.Submissions[0].Filename != "" {
-			response.Content = response.Content + " " + jsonResponse.Submissions[0].Filename
+		err = json.Unmarshal(body, &jsonResponse)
+		if err != nil {
+			fmt.Println(string(body))
+			fmt.Println(err)
+			if len(string(body)) == 2 {		//If this statement is true it means that the request
+											//is sucessful but it cant be unmarshalled because it returns empty
+											//It returns empty because HybridAnalysis does not have any information on the hash.
+				utils.SetResponseObjectHybridAnalysisHash(jsonResponse, response)	//This function will then parse this as unknown.
+			}else{
+				utils.SetGenericError(response) //If it did not return empty but still failed it means something else went wrong,											//Returning an error
+			}
+			return		//Returning
 		}
+
+	utils.SetResponseObjectHybridAnalysisHash(jsonResponse, response)
+	}else{
+		utils.SetGenericError(response)
 	}
-
-	return
-
 }
 
 // CallHybridAnalyisUrl function takes a url, returns data on it from the hybridanalysis api
