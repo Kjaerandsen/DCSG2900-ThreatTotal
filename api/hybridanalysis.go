@@ -146,7 +146,7 @@ func CallHybridAnalyisUrl(URL string) (VirusTotal utils.FrontendResponse, urlsca
 		fmt.Println(err)
 	}
 
-	if jsonResponse.Finished != true {
+	if !jsonResponse.Finished {
 		time.Sleep(20 * time.Second) //Får prøve å finne en bedre løsning enn dette men det er det jeg har for now.
 
 		res, err := client.Do(req)
@@ -188,7 +188,6 @@ func CallHybridAnalyisUrl(URL string) (VirusTotal utils.FrontendResponse, urlsca
 func TestHybridAnalyisUrl(URL string, VirusTotal *utils.FrontendResponse2, urlscanio *utils.FrontendResponse2, wg *sync.WaitGroup) {
 
 	defer wg.Done()
-	
 
 	fmt.Println("HYBRID URL: ", URL)
 	//DENNE FUNKSJONENE KAN SCANNE EN URL MEN DETTE BENYTTER SEG AV VIRUS TOTAL/
@@ -230,7 +229,7 @@ func TestHybridAnalyisUrl(URL string, VirusTotal *utils.FrontendResponse2, urlsc
 	defer res.Body.Close()
 
 	fmt.Println("response Status:", res.Status)
-	if res.StatusCode == http.StatusOK{
+	if res.StatusCode == http.StatusOK {
 
 		// res.Body.Read("finished") Her skal jeg føre en sjekk som sjekker om "finished = true eller false"
 
@@ -254,7 +253,7 @@ func TestHybridAnalyisUrl(URL string, VirusTotal *utils.FrontendResponse2, urlsc
 			fmt.Println(err)
 		}
 
-		if jsonResponse.Finished != true {
+		if !jsonResponse.Finished {
 			time.Sleep(20 * time.Second) //Får prøve å finne en bedre løsning enn dette men det er det jeg har for now.
 
 			res, err := client.Do(req)
@@ -279,40 +278,39 @@ func TestHybridAnalyisUrl(URL string, VirusTotal *utils.FrontendResponse2, urlsc
 		VirusTotal.SourceName = jsonResponse.Scanners[0].Name
 		urlscanio.SourceName = jsonResponse.Scanners[1].Name
 		/*
-		VirusTotal.Status = jsonResponse.Scanners[0].Status
+				VirusTotal.Status = jsonResponse.Scanners[0].Status
 
-		// Set the clean value to safe instead for frontend display.
-		if VirusTotal.Status == "clean" {
-			VirusTotal.Status = "Safe"
-		}
+				// Set the clean value to safe instead for frontend display.
+				if VirusTotal.Status == "clean" {
+					VirusTotal.Status = "Safe"
+				}
 
-		urlscanio.SourceName = jsonResponse.Scanners[1].Name
-		urlscanio.Status = jsonResponse.Scanners[1].Status
+				urlscanio.SourceName = jsonResponse.Scanners[1].Name
+				urlscanio.Status = jsonResponse.Scanners[1].Status
 
-		fmt.Println("Attempted HybridAnalysisURL output VT:", VirusTotal.SourceName, "   Status:", VirusTotal.Status)
-		fmt.Println("\n\nAttempted HybridAnalysisURL output VT:", urlscanio.SourceName, "   Status:", urlscanio.Status)
+				fmt.Println("Attempted HybridAnalysisURL output VT:", VirusTotal.SourceName, "   Status:", VirusTotal.Status)
+				fmt.Println("\n\nAttempted HybridAnalysisURL output VT:", urlscanio.SourceName, "   Status:", urlscanio.Status)
+			} else {
+				VirusTotal.SourceName = "VirusTotal"
+				VirusTotal.Status = "Error"
+
+				urlscanio.SourceName = "urlscan.io"
+				urlscanio.Status = "Error"
+			}
+		*/
+		fmt.Println("WHAT IS THIS \n\n\n", jsonResponse.Finished)
+		fmt.Println("URLSCANIO STATUS:", jsonResponse.Scanners[1].Status)
+
+		utils.SetResponeObjectVirusTotal(jsonResponse, VirusTotal)
+		utils.SetResponeObjectUrlscanio(jsonResponse, urlscanio)
 	} else {
 		VirusTotal.SourceName = "VirusTotal"
-		VirusTotal.Status = "Error"
+		VirusTotal.EN.Status = "Error"
+		VirusTotal.NO.Status = "Error"
 
 		urlscanio.SourceName = "urlscan.io"
-		urlscanio.Status = "Error"
+		urlscanio.EN.Status = "Error"
+		urlscanio.NO.Status = "Error"
+
 	}
-	*/
-	fmt.Println("WHAT IS THIS \n\n\n", jsonResponse.Finished)
-	fmt.Println("URLSCANIO STATUS:", jsonResponse.Scanners[1].Status)
-
-	utils.SetResponeObjectVirusTotal(jsonResponse, VirusTotal)
-	utils.SetResponeObjectUrlscanio(jsonResponse, urlscanio)
-}else {
-	VirusTotal.SourceName = "VirusTotal"
-	VirusTotal.EN.Status = "Error"
-	VirusTotal.NO.Status = "Error"
-
-	urlscanio.SourceName = "urlscan.io"
-	urlscanio.EN.Status = "Error"
-	urlscanio.NO.Status = "Error"
-
 }
-}
-
