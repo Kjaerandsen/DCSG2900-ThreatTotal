@@ -1,14 +1,16 @@
 package main
 
 import (
+	"bytes"
 	"dcsg2900-threattotal/api"
 	"dcsg2900-threattotal/utils"
 	"encoding/json"
 	"fmt"
+	"io"
 	"io/ioutil"
 	"log"
+	"mime/multipart"
 	"net/http"
-	"strings"
 	"sync"
 
 	// External
@@ -52,10 +54,10 @@ func main() {
 		}
 
 		var p, VirusTotal, urlscanio, alienvault *utils.FrontendResponse2
-			p = &responseData[0]
-			VirusTotal = &responseData[1]
-			urlscanio  = &responseData[2]
-			alienvault = &responseData[3]
+		p = &responseData[0]
+		VirusTotal = &responseData[1]
+		urlscanio = &responseData[2]
+		alienvault = &responseData[3]
 
 		fmt.Println(url)
 
@@ -64,7 +66,7 @@ func main() {
 		go api.TestHybridAnalyisUrl(url, VirusTotal, urlscanio, &wg)
 		go api.TestAlienVaultUrl(url, alienvault, &wg)
 		wg.Wait()
-		
+
 		//responseData2 := FR122(responseData[:])
 
 		URLint, err := json.Marshal(responseData)
@@ -198,37 +200,58 @@ func main() {
 	// TODO: Upload a file
 	// figure out routing here, where are we supposted to have/deliver a file?
 	// do we make a new route that says "search" instead? discuss this tomorrow
-	// https://github.com/gin-gonic/gin#single-file
+	// inspiration from https://github.com/dutchcoders/go-virustotal/blob/24cc8e6fa329f020c70a3b32330b5743f1ba7971/virustotal.go#L305
+
 	r.POST("/upload", func(c *gin.Context) {
 
 		log.Println("Fileupload worked")
 
-		file, _ := c.FormFile("file")
-		inputFile, _ := file.Open()
+		uri := "https://www.virustotal.com/api/v3/files"
+		body := &bytes.Buffer{}
+		writer := multipart.NewWriter(body)
 
-		log.Println(file.Filename)
-		log.Println(file.Header)
-		log.Println(inputFile)
+		// fetch the file contents
+		file2, _ := c.FormFile("file")
+		// open the file
+		file3, _ := file2.Open()
 
-		url := "https://www.virustotal.com/api/v3/files"
+		// use file contents to fetch file name, associate it with the "file" form header.
+		part, err := writer.CreateFormFile("file", file2.Filename)
 
-		payload := strings.NewReader("-----011000010111000001101001\r\nContent-Disposition: form-data; name=\"file\"\r\n\r\ndata:text/plain;name=asdf.txt;base64,YXNkYQ==\r\n-----011000010111000001101001--\r\n\r\n")
+		if err != nil {
+			log.Println(err)
+		}
+		// copy file locally
+		_, err = io.Copy(part, file3)
 
-		req, _ := http.NewRequest("POST", url, payload)
-		log.Println(req)
+		err = writer.Close()
 
+		if err != nil {
+			log.Println(err)
+		}
+
+		// prepare request towards API
+		req, err := http.NewRequest("POST", uri, body)
+
+		// dynamically set content type, based on the formdata writer
+		req.Header.Set("Content-Type", writer.FormDataContentType())
+
+		// remember to change api key, and reference it to a file instead
+		// as well as deactivate the key from the account, as it's leaked.
 		req.Header.Add("x-apikey", "4062c07a4340e4f8fe5f647412ef936d99d53aa793e1cebfc4b31e43ae801ed0")
-		req.Header.Add("Content-Type", "multipart/form-data; boundary=---011000010111000001101001")
 
+		// perform the prepared API request
 		res, _ := http.DefaultClient.Do(req)
 
 		defer res.Body.Close()
 
-		body, _ := ioutil.ReadAll(res.Body)
+		// read the response
+		contents, _ := ioutil.ReadAll(res.Body)
 
 		log.Println(res)
 
-		log.Println(string(body))
+		log.Println(string(contents))
+
 	})
 
 	/**
