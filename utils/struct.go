@@ -24,7 +24,7 @@ type Scanners struct {
 }
 
 type APIresponseResult struct {
-	Result		string
+	Result       string
 	ResponseData []FrontendResponse2
 }
 
@@ -42,18 +42,18 @@ type FrontendResponse2 struct {
 	ID         int    `json:"id"`
 	SourceName string `json:"sourceName"`
 	EN         struct {
-		Status      string   `json:"status"`
-		Content     string   `json:"content"`
-		Description string   `json:"description"`
-		Tags        string `json:"tags"`					//fjerner denne fra å være []string for now.
-		Result 		string
+		Status      string `json:"status"`
+		Content     string `json:"content"`
+		Description string `json:"description"`
+		Tags        string `json:"tags"` //fjerner denne fra å være []string for now.
+		Result      string
 	} `json:"en"`
 	NO struct {
-		Status      string   `json:"status"`
-		Content     string   `json:"content"`
-		Description string   `json:"description"`
+		Status      string `json:"status"`
+		Content     string `json:"content"`
+		Description string `json:"description"`
 		Tags        string `json:"tags"`
-		Result 		string
+		Result      string
 	} `json:"no"`
 }
 
@@ -277,4 +277,31 @@ type AlienVaultHash struct {
 		} `json:"related"`
 	} `json:"pulse_info"`
 	FalsePositive []interface{} `json:"false_positive"`
+}
+
+// feideToken response to oauth2token request
+type FeideToken struct {
+	AccessToken string `json:"access_token"`
+	TokenType   string `json:"token_type"`
+	ExpiresIn   int    `json:"expires_in"`
+	Scope       string `json:"scope"`
+	IDToken     string `json:"id_token"`
+}
+
+type FeideJWT struct {
+	Header struct {
+		Typ string `json:"typ"`
+		Alg string `json:"alg"`
+		Kid string `json:"kid"`
+	} `json:"header"`
+	Payload struct {
+		Iss      string `json:"iss"`
+		Jti      string `json:"jti"`
+		Aud      string `json:"aud"`
+		Sub      string `json:"sub"`
+		Iat      int    `json:"iat"`
+		Exp      int    `json:"exp"`
+		AuthTime int    `json:"auth_time"`
+		Email    string `json:"email"`
+	} `json:"payload"`
 }

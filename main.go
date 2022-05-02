@@ -1,20 +1,25 @@
 package main
 
 import (
+	"bytes"
+	"context"
 	"dcsg2900-threattotal/api"
+	"dcsg2900-threattotal/storage"
 	"dcsg2900-threattotal/utils"
 	"encoding/json"
 	"fmt"
+	"io"
 	"io/ioutil"
 	"log"
+	"mime/multipart"
 	"net/http"
-	"strings"
-	"sync"
 
 	// External
 	//webrisk "cloud.google.com/go/webrisk/apiv1"
+	"github.com/coreos/go-oidc/v3/oidc"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
+	"golang.org/x/oauth2"
 	//"google.golang.org/grpc/status"
 	//"google.golang.org/api/option"
 	//webriskpb "google.golang.org/genproto/googleapis/cloud/webrisk/v1"
@@ -22,17 +27,35 @@ import (
 	//"google.golang.org/api/option"
 )
 
-var wg sync.WaitGroup //Vente gruppe for goroutiner
-
 func main() {
 	r := gin.Default()
 
 	r.Use(cors.Default())
 
-	/*
-		redisPool := Storage.InitPool()
-		conn := redisPool.Get()
-	*/
+	var err error
+
+	utils.Ctx = context.Background()
+
+	utils.Config = oauth2.Config{
+		ClientID:     "",
+		ClientSecret: "",
+		Endpoint: oauth2.Endpoint{
+			AuthURL:  "https://auth.dataporten.no/oauth/authorization",
+			TokenURL: "https://auth.dataporten.no/oauth/token",
+		},
+		RedirectURL: "http://localhost:3000",
+		Scopes:      []string{oidc.ScopeOpenID, "email"},
+	}
+
+	// Initializing authentication connection
+	utils.Provider, err = oidc.NewProvider(utils.Ctx, "https://auth.dataporten.no")
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	// move to init function?
+	RedisPool := storage.InitPool()
+	utils.Conn = RedisPool.Get()
 
 	r.GET("/", func(c *gin.Context) {
 		//c.HTML(http.StatusOK, hello world, gin.H{
@@ -41,43 +64,7 @@ func main() {
 	})
 
 	r.GET("/url-testing", func(c *gin.Context) {
-
-		url := c.Query("url")
-		lng := c.Query("lng")
-
-		var responseData [4]utils.FrontendResponse2
-
-		if lng != "no" {
-			fmt.Println("Language english")
-		}
-
-		var p, VirusTotal, urlscanio, alienvault *utils.FrontendResponse2
-			p = &responseData[0]
-			VirusTotal = &responseData[1]
-			urlscanio  = &responseData[2]
-			alienvault = &responseData[3]
-
-		fmt.Println(url)
-
-		wg.Add(3)
-		go api.TestGoGoogleUrl(url, p, &wg)
-		go api.TestHybridAnalyisUrl(url, VirusTotal, urlscanio, &wg)
-		go api.TestAlienVaultUrl(url, alienvault, &wg)
-		wg.Wait()
-		
-		//responseData2 := FR122(responseData[:])
-
-		URLint, err := json.Marshal(responseData)
-
-		if err != nil {
-			fmt.Println(err)
-		}
-
-		fmt.Println("WHERE IS MY CONTENT 1", responseData)
-		//fmt.Println("WHERE IS MY CONTENT 2", responseData2)
-
-		c.Data(http.StatusOK, "application/json", URLint)
-
+		api.UrlIntelligence(c)
 	})
 
 	/**
@@ -133,102 +120,69 @@ func main() {
 		c.Data(http.StatusOK, "application/json", outputData)
 	})
 
-	/*
-		r.GET("/result", func(c *gin.Context) {
-			fmt.Println(c.Query("url"))
-			fmt.Println(c.Query("hash"))
-			var data [3]utils.FrontendResponse
-			var Data2 []byte
-
-			value, err := conn.Do("GET", "key")
-			if value == nil {
-				if err != nil {
-					fmt.Println("Error:" + err.Error())
-				}
-				fmt.Println("No Cache hit")
-				data[0].ID = 1
-				data[0].SourceName = "Threat Total"
-				data[0].Content = "Unsafe: potentially unwanted software."
-				data[0].Tags = []string{"PUA", "Windows", "Social Engineering", "URL"}
-				data[0].Description = "Potentially unwanted software, might be used for lorem ipsum dolor sin amet."
-				data[0].Status = "Potentially unsafe"
-
-				data[1].ID = 2
-				data[1].SourceName = "Google safebrowsing"
-				data[1].Content = "Unsafe: Malware."
-				data[1].Tags = []string{"Malware", "Windows", "URL"}
-				data[1].Description = "Malware found at he location, might be used for lorem ipsum dolor sin amet."
-				data[1].Status = "Risk"
-
-				data[2].ID = 3
-				data[2].SourceName = "Hybrid Analysis"
-				data[2].Content = "Safe: No known risks at this location."
-				data[2].Tags = []string{"URL", "Safe"}
-				data[2].Description = "No known risks at this location. The data source has no information on this url."
-				data[2].Status = "Safe"
-
-				Data2, _ = json.Marshal(data)
-
-				// Add the data to the cache
-				// Set the key to Data2 with a timeout (auto purge) of x seconds
-				response, err := conn.Do("SETEX", "key", 10, Data2)
-				if err != nil {
-					fmt.Println("Error:" + err.Error())
-				}
-				// Print the response to adding the data (should be "OK"
-				fmt.Println(response)
-
-				// Cache hit
-			} else {
-				fmt.Println("Cache hit")
-				fmt.Println("Value is:\n", value)
-				responseBytes, err := json.Marshal(value)
-				if err != nil {
-					fmt.Println("Error handling redis response:" + err.Error())
-				}
-				err = json.Unmarshal(responseBytes, &Data2)
-				if err != nil {
-					fmt.Println("Error handling redis response:" + err.Error())
-				}
-			}
-
-			c.Data(http.StatusOK, "application/json", Data2)
-		})*/
-
 	// TODO: Upload a file
 	// figure out routing here, where are we supposted to have/deliver a file?
 	// do we make a new route that says "search" instead? discuss this tomorrow
-	// https://github.com/gin-gonic/gin#single-file
+	// inspiration from https://github.com/dutchcoders/go-virustotal/blob/24cc8e6fa329f020c70a3b32330b5743f1ba7971/virustotal.go#L305
+
 	r.POST("/upload", func(c *gin.Context) {
 
 		log.Println("Fileupload worked")
 
-		file, _ := c.FormFile("file")
-		inputFile, _ := file.Open()
+		uri := "https://www.virustotal.com/api/v3/files"
+		body := &bytes.Buffer{}
+		writer := multipart.NewWriter(body)
 
-		log.Println(file.Filename)
-		log.Println(file.Header)
-		log.Println(inputFile)
+		// fetch the file contents
+		file2, _ := c.FormFile("file")
+		// open the file
+		file3, _ := file2.Open()
 
-		url := "https://www.virustotal.com/api/v3/files"
+		// use file contents to fetch file name, associate it with the "file" form header.
+		part, err := writer.CreateFormFile("file", file2.Filename)
 
-		payload := strings.NewReader("-----011000010111000001101001\r\nContent-Disposition: form-data; name=\"file\"\r\n\r\ndata:text/plain;name=asdf.txt;base64,YXNkYQ==\r\n-----011000010111000001101001--\r\n\r\n")
+		if err != nil {
+			log.Println(err)
+		}
+		// copy file locally
+		_, err = io.Copy(part, file3)
 
-		req, _ := http.NewRequest("POST", url, payload)
-		log.Println(req)
+		if err != nil {
+			log.Println(err)
+		}
+		// close writer
+		err = writer.Close()
 
+		if err != nil {
+			log.Println(err)
+		}
+
+		// prepare request towards API
+		req, err := http.NewRequest("POST", uri, body)
+
+		if err != nil {
+			log.Println(err)
+		}
+
+		// dynamically set content type, based on the formdata writer
+		req.Header.Set("Content-Type", writer.FormDataContentType())
+
+		// remember to change api key, and reference it to a file instead
+		// as well as deactivate the key from the account, as it's leaked.
 		req.Header.Add("x-apikey", "4062c07a4340e4f8fe5f647412ef936d99d53aa793e1cebfc4b31e43ae801ed0")
-		req.Header.Add("Content-Type", "multipart/form-data; boundary=---011000010111000001101001")
 
+		// perform the prepared API request
 		res, _ := http.DefaultClient.Do(req)
 
 		defer res.Body.Close()
 
-		body, _ := ioutil.ReadAll(res.Body)
+		// read the response
+		contents, _ := ioutil.ReadAll(res.Body)
 
 		log.Println(res)
 
-		log.Println(string(body))
+		log.Println(string(contents))
+
 	})
 
 	/**
@@ -371,25 +325,48 @@ func main() {
 	})
 
 	r.GET("/hash-intelligence", func(c *gin.Context) {
+
 		hash := c.Query("hash")
-		lng := c.Query("lng")
 
-		if lng != "no" {
-			fmt.Println("Language english")
-		}
-
+		var Hashint []byte
 		var responseData [2]utils.FrontendResponse
 
-		responseData[0] = api.CallHybridAnalysisHash(hash)
+		value, err := utils.Conn.Do("GET", hash)
+		if value == nil {
+			if err != nil {
+				fmt.Println("Error:" + err.Error())
+			}
+			fmt.Println("No Cache hit")
+			responseData[0] = api.CallHybridAnalysisHash(hash)
 
-		responseData[1] = api.CallAlienVaultHash(hash)
+			responseData[1] = api.CallAlienVaultHash(hash)
 
-		Hashint, err := json.Marshal(responseData)
-		if err != nil {
-			fmt.Println(err)
+			Hashint, err = json.Marshal(responseData)
+			if err != nil {
+				fmt.Println(err)
+			}
+
+			response, err := utils.Conn.Do("SETEX", hash, 60, Hashint)
+			if err != nil {
+				fmt.Println("Error adding data to redis:" + err.Error())
+			}
+			// Print the response to adding the data (should be "OK"
+			fmt.Println(response)
+
+			fmt.Println("WHERE IS MY CONTENT", responseData)
+			// Cache hit
+		} else {
+			fmt.Println("Cache hit")
+			responseBytes, err := json.Marshal(value)
+			if err != nil {
+				fmt.Println("Error handling redis response:" + err.Error())
+			}
+			err = json.Unmarshal(responseBytes, &Hashint)
+			if err != nil {
+				fmt.Println("Error handling redis response:" + err.Error())
+			}
+			fmt.Println("Value is:\n", Hashint)
 		}
-
-		fmt.Println("WHERE IS MY CONTENT", responseData)
 
 		c.Data(http.StatusOK, "application/json", Hashint)
 
