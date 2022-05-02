@@ -2,6 +2,7 @@ package main
 
 import (
 	"dcsg2900-threattotal/api"
+	"dcsg2900-threattotal/storage"
 	"dcsg2900-threattotal/utils"
 	"encoding/json"
 	"fmt"
@@ -29,10 +30,8 @@ func main() {
 
 	r.Use(cors.Default())
 
-	/*
-		redisPool := Storage.InitPool()
-		conn := redisPool.Get()
-	*/
+	RedisPool := storage.InitPool()
+	Conn := RedisPool.Get()
 
 	r.GET("/", func(c *gin.Context) {
 		//c.HTML(http.StatusOK, hello world, gin.H{
@@ -43,38 +42,60 @@ func main() {
 	r.GET("/url-testing", func(c *gin.Context) {
 
 		url := c.Query("url")
-		lng := c.Query("lng")
 
+		var URLint []byte
 		var responseData [4]utils.FrontendResponse2
 
-		if lng != "no" {
-			fmt.Println("Language english")
-		}
+		value, err := Conn.Do("GET", url)
+		if value == nil {
+			if err != nil {
+				fmt.Println("Error:" + err.Error())
+			}
+			fmt.Println("No Cache hit")
 
-		var p, VirusTotal, urlscanio, alienvault *utils.FrontendResponse2
+			var p, VirusTotal, urlscanio, alienvault *utils.FrontendResponse2
 			p = &responseData[0]
 			VirusTotal = &responseData[1]
-			urlscanio  = &responseData[2]
+			urlscanio = &responseData[2]
 			alienvault = &responseData[3]
 
-		fmt.Println(url)
+			fmt.Println(url)
 
-		wg.Add(3)
-		go api.TestGoGoogleUrl(url, p, &wg)
-		go api.TestHybridAnalyisUrl(url, VirusTotal, urlscanio, &wg)
-		go api.TestAlienVaultUrl(url, alienvault, &wg)
-		wg.Wait()
-		
-		//responseData2 := FR122(responseData[:])
+			wg.Add(3)
+			go api.TestGoGoogleUrl(url, p, &wg)
+			go api.TestHybridAnalyisUrl(url, VirusTotal, urlscanio, &wg)
+			go api.TestAlienVaultUrl(url, alienvault, &wg)
+			wg.Wait()
 
-		URLint, err := json.Marshal(responseData)
+			//responseData2 := FR122(responseData[:])
 
-		if err != nil {
-			fmt.Println(err)
+			URLint, err = json.Marshal(responseData)
+			if err != nil {
+				fmt.Println(err)
+			}
+
+			response, err := Conn.Do("SETEX", url, 60, URLint)
+			if err != nil {
+				fmt.Println("Error adding data to redis:" + err.Error())
+			}
+			// Print the response to adding the data (should be "OK"
+			fmt.Println(response)
+
+			fmt.Println("WHERE IS MY CONTENT 1", responseData)
+			//fmt.Println("WHERE IS MY CONTENT 2", responseData2)
+			// Cache hit
+		} else {
+			fmt.Println("Cache hit")
+			responseBytes, err := json.Marshal(value)
+			if err != nil {
+				fmt.Println("Error handling redis response:" + err.Error())
+			}
+			err = json.Unmarshal(responseBytes, &URLint)
+			if err != nil {
+				fmt.Println("Error handling redis response:" + err.Error())
+			}
+			fmt.Println("Value is:\n", URLint)
 		}
-
-		fmt.Println("WHERE IS MY CONTENT 1", responseData)
-		//fmt.Println("WHERE IS MY CONTENT 2", responseData2)
 
 		c.Data(http.StatusOK, "application/json", URLint)
 
@@ -371,25 +392,48 @@ func main() {
 	})
 
 	r.GET("/hash-intelligence", func(c *gin.Context) {
+
 		hash := c.Query("hash")
-		lng := c.Query("lng")
 
-		if lng != "no" {
-			fmt.Println("Language english")
-		}
-
+		var Hashint []byte
 		var responseData [2]utils.FrontendResponse
 
-		responseData[0] = api.CallHybridAnalysisHash(hash)
+		value, err := Conn.Do("GET", hash)
+		if value == nil {
+			if err != nil {
+				fmt.Println("Error:" + err.Error())
+			}
+			fmt.Println("No Cache hit")
+			responseData[0] = api.CallHybridAnalysisHash(hash)
 
-		responseData[1] = api.CallAlienVaultHash(hash)
+			responseData[1] = api.CallAlienVaultHash(hash)
 
-		Hashint, err := json.Marshal(responseData)
-		if err != nil {
-			fmt.Println(err)
+			Hashint, err = json.Marshal(responseData)
+			if err != nil {
+				fmt.Println(err)
+			}
+
+			response, err := Conn.Do("SETEX", hash, 60, Hashint)
+			if err != nil {
+				fmt.Println("Error adding data to redis:" + err.Error())
+			}
+			// Print the response to adding the data (should be "OK"
+			fmt.Println(response)
+
+			fmt.Println("WHERE IS MY CONTENT", responseData)
+			// Cache hit
+		} else {
+			fmt.Println("Cache hit")
+			responseBytes, err := json.Marshal(value)
+			if err != nil {
+				fmt.Println("Error handling redis response:" + err.Error())
+			}
+			err = json.Unmarshal(responseBytes, &Hashint)
+			if err != nil {
+				fmt.Println("Error handling redis response:" + err.Error())
+			}
+			fmt.Println("Value is:\n", Hashint)
 		}
-
-		fmt.Println("WHERE IS MY CONTENT", responseData)
 
 		c.Data(http.StatusOK, "application/json", Hashint)
 

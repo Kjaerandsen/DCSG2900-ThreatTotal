@@ -1,4 +1,4 @@
-package Storage
+package storage
 
 import (
 	"github.com/gomodule/redigo/redis"
@@ -7,7 +7,7 @@ import (
 // Alternatively use https://github.com/go-redis/redis
 
 // TODO: move theese to the utils library when done testing
-const Host = "10.0.0.42"
+const Host = "localhost"
 const Port = "6379"
 
 // TODO: password in authentication file or as system args?
