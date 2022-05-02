@@ -919,3 +919,30 @@ type FileUploadData struct {
 		} `json:"links"`
 	} `json:"data"`
 }
+
+// feideToken response to oauth2token request
+type FeideToken struct {
+	AccessToken string `json:"access_token"`
+	TokenType   string `json:"token_type"`
+	ExpiresIn   int    `json:"expires_in"`
+	Scope       string `json:"scope"`
+	IDToken     string `json:"id_token"`
+}
+
+type FeideJWT struct {
+	Header struct {
+		Typ string `json:"typ"`
+		Alg string `json:"alg"`
+		Kid string `json:"kid"`
+	} `json:"header"`
+	Payload struct {
+		Iss      string `json:"iss"`
+		Jti      string `json:"jti"`
+		Aud      string `json:"aud"`
+		Sub      string `json:"sub"`
+		Iat      int    `json:"iat"`
+		Exp      int    `json:"exp"`
+		AuthTime int    `json:"auth_time"`
+		Email    string `json:"email"`
+	} `json:"payload"`
+}

@@ -2,6 +2,7 @@ package main
 
 import (
 	"bytes"
+	"context"
 	"dcsg2900-threattotal/api"
 	"dcsg2900-threattotal/storage"
 	"dcsg2900-threattotal/utils"
@@ -17,8 +18,10 @@ import (
 
 	// External
 	//webrisk "cloud.google.com/go/webrisk/apiv1"
+	"github.com/coreos/go-oidc/v3/oidc"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
+	"golang.org/x/oauth2"
 	//"google.golang.org/grpc/status"
 	//"google.golang.org/api/option"
 	//webriskpb "google.golang.org/genproto/googleapis/cloud/webrisk/v1"
@@ -30,6 +33,27 @@ func main() {
 	r := gin.Default()
 
 	r.Use(cors.Default())
+
+	var err error
+
+	utils.Ctx = context.Background()
+
+	utils.Config = oauth2.Config{
+		ClientID:     "",
+		ClientSecret: "",
+		Endpoint: oauth2.Endpoint{
+			AuthURL:  "https://auth.dataporten.no/oauth/authorization",
+			TokenURL: "https://auth.dataporten.no/oauth/token",
+		},
+		RedirectURL: "http://localhost:3000",
+		Scopes:      []string{oidc.ScopeOpenID, "email"},
+	}
+
+	// Initializing authentication connection
+	utils.Provider, err = oidc.NewProvider(utils.Ctx, "https://auth.dataporten.no")
+	if err != nil {
+		log.Fatal(err)
+	}
 
 	// move to init function?
 	RedisPool := storage.InitPool()
