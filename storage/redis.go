@@ -1,13 +1,16 @@
-package Storage
+package storage
 
 import (
+	"dcsg2900-threattotal/utils"
+	"fmt"
+
 	"github.com/gomodule/redigo/redis"
 )
 
 // Alternatively use https://github.com/go-redis/redis
 
 // TODO: move theese to the utils library when done testing
-const Host = "10.0.0.42"
+const Host = "localhost"
 const Port = "6379"
 
 // TODO: password in authentication file or as system args?
@@ -34,4 +37,15 @@ func InitPool() *redis.Pool {
 			return c, err
 		},
 	}
+}
+
+// Add to pool function takes a key, a timeout and some data and
+// adds it to the redis pool as a new key value pair.
+func AddToPool(key string, timeout int, data string) {
+	response, err := utils.Conn.Do("SETEX", key, timeout, data)
+	if err != nil {
+		fmt.Println("Error:" + err.Error())
+	}
+	// Print the response to adding the data (should be "OK"
+	fmt.Println(response)
 }
