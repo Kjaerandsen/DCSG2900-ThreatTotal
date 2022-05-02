@@ -171,9 +171,17 @@ func main() {
 		// dynamically set content type, based on the formdata writer
 		req.Header.Set("Content-Type", writer.FormDataContentType())
 
+		// ADD VT KEY TODO
+		content, err := ioutil.ReadFile("./APIKey/virusTotal.txt")
+		if err != nil {
+			//log.Fatal(err)
+			fmt.Println(err)
+		}
+		// Convert []byte to string and print to screen
+		APIKey := string(content)
 		// remember to change api key, and reference it to a file instead
 		// as well as deactivate the key from the account, as it's leaked.
-		req.Header.Add("x-apikey", "4062c07a4340e4f8fe5f647412ef936d99d53aa793e1cebfc4b31e43ae801ed0")
+		req.Header.Add("x-apikey", APIKey)
 
 		log.Println(req)
 		// perform the prepared API request
@@ -223,7 +231,7 @@ func main() {
 
 		vtReq.Header.Add("Accept", "application/json")
 
-		vtReq.Header.Add("X-Apikey", "4062c07a4340e4f8fe5f647412ef936d99d53aa793e1cebfc4b31e43ae801ed0")
+		vtReq.Header.Add("X-Apikey", APIKey)
 
 		vtRes, _ := http.DefaultClient.Do(vtReq)
 
