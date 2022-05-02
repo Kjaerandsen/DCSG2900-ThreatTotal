@@ -5,6 +5,7 @@ import (
 	"dcsg2900-threattotal/api"
 	"dcsg2900-threattotal/storage"
 	"dcsg2900-threattotal/utils"
+	"encoding/base64"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -12,6 +13,7 @@ import (
 	"log"
 	"mime/multipart"
 	"net/http"
+	"strings"
 
 	// External
 	//webrisk "cloud.google.com/go/webrisk/apiv1"
@@ -147,17 +149,74 @@ func main() {
 		// as well as deactivate the key from the account, as it's leaked.
 		req.Header.Add("x-apikey", "4062c07a4340e4f8fe5f647412ef936d99d53aa793e1cebfc4b31e43ae801ed0")
 
+		log.Println(req)
 		// perform the prepared API request
-		res, _ := http.DefaultClient.Do(req)
+		res, err := http.DefaultClient.Do(req)
+
+		if err != nil {
+			log.Println(err)
+		}
 
 		defer res.Body.Close()
+
+		// så lenge status 200
 
 		// read the response
 		contents, _ := ioutil.ReadAll(res.Body)
 
-		log.Println(res)
-
 		log.Println(string(contents))
+
+		var jsonResponse utils.VirusTotalUploadID
+
+		log.Println(res)
+		unmarshalledID := json.Unmarshal(contents, &jsonResponse)
+
+		if unmarshalledID != nil {
+			log.Println(unmarshalledID)
+		}
+
+		encodedID := jsonResponse.Data.ID
+
+		// decode provided values for virustotal report
+		decode64, err := base64.RawStdEncoding.DecodeString(encodedID)
+		log.Println("decoded here")
+		log.Println(string(decode64))
+
+		// extract ID for virustotal report
+		trimID := strings.Split((string(decode64)), ":")
+		log.Println("TRIMMED")
+		log.Println(trimID[0])
+		if err != nil {
+			log.Println(err)
+		}
+
+		url := fmt.Sprintf("https://www.virustotal.com/api/v3/files/%s", trimID[0])
+		log.Println(url)
+
+		vtReq, _ := http.NewRequest("GET", url, nil)
+
+		vtReq.Header.Add("Accept", "application/json")
+
+		vtReq.Header.Add("X-Apikey", "4062c07a4340e4f8fe5f647412ef936d99d53aa793e1cebfc4b31e43ae801ed0")
+
+		vtRes, _ := http.DefaultClient.Do(vtReq)
+
+		defer res.Body.Close()
+
+		vtBody, _ := ioutil.ReadAll(vtRes.Body)
+
+		log.Println(string(vtBody))
+
+		var vtResponse utils.FileUploadData
+
+		unmarshalledBody := json.Unmarshal(vtBody, &vtResponse)
+
+		if unmarshalledBody != nil {
+			log.Println(unmarshalledBody)
+		}
+
+		// sender struct nå til en ny struct, som heter frontendresponse 3 elns
+		// denne henter ut f.eks category, engine name og result
 
 	})
 
