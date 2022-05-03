@@ -14,6 +14,7 @@ import (
 	"log"
 	"mime/multipart"
 	"net/http"
+	"os"
 	"strings"
 	"sync"
 
@@ -40,8 +41,8 @@ func main() {
 	utils.Ctx = context.Background()
 
 	utils.Config = oauth2.Config{
-		ClientID:     "",
-		ClientSecret: "",
+		ClientID:     os.Getenv("clientId"),
+		ClientSecret: "clientSecret",
 		Endpoint: oauth2.Endpoint{
 			AuthURL:  "https://auth.dataporten.no/oauth/authorization",
 			TokenURL: "https://auth.dataporten.no/oauth/token",
@@ -81,10 +82,10 @@ func main() {
 		}
 
 		var p, VirusTotal, urlscanio, alienvault *utils.FrontendResponse2
-			p = &responseData[0]
-			VirusTotal = &responseData[1]
-			urlscanio  = &responseData[2]
-			alienvault = &responseData[3]
+		p = &responseData[0]
+		VirusTotal = &responseData[1]
+		urlscanio = &responseData[2]
+		alienvault = &responseData[3]
 
 		fmt.Println(url)
 
@@ -93,7 +94,7 @@ func main() {
 		go api.TestHybridAnalyisUrl(url, VirusTotal, urlscanio, &wg)
 		go api.TestAlienVaultUrl(url, alienvault, &wg)
 		wg.Wait()
-		
+
 		//responseData2 := FR122(responseData[:])
 		var resultResponse utils.ResultFrontendResponse
 
@@ -350,7 +351,7 @@ func main() {
 		ResultURLHybridA := api.CallHybridAnalyisUrl(HybridTestURL)
 
 		fmt.Println("\n\n\n\n\n HYBRID URL:\n\n", ResultURLHybridA)
-		
+
 	})*/
 
 	r.GET("/url-intelligence", func(c *gin.Context) {
@@ -406,20 +407,19 @@ func main() {
 		hash := c.Query("hash")
 
 		var responseData [2]utils.FrontendResponse2
-		
+
 		var hybridApointer, AlienVaultpointer *utils.FrontendResponse2
 
 		hybridApointer = &responseData[0]
 		AlienVaultpointer = &responseData[1]
 
 		wg.Add(2)
-		go	api.CallHybridAnalysisHash(hash, hybridApointer, &wg)
-		go	api.CallAlienVaultHash(hash, AlienVaultpointer, &wg)
+		go api.CallHybridAnalysisHash(hash, hybridApointer, &wg)
+		go api.CallAlienVaultHash(hash, AlienVaultpointer, &wg)
 		wg.Wait()
-		 
 
 		var resultResponse utils.ResultFrontendResponse
-		
+
 		resultResponse.FrontendResponse = responseData[:]
 		var resultPointer = &resultResponse
 
