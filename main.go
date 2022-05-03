@@ -40,6 +40,9 @@ func main() {
 
 	utils.Ctx = context.Background()
 
+	fmt.Println("ClientId: ", os.Getenv("clientId"))
+	fmt.Println("Client secret: ", os.Getenv("clientSecret"))
+
 	utils.Config = oauth2.Config{
 		ClientID:     os.Getenv("clientId"),
 		ClientSecret: "clientSecret",
