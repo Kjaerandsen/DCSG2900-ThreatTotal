@@ -80,9 +80,16 @@ func urlSearch(url string) (data []byte, err error) {
 	go TestAlienVaultUrl(url, alienvault, &wg)
 	wg.Wait()
 
-	//responseData2 := FR122(responseData[:])
+	var resultResponse utils.ResultFrontendResponse
 
-	URLint, err = json.Marshal(responseData)
+		resultResponse.FrontendResponse = responseData[:]
+
+		var setResults *utils.ResultFrontendResponse
+		setResults = &resultResponse
+
+	utils.SetResultURL(setResults, len(responseData))
+	
+	URLint, err = json.Marshal(resultResponse)
 	if err != nil {
 		fmt.Println(err)
 		return URLint, err
