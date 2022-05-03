@@ -80,12 +80,10 @@ func SetResponeObjectVirusTotal(jsonResponse HybridAnalysisURL, VirusTotal *Fron
 		VirusTotal.NO.Content = "VirusTotal har ingen informasjon som tilsier at denne URL'en er skadelig."
 	} else if jsonResponse.Scanners[0].Status == "malicious" {
 		VirusTotal.EN.Status = "Risk"
-		//VirusTotal.EN.Content ="%d/%d Sources has detected this URL/Domain as malicious", jsonResponse.Scanners[0].Positives, jsonResponse.Scanners[0].Total
-
-		fmt.Printf("%d/%d Sources has detected this URL/Domain as malicious", jsonResponse.Scanners[0].Positives, jsonResponse.Scanners[0].Total)
+		VirusTotal.EN.Content = fmt.Sprintf("%d / %d Antivirus agents has detected this URL/Domain as malicious",  jsonResponse.Scanners[0].Positives, jsonResponse.Scanners[0].Total)
 
 		VirusTotal.NO.Status = "Utrygg"
-		//VirusTotal.NO.Content = jsonResponse.Scanners[0].Positives + "/" + jsonResponse.Scanners[0].Total + " har detektert denne URLen / domenet som skadelig"
+		VirusTotal.NO.Content =fmt.Sprintf("%d / %d Antivirus agenter har detektert dette som ondsinnet",  jsonResponse.Scanners[0].Positives, jsonResponse.Scanners[0].Total)
 	} else if jsonResponse.Scanners[0].Status == "in-queue" {
 		VirusTotal.EN.Status = "Awaiting analysis"
 		VirusTotal.EN.Content = "Awaiting analysis"
@@ -93,7 +91,15 @@ func SetResponeObjectVirusTotal(jsonResponse HybridAnalysisURL, VirusTotal *Fron
 		VirusTotal.NO.Status = "Venter på analyse."
 		VirusTotal.NO.Content = "Venter på analyse."
 
-	} else {
+	} else if jsonResponse.Scanners[0].Status == "no-result" {
+
+			VirusTotal.EN.Status = "Safe"
+			VirusTotal.EN.Content = "VirusTotal has no information that indicates this URL is malicious"
+	
+			VirusTotal.NO.Status = "Trygg"
+			VirusTotal.NO.Content = "VirusTotal har ingen informasjon som tilsier at denne URL'en er skadelig."
+
+	}else {
 		VirusTotal.EN.Status = "Error"
 		VirusTotal.NO.Status = "Error"
 	}
@@ -185,7 +191,7 @@ func SetResultURL(Responses *ResultFrontendResponse, size int){
 			Responses.NO.Result = "Denne URLen/Domenet har blitt markert som ondsinnet av minst en av våre trusseletteretningskilder, besøk er ikke anbefalt."
 		}
 	  }
-	  if Responses.EN.Result == "" {
+	  if Responses.EN.Result == "" {	//If the for loop does not assign a value it means that no agent found this as risky.
 		Responses.EN.Result = "We do not have any intelligence indicating that this URL/Domain is malicious."
 		Responses.NO.Result = "Vi har ingen informasjon som tilsier at denne URLen/Domenet er ondsinnet"
 	  }
