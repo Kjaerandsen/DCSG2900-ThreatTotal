@@ -125,3 +125,91 @@ func SetResponeObjectUrlscanio(jsonResponse HybridAnalysisURL, urlscanio *Fronte
 		urlscanio.NO.Status = "Error"
 	}
 }
+
+func SetResponseObjectAlienVaultHash(jsonResponse AlienVaultHash, response *FrontendResponse2){
+	if(jsonResponse.PulseInfo.Count == 0 || len(jsonResponse.PulseInfo.Related.Other.MalwareFamilies) == 0){
+		response.EN.Status = "Safe"
+		response.EN.Content= "We have no information indicating that this is malicious."
+
+		response.NO.Content= "Trygg"
+		response.NO.Content= "Vi har ingen informasjon som tyder på at dette er ondsinnet."
+	}else{
+		response.EN.Status = "Risk"
+		response.EN.Content= jsonResponse.PulseInfo.Related.Other.MalwareFamilies[0]
+
+		response.NO.Status = "Risk"
+		response.NO.Content = jsonResponse.PulseInfo.Related.Other.MalwareFamilies[0]
+	}
+}
+
+func SetResponseObjectHybridAnalysisHash(jsonResponse HybridAnalysishash, response *FrontendResponse2){
+	response.SourceName = "Hybrid Analysis"
+
+	if jsonResponse.Verdict == "malicious" {
+		response.EN.Status = "Risk"
+		response.EN.Content = "This file is malicious"
+
+		response.NO.Status = "Utrygg"
+		response.EN.Content = "Denne filen er gjenkjent som ondsinnet"
+		//response.SourceName = jsonResponse.Submissions[0].Filename
+	} else if jsonResponse.Verdict == "whitelisted" {
+		response.EN.Status = "Safe"
+		response.EN.Content = "This file is known to be good"
+
+		response.NO.Status = "Trygg"
+		response.EN.Content = "Denne filen er hvitelistet av HybridAnalysis - Ikke ondsinnet."
+		//response.SourceName = jsonResponse.Submissions[0].Filename
+	} else {
+		response.EN.Status = "Unknown" //Denne må byttes til at den er ukjent // grå farge elns på frontend.
+		response.EN.Content = "This filehash is not known to Hybrid Analysis"
+
+		response.NO.Status = "Ukjent"
+		response.NO.Status = "Denne filhashen er ukjent for Hybrid Analysis"
+	}
+
+	// Set the filename field if known
+	if jsonResponse.Submissions != nil {
+		if jsonResponse.Submissions[0].Filename != "" {
+			response.EN.Content = response.EN.Content + " " + jsonResponse.Submissions[0].Filename
+			response.NO.Content = response.NO.Content + " " + jsonResponse.Submissions[0].Filename
+		}
+	}
+}
+
+
+func SetResultURL(Responses *ResultFrontendResponse, size int){
+
+	for i := 0; i <= size-1; i++ {
+		if Responses.FrontendResponse[i].EN.Status == "Risk"{
+			Responses.EN.Result = "This URL/Domain has been marked as malicious by atleast one of our threat intelligence sources visiting is not reccomended."
+			Responses.NO.Result = "Denne URLen/Domenet har blitt markert som ondsinnet av minst en av våre trusseletteretningskilder, besøk er ikke anbefalt."
+		}
+	  }
+	  if Responses.EN.Result == "" {
+		Responses.EN.Result = "We do not have any intelligence indicating that this URL/Domain is malicious."
+		Responses.NO.Result = "Vi har ingen informasjon som tilsier at denne URLen/Domenet er ondsinnet"
+	  }
+	}
+
+	func SetResultHash(Responses *ResultFrontendResponse, size int){
+
+		for i := 0; i <= size-1; i++ {
+			if Responses.FrontendResponse[i].EN.Status == "Risk"{
+				Responses.EN.Result = "This filehash has been marked as malicious by atleast one of our threat intelligence sources visiting is not reccomended."
+				Responses.NO.Result = "Denne filhashen har blitt markert som ondsinnet av minst en av våre trusseletteretningskilder, besøk er ikke anbefalt."
+			}
+		  }
+		  if Responses.EN.Result == "" {
+			Responses.EN.Result = "We do not have any intelligence indicating that this filehash is malicious."
+			Responses.NO.Result = "Vi har ingen informasjon som tilsier at denne filhashen er ondsinnet"
+		  }
+		}
+
+func SetGenericError(Response *FrontendResponse2){
+
+	Response.EN.Status = "ERROR"
+	Response.NO.Status = "ERROR"
+
+	Response.EN.Content = "We have encountered an error"
+	Response.NO.Content = "Vi har støtt på en error"
+}

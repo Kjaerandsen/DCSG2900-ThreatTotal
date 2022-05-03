@@ -6,6 +6,7 @@ import (
 	"dcsg2900-threattotal/api"
 	"dcsg2900-threattotal/storage"
 	"dcsg2900-threattotal/utils"
+	"encoding/base64"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -14,6 +15,7 @@ import (
 	"mime/multipart"
 	"net/http"
 	"os"
+	"strings"
 
 	// External
 	//webrisk "cloud.google.com/go/webrisk/apiv1"
@@ -67,7 +69,51 @@ func main() {
 	})
 
 	r.GET("/url-testing", func(c *gin.Context) {
-		api.UrlIntelligence(c)
+
+		url := c.Query("url")
+		lng := c.Query("lng")
+
+		var responseData [4]utils.FrontendResponse2
+
+		if lng != "no" {
+			fmt.Println("Language english")
+		}
+
+		var p, VirusTotal, urlscanio, alienvault *utils.FrontendResponse2
+		p = &responseData[0]
+		VirusTotal = &responseData[1]
+		urlscanio = &responseData[2]
+		alienvault = &responseData[3]
+
+		fmt.Println(url)
+
+		wg.Add(3)
+		go api.TestGoGoogleUrl(url, p, &wg)
+		go api.TestHybridAnalyisUrl(url, VirusTotal, urlscanio, &wg)
+		go api.TestAlienVaultUrl(url, alienvault, &wg)
+		wg.Wait()
+
+		//responseData2 := FR122(responseData[:])
+		var resultResponse utils.ResultFrontendResponse
+
+		resultResponse.FrontendResponse = responseData[:]
+
+		var setResults *utils.ResultFrontendResponse
+		setResults = &resultResponse
+
+		utils.SetResultURL(setResults, len(responseData))
+
+		URLint, err := json.Marshal(resultResponse)
+
+		if err != nil {
+			fmt.Println(err)
+		}
+
+		fmt.Println("WHERE IS MY CONTENT 1", responseData)
+		//fmt.Println("WHERE IS MY CONTENT 2", responseData2)
+
+		c.Data(http.StatusOK, "application/json", URLint)
+
 	})
 
 	/**
@@ -170,21 +216,86 @@ func main() {
 		// dynamically set content type, based on the formdata writer
 		req.Header.Set("Content-Type", writer.FormDataContentType())
 
+		// ADD VT KEY TODO
+		content, err := ioutil.ReadFile("./APIKey/virusTotal.txt")
+		if err != nil {
+			//log.Fatal(err)
+			fmt.Println(err)
+		}
+		// Convert []byte to string and print to screen
+		APIKey := string(content)
 		// remember to change api key, and reference it to a file instead
 		// as well as deactivate the key from the account, as it's leaked.
-		req.Header.Add("x-apikey", "4062c07a4340e4f8fe5f647412ef936d99d53aa793e1cebfc4b31e43ae801ed0")
+		req.Header.Add("x-apikey", APIKey)
 
+		log.Println(req)
 		// perform the prepared API request
-		res, _ := http.DefaultClient.Do(req)
+		res, err := http.DefaultClient.Do(req)
+
+		if err != nil {
+			log.Println(err)
+		}
 
 		defer res.Body.Close()
+
+		// så lenge status 200
 
 		// read the response
 		contents, _ := ioutil.ReadAll(res.Body)
 
-		log.Println(res)
-
 		log.Println(string(contents))
+
+		var jsonResponse utils.VirusTotalUploadID
+
+		log.Println(res)
+		unmarshalledID := json.Unmarshal(contents, &jsonResponse)
+
+		if unmarshalledID != nil {
+			log.Println(unmarshalledID)
+		}
+
+		encodedID := jsonResponse.Data.ID
+
+		// decode provided values for virustotal report
+		decode64, err := base64.RawStdEncoding.DecodeString(encodedID)
+		log.Println("decoded here")
+		log.Println(string(decode64))
+
+		// extract ID for virustotal report
+		trimID := strings.Split((string(decode64)), ":")
+		log.Println("TRIMMED")
+		log.Println(trimID[0])
+		if err != nil {
+			log.Println(err)
+		}
+
+		url := fmt.Sprintf("https://www.virustotal.com/api/v3/files/%s", trimID[0])
+		log.Println(url)
+
+		vtReq, _ := http.NewRequest("GET", url, nil)
+
+		vtReq.Header.Add("Accept", "application/json")
+
+		vtReq.Header.Add("X-Apikey", APIKey)
+
+		vtRes, _ := http.DefaultClient.Do(vtReq)
+
+		defer res.Body.Close()
+
+		vtBody, _ := ioutil.ReadAll(vtRes.Body)
+
+		log.Println(string(vtBody))
+
+		var vtResponse utils.FileUploadData
+
+		unmarshalledBody := json.Unmarshal(vtBody, &vtResponse)
+
+		if unmarshalledBody != nil {
+			log.Println(unmarshalledBody)
+		}
+
+		// sender struct nå til en ny struct, som heter frontendresponse 3 elns
+		// denne henter ut f.eks category, engine name og result
 
 	})
 
@@ -196,6 +307,7 @@ func main() {
 
 	//GOLANG API STUFF:
 
+	/**
 	r.GET("/public-intelligence", func(c *gin.Context) {
 		//fmt.Println(c.Query("url"))
 
@@ -237,8 +349,8 @@ func main() {
 		ResultURLHybridA := api.CallHybridAnalyisUrl(HybridTestURL)
 
 		fmt.Println("\n\n\n\n\n HYBRID URL:\n\n", ResultURLHybridA)
-		*/
-	})
+
+	})*/
 
 	r.GET("/url-intelligence", func(c *gin.Context) {
 
@@ -331,45 +443,32 @@ func main() {
 
 		hash := c.Query("hash")
 
-		var Hashint []byte
-		var responseData [2]utils.FrontendResponse
+		var responseData [2]utils.FrontendResponse2
 
-		value, err := utils.Conn.Do("GET", hash)
-		if value == nil {
-			if err != nil {
-				fmt.Println("Error:" + err.Error())
-			}
-			fmt.Println("No Cache hit")
-			responseData[0] = api.CallHybridAnalysisHash(hash)
+		var hybridApointer, AlienVaultpointer *utils.FrontendResponse2
 
-			responseData[1] = api.CallAlienVaultHash(hash)
+		hybridApointer = &responseData[0]
+		AlienVaultpointer = &responseData[1]
 
-			Hashint, err = json.Marshal(responseData)
-			if err != nil {
-				fmt.Println(err)
-			}
+		wg.Add(2)
+		go api.CallHybridAnalysisHash(hash, hybridApointer, &wg)
+		go api.CallAlienVaultHash(hash, AlienVaultpointer, &wg)
+		wg.Wait()
 
-			response, err := utils.Conn.Do("SETEX", hash, 60, Hashint)
-			if err != nil {
-				fmt.Println("Error adding data to redis:" + err.Error())
-			}
-			// Print the response to adding the data (should be "OK"
-			fmt.Println(response)
+		var resultResponse utils.ResultFrontendResponse
 
-			fmt.Println("WHERE IS MY CONTENT", responseData)
-			// Cache hit
-		} else {
-			fmt.Println("Cache hit")
-			responseBytes, err := json.Marshal(value)
-			if err != nil {
-				fmt.Println("Error handling redis response:" + err.Error())
-			}
-			err = json.Unmarshal(responseBytes, &Hashint)
-			if err != nil {
-				fmt.Println("Error handling redis response:" + err.Error())
-			}
-			fmt.Println("Value is:\n", Hashint)
+		resultResponse.FrontendResponse = responseData[:]
+		var resultPointer = &resultResponse
+
+		utils.SetResultHash(resultPointer, len(responseData))
+
+		Hashint, err := json.Marshal(resultResponse)
+		if err != nil {
+			fmt.Println(err)
+			//c.Data(http.StatusInternalServerError, "application/json", )
 		}
+
+		//fmt.Println("WHERE IS MY CONTENT", responseData)
 
 		c.Data(http.StatusOK, "application/json", Hashint)
 

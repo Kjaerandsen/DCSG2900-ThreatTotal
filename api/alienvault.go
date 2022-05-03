@@ -68,7 +68,10 @@ func CallAlienVaultUrl(url string) (response utils.FrontendResponse) {
 }
 
 // CallAlienVaultHash function takes a hash, returns data on it from the alienvault api
-func CallAlienVaultHash(hash string) (response utils.FrontendResponse) {
+func CallAlienVaultHash(hash string, response *utils.FrontendResponse2, wg *sync.WaitGroup) {
+
+	defer wg.Done()
+	response.SourceName="AlienVault"
 
 	content, err := ioutil.ReadFile("./APIKey/OTXapikey.txt")
 	if err != nil {
@@ -81,45 +84,48 @@ func CallAlienVaultHash(hash string) (response utils.FrontendResponse) {
 	req, err := http.NewRequest("GET", getURL, nil)
 	req.Header.Set("X-OTX-API-KEY", APIKey)
 
-	fmt.Println(req.Header)
+	//fmt.Println(req.Header)
 
 	client := &http.Client{}
 
 	res, err := client.Do(req)
+	//fmt.Println(res.Status)
+	//fmt.Print(string(res.Body))
 	if err != nil {
-		panic(err)
+		fmt.Println("ERROR IN Request", err)
+		utils.SetGenericError(response)
 	}
+	if(res.StatusCode == 200){
 	defer res.Body.Close()
 
 	body, _ := ioutil.ReadAll(res.Body)
 
 	if(err != nil){
 		fmt.Println("ERROR READING JSON DATA", err)
+		utils.SetGenericError(response)
 		}
 		
 		var jsonResponse utils.AlienVaultHash
 	
 		err = json.Unmarshal(body, &jsonResponse)
 		if err != nil {
-			fmt.Println("UNMARSHAL ERROR:\n\n", err)
+			utils.SetGenericError(response)
+			fmt.Println(err)
 		}
 	
 		//output:= string(body)
 		//fmt.Println(output)
 		//fmt.Println("\n\nAMOUNT OF PULSES:::::: ", jsonResponse.PulseInfo.Count)
+		utils.SetResponseObjectAlienVaultHash(jsonResponse, response)
+	}else{
 
-		if(jsonResponse.PulseInfo.Count == 0 || len(jsonResponse.PulseInfo.Related.Other.MalwareFamilies) == 0){
-			response.Status = "Safe"
-			response.Content= jsonResponse.PulseInfo.Related.Other.MalwareFamilies[0]
-		}else{
-			response.Status = "Risk"
-			response.Content= jsonResponse.PulseInfo.Related.Other.MalwareFamilies[0]
-		}
-	response.SourceName="AlienVault"
+		response.EN.Content = "We have encountered an error, check if the filehash is a valid filehash."
+		response.EN.Status = "ERROR"
 
-	
+		response.NO.Content = "Vi har møtt på en error, sjekk om filhashen er en gyldig filhash."
+		response.NO.Status = "ERROR"
+	}
 	//HER KAN VI SJEKKE OM "VERDICT feltet er" MALICIOUS, SUSPICIOUS ELLER NOE ANNET. OG Bare returnere det.
-	return response
 }
 
 func TestAlienVaultUrl(url string, response *utils.FrontendResponse2, wg *sync.WaitGroup) {
