@@ -29,7 +29,7 @@ func UrlIntelligence(c *gin.Context) {
 		}
 
 		// Add the data to the redis backend.
-		response, err := utils.Conn.Do("SETEX", url, 60, URLint)
+		response, err := utils.Conn.Do("SETEX", url, 300, URLint)
 		if err != nil {
 			fmt.Println("Error adding data to redis:" + err.Error())
 		}
@@ -82,13 +82,12 @@ func urlSearch(url string) (data []byte, err error) {
 
 	var resultResponse utils.ResultFrontendResponse
 
-		resultResponse.FrontendResponse = responseData[:]
+	resultResponse.FrontendResponse = responseData[:]
 
-		var setResults *utils.ResultFrontendResponse
-		setResults = &resultResponse
+	setResults := &resultResponse
 
 	utils.SetResultURL(setResults, len(responseData))
-	
+
 	URLint, err = json.Marshal(resultResponse)
 	if err != nil {
 		fmt.Println(err)

@@ -23,7 +23,7 @@ export default function Sources(props) {
                 <h1 className="text-2xl font-bold">{t("sourceTitle")}</h1>
                 <div className='bg-yellow-500 bg-red-600 bg-green-600'></div>
                 <div className='grid grid-cols-1 p-2 md:grid-cols-2 xl:grid-cols-3'>
-                {props.sourceData.ResponseData.map((Data, index ) => {
+                {props.sourceData.FrontendResponse.map((Data, index ) => {
                     if (Data.en.status === "Safe") {
                         BG = "bg-green-600"
                     } else if (Data.en.status === "Risk") {

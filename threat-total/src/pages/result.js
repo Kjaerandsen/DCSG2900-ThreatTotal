@@ -39,7 +39,7 @@ function Result() {
         } else if (url != null){
             setIsLoading(true);
             // Send an api request to the backend with url data
-            fetch('http://localhost:8081/url-testing?url=' + url, {
+            fetch('http://localhost:8081/url-intelligence?url=' + url, {
                 method: 'GET',
                 headers: {
                     Accept: 'application/json',
