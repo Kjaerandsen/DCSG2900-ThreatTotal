@@ -13,6 +13,7 @@ import (
 	"log"
 	"mime/multipart"
 	"net/http"
+	"os"
 
 	// External
 	//webrisk "cloud.google.com/go/webrisk/apiv1"
@@ -37,8 +38,8 @@ func main() {
 	utils.Ctx = context.Background()
 
 	utils.Config = oauth2.Config{
-		ClientID:     "",
-		ClientSecret: "",
+		ClientID:     os.Getenv("clientId"),
+		ClientSecret: "clientSecret",
 		Endpoint: oauth2.Endpoint{
 			AuthURL:  "https://auth.dataporten.no/oauth/authorization",
 			TokenURL: "https://auth.dataporten.no/oauth/token",
