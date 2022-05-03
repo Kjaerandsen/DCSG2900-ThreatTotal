@@ -171,7 +171,7 @@ func main() {
 		// dynamically set content type, based on the formdata writer
 		req.Header.Set("Content-Type", writer.FormDataContentType())
 
-		// ADD VT KEY TODO
+		// VT key has been added. REMEMBER TO DEACTIVATE AND CHANGE BEFORE FINAL RELEASE.
 		content, err := ioutil.ReadFile("./APIKey/virusTotal.txt")
 		if err != nil {
 			//log.Fatal(err)
