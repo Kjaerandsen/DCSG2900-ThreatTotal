@@ -355,47 +355,7 @@ func main() {
 	})*/
 
 	r.GET("/url-intelligence", func(c *gin.Context) {
-
-		url := c.Query("url")
-		//lng := c.Query("lng")
-
-		//if lng != "no" {
-		//	fmt.Println("Language english")
-		//}
-
-		fmt.Println(url)
-
-		var responseData [4]utils.FrontendResponse
-
-		responseData[0] = api.CallGoogleUrl(url)
-
-		responseData[1], responseData[2] = api.CallHybridAnalyisUrl(url)
-
-		responseData[3] = api.CallAlienVaultUrl(url)
-
-		responseData2 := FR122(responseData[:])
-
-		URLint, err := json.Marshal(responseData2)
-		if err != nil {
-			fmt.Println(err)
-		}
-
-		fmt.Println("WHERE IS MY CONTENT 1", responseData)
-		fmt.Println("WHERE IS MY CONTENT 2", responseData2)
-
-		c.Data(http.StatusOK, "application/json", URLint)
-
-		/* Backup of old code
-
-		URLint, err := json.Marshal(responseData)
-		if err != nil {
-			fmt.Println(err)
-		}
-
-		fmt.Println("WHERE IS MY CONTENT", responseData)
-
-		c.Data(http.StatusOK, "application/json", URLint)
-		*/
+		api.UrlIntelligence(c)
 	})
 
 	r.GET("/url-intelligence2", func(c *gin.Context) {
