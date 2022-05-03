@@ -23,9 +23,16 @@ type Scanners struct {
 	AntiVirusResults []map[string]interface{} `json:"anti_virus_results"`
 }
 
-type APIresponseResult struct {
-	Result       string
-	ResponseData []FrontendResponse2
+type ResultFrontendResponse struct {
+	EN struct {
+		Result string
+	}
+
+	NO struct {
+		Result string
+	}
+
+	FrontendResponse []FrontendResponse2
 }
 
 // FrontendResponse struct for the response sent to the frontend to be displayed as cards
@@ -42,10 +49,10 @@ type FrontendResponse2 struct {
 	ID         int    `json:"id"`
 	SourceName string `json:"sourceName"`
 	EN         struct {
-		Status      string   `json:"status"`
-		Content     string   `json:"content"`
-		Description string   `json:"description"`
-		Tags        string `json:"tags"`					//fjerner denne fra å være []string for now.
+		Status      string `json:"status"`
+		Content     string `json:"content"`
+		Description string `json:"description"`
+		Tags        string `json:"tags"` //fjerner denne fra å være []string for now.
 	} `json:"en"`
 	NO struct {
 		Status      string `json:"status"`
@@ -277,17 +284,6 @@ type AlienVaultHash struct {
 	FalsePositive []interface{} `json:"false_positive"`
 }
 
-type ResultFrontendResponse struct {
-	EN struct{
-		Result string
-	}
-	
-	NO struct {
-		Result string
-		}
-	
-	FrontendResponse []FrontendResponse2
-	} 
 type VirusTotalUploadID struct {
 	Data struct {
 		Type string `json:"type"`

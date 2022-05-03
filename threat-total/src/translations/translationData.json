@@ -21,7 +21,8 @@
 			"about": "About:",
 			"source": "Source: ",
 			"shortForm": "Shortform: ",
-			"assessment": "Assessment: "
+			"assessment": "Assessment: ",
+			"Result": ""
 		},
 		"about":{
 			"about": "About",
@@ -73,7 +74,8 @@
 			"about": "Om oss",
 			"source": "Kilde: ",
 			"shortForm": "Kortform: ",
-			"assessment": "Vurdering: "
+			"assessment": "Vurdering: ",
+			"Result": ""
 		},
 		"about":{
 			"about": "Om:",
