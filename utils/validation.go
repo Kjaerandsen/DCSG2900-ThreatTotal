@@ -93,7 +93,15 @@ func SetResponeObjectVirusTotal(jsonResponse HybridAnalysisURL, VirusTotal *Fron
 		VirusTotal.NO.Status = "Venter på analyse."
 		VirusTotal.NO.Content = "Venter på analyse."
 
-	} else {
+	} else if jsonResponse.Scanners[0].Status == "no-result" {
+
+			VirusTotal.EN.Status = "Safe"
+			VirusTotal.EN.Content = "VirusTotal has no information that indicates this URL is malicious"
+	
+			VirusTotal.NO.Status = "Trygg"
+			VirusTotal.NO.Content = "VirusTotal har ingen informasjon som tilsier at denne URL'en er skadelig."
+
+	}else {
 		VirusTotal.EN.Status = "Error"
 		VirusTotal.NO.Status = "Error"
 	}
@@ -185,7 +193,7 @@ func SetResultURL(Responses *ResultFrontendResponse, size int){
 			Responses.NO.Result = "Denne URLen/Domenet har blitt markert som ondsinnet av minst en av våre trusseletteretningskilder, besøk er ikke anbefalt."
 		}
 	  }
-	  if Responses.EN.Result == "" {
+	  if Responses.EN.Result == "" {	//If the for loop does not assign a value it means that no agent found this as risky.
 		Responses.EN.Result = "We do not have any intelligence indicating that this URL/Domain is malicious."
 		Responses.NO.Result = "Vi har ingen informasjon som tilsier at denne URLen/Domenet er ondsinnet"
 	  }

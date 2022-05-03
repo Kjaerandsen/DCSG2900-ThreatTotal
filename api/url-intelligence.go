@@ -12,9 +12,11 @@ import (
 
 func UrlIntelligence(c *gin.Context) {
 	url := c.Query("url")
-
+	
+	var completeInt bool
 	var URLint []byte
 
+	//var URLint utils.APIresponseResult
 	value, err := utils.Conn.Do("GET", url)
 	if value == nil {
 		if err != nil {
@@ -22,21 +24,23 @@ func UrlIntelligence(c *gin.Context) {
 		}
 		fmt.Println("No Cache hit")
 
-		URLint, err = urlSearch(url)
+		URLint, err, completeInt = urlSearch(url)
 		if err != nil {
 			http.Error(c.Writer, "Failed retrieving api data.", http.StatusInternalServerError)
 			return
 		}
 
 		// Add the data to the redis backend.
+		if(completeInt){
 		response, err := utils.Conn.Do("SETEX", url, 300, URLint)
 		if err != nil {
 			fmt.Println("Error adding data to redis:" + err.Error())
 		}
-
+	
 		// Print the response to adding the data (should be "OK")
+		fmt.Println("Bool is true")
 		fmt.Println(response)
-
+	}
 		//fmt.Println("WHERE IS MY CONTENT 2", responseData2)
 		// Cache hit
 	} else {
@@ -48,6 +52,14 @@ func UrlIntelligence(c *gin.Context) {
 			return
 			// Maybe do another call to delete the key from the database?
 		}
+		/**
+		//var checkData utils.ResultFrontendResponse
+		err = json.Unmarshal(responseBytes, &checkdata)
+		if err!=nil {
+			fmt.Println(string(checkData))
+		}
+		fmt.Println(string(checkData))
+		*/
 		err = json.Unmarshal(responseBytes, &URLint)
 		if err != nil {
 			fmt.Println("Error handling redis response:" + err.Error())
@@ -61,7 +73,7 @@ func UrlIntelligence(c *gin.Context) {
 }
 
 // Makes the api requests used in urlIntelligence
-func urlSearch(url string) (data []byte, err error) {
+func urlSearch(url string) (data []byte, err error, complete bool) {
 	var wg sync.WaitGroup //Vente gruppe for goroutiner
 	var URLint []byte
 	var responseData [4]utils.FrontendResponse2
@@ -88,13 +100,29 @@ func urlSearch(url string) (data []byte, err error) {
 
 	utils.SetResultURL(setResults, len(responseData))
 
+	complete = checkIfIntelligenceComplete(resultResponse, len(responseData)) //This runs a check to see if the intelligence is complete
+																			//If complete is true the intelligence will be hashed,
+																			//If it is not complete the result won't be cached.
+
 	URLint, err = json.Marshal(resultResponse)
 	if err != nil {
 		fmt.Println(err)
-		return URLint, err
+		return URLint, err, complete
 	}
 
 	fmt.Println("WHERE IS MY CONTENT 1", responseData)
 
-	return URLint, nil
+	return URLint, nil, complete
+}
+
+func checkIfIntelligenceComplete(jsonData utils.ResultFrontendResponse, size int)(complete bool){
+	complete = true
+
+	for i := 0; i <= size-1; i++ {
+		if(jsonData.FrontendResponse[i].EN.Status == "Awaiting analysis" || jsonData.FrontendResponse[i].EN.Status == "Error"){
+			complete = false
+		}
+	}
+
+return complete
 }
