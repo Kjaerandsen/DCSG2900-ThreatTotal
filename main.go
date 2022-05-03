@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"context"
 	"dcsg2900-threattotal/api"
+	"dcsg2900-threattotal/auth"
 	"dcsg2900-threattotal/storage"
 	"dcsg2900-threattotal/utils"
 	"encoding/base64"
@@ -172,6 +173,21 @@ func main() {
 		}
 
 		c.Data(http.StatusOK, "application/json", outputData)
+	})
+
+	r.GET("/login", func(c *gin.Context) {
+		code := c.Query("code")
+		authenticated, hash := auth.Authenticate(code, "")
+		if authenticated {
+			c.JSON(http.StatusOK, gin.H{"hash": hash})
+		} else {
+			http.Error(c.Writer, "Failed authenticating with the code.", http.StatusUnauthorized)
+		}
+	})
+
+	r.GET("/auth", func(c *gin.Context) {
+
+		c.JSON(http.StatusOK, gin.H{"hash": "eaebd"})
 	})
 
 	// TODO: Upload a file

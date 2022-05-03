@@ -10,16 +10,20 @@ import (
 // Authenticate function, takes a code or a token,
 // returns a bool, and if the input is a valid code a hash is also returned.
 func Authenticate(code string, token string) (authenticated bool, hash string) {
+	authenticated = false
+	var err bool
 	if code != "" {
-		hash, err := addUser(code)
+		hash, err = addUser(code)
 		if !err {
-			return false, ""
+			return
 		}
-		return true, hash
+		authenticated = true
+		return
 	} else if token != "" {
-		return checkAuth(token), ""
+		authenticated = checkAuth(token)
+		return
 	}
-	return false, ""
+	return
 }
 
 // Func which adds a user to the database and returns a code
