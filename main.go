@@ -16,6 +16,7 @@ import (
 	"net/http"
 	"os"
 	"strings"
+	"sync"
 
 	// External
 	//webrisk "cloud.google.com/go/webrisk/apiv1"
@@ -73,6 +74,7 @@ func main() {
 		url := c.Query("url")
 		lng := c.Query("lng")
 
+		var wg sync.WaitGroup
 		var responseData [4]utils.FrontendResponse2
 
 		if lng != "no" {
@@ -441,6 +443,7 @@ func main() {
 
 	r.GET("/hash-intelligence", func(c *gin.Context) {
 
+		var wg sync.WaitGroup
 		hash := c.Query("hash")
 
 		var responseData [2]utils.FrontendResponse2
