@@ -80,10 +80,10 @@ func SetResponeObjectVirusTotal(jsonResponse HybridAnalysisURL, VirusTotal *Fron
 		VirusTotal.NO.Content = "VirusTotal har ingen informasjon som tilsier at denne URL'en er skadelig."
 	} else if jsonResponse.Scanners[0].Status == "malicious" {
 		VirusTotal.EN.Status = "Risk"
-		VirusTotal.EN.Content = fmt.Sprintf("%d / %d Antivirus agents has detected this URL/Domain as malicious",  jsonResponse.Scanners[0].Positives, jsonResponse.Scanners[0].Total)
+		VirusTotal.EN.Content = fmt.Sprintf("%d / %d Antivirus agents has detected this URL/Domain as malicious", jsonResponse.Scanners[0].Positives, jsonResponse.Scanners[0].Total)
 
 		VirusTotal.NO.Status = "Utrygg"
-		VirusTotal.NO.Content =fmt.Sprintf("%d / %d Antivirus agenter har detektert dette som ondsinnet",  jsonResponse.Scanners[0].Positives, jsonResponse.Scanners[0].Total)
+		VirusTotal.NO.Content = fmt.Sprintf("%d / %d Antivirus agenter har detektert dette som ondsinnet", jsonResponse.Scanners[0].Positives, jsonResponse.Scanners[0].Total)
 	} else if jsonResponse.Scanners[0].Status == "in-queue" {
 		VirusTotal.EN.Status = "Awaiting analysis"
 		VirusTotal.EN.Content = "Awaiting analysis"
@@ -93,13 +93,13 @@ func SetResponeObjectVirusTotal(jsonResponse HybridAnalysisURL, VirusTotal *Fron
 
 	} else if jsonResponse.Scanners[0].Status == "no-result" {
 
-			VirusTotal.EN.Status = "Safe"
-			VirusTotal.EN.Content = "VirusTotal has no information that indicates this URL is malicious"
-	
-			VirusTotal.NO.Status = "Trygg"
-			VirusTotal.NO.Content = "VirusTotal har ingen informasjon som tilsier at denne URL'en er skadelig."
+		VirusTotal.EN.Status = "Safe"
+		VirusTotal.EN.Content = "VirusTotal has no information that indicates this URL is malicious"
 
-	}else {
+		VirusTotal.NO.Status = "Trygg"
+		VirusTotal.NO.Content = "VirusTotal har ingen informasjon som tilsier at denne URL'en er skadelig."
+
+	} else {
 		VirusTotal.EN.Status = "Error"
 		VirusTotal.NO.Status = "Error"
 	}
@@ -132,23 +132,23 @@ func SetResponeObjectUrlscanio(jsonResponse HybridAnalysisURL, urlscanio *Fronte
 	}
 }
 
-func SetResponseObjectAlienVaultHash(jsonResponse AlienVaultHash, response *FrontendResponse2){
-	if(jsonResponse.PulseInfo.Count == 0 || len(jsonResponse.PulseInfo.Related.Other.MalwareFamilies) == 0){
+func SetResponseObjectAlienVaultHash(jsonResponse AlienVaultHash, response *FrontendResponse2) {
+	if jsonResponse.PulseInfo.Count == 0 || len(jsonResponse.PulseInfo.Related.Other.MalwareFamilies) == 0 {
 		response.EN.Status = "Safe"
-		response.EN.Content= "We have no information indicating that this is malicious."
+		response.EN.Content = "We have no information indicating that this is malicious."
 
-		response.NO.Content= "Trygg"
-		response.NO.Content= "Vi har ingen informasjon som tyder på at dette er ondsinnet."
-	}else{
+		response.NO.Content = "Trygg"
+		response.NO.Content = "Vi har ingen informasjon som tyder på at dette er ondsinnet."
+	} else {
 		response.EN.Status = "Risk"
-		response.EN.Content= jsonResponse.PulseInfo.Related.Other.MalwareFamilies[0]
+		response.EN.Content = jsonResponse.PulseInfo.Related.Other.MalwareFamilies[0]
 
 		response.NO.Status = "Risk"
 		response.NO.Content = jsonResponse.PulseInfo.Related.Other.MalwareFamilies[0]
 	}
 }
 
-func SetResponseObjectHybridAnalysisHash(jsonResponse HybridAnalysishash, response *FrontendResponse2){
+func SetResponseObjectHybridAnalysisHash(jsonResponse HybridAnalysishash, response *FrontendResponse2) {
 	response.SourceName = "Hybrid Analysis"
 
 	if jsonResponse.Verdict == "malicious" {
@@ -182,40 +182,43 @@ func SetResponseObjectHybridAnalysisHash(jsonResponse HybridAnalysishash, respon
 	}
 }
 
-
-func SetResultURL(Responses *ResultFrontendResponse, size int){
+func SetResultURL(Responses *ResultFrontendResponse, size int) {
 
 	for i := 0; i <= size-1; i++ {
-		if Responses.FrontendResponse[i].EN.Status == "Risk"{
+		if Responses.FrontendResponse[i].EN.Status == "Risk" {
 			Responses.EN.Result = "This URL/Domain has been marked as malicious by atleast one of our threat intelligence sources visiting is not reccomended."
 			Responses.NO.Result = "Denne URLen/Domenet har blitt markert som ondsinnet av minst en av våre trusseletteretningskilder, besøk er ikke anbefalt."
 		}
-	  }
-	  if Responses.EN.Result == "" {	//If the for loop does not assign a value it means that no agent found this as risky.
+	}
+	if Responses.EN.Result == "" { //If the for loop does not assign a value it means that no agent found this as risky.
 		Responses.EN.Result = "We do not have any intelligence indicating that this URL/Domain is malicious."
 		Responses.NO.Result = "Vi har ingen informasjon som tilsier at denne URLen/Domenet er ondsinnet"
-	  }
 	}
+}
 
-	func SetResultHash(Responses *ResultFrontendResponse, size int){
+func SetResultHash(Responses *ResultFrontendResponse, size int) {
 
-		for i := 0; i <= size-1; i++ {
-			if Responses.FrontendResponse[i].EN.Status == "Risk"{
-				Responses.EN.Result = "This filehash has been marked as malicious by atleast one of our threat intelligence sources visiting is not reccomended."
-				Responses.NO.Result = "Denne filhashen har blitt markert som ondsinnet av minst en av våre trusseletteretningskilder, besøk er ikke anbefalt."
-			}
-		  }
-		  if Responses.EN.Result == "" {
-			Responses.EN.Result = "We do not have any intelligence indicating that this filehash is malicious."
-			Responses.NO.Result = "Vi har ingen informasjon som tilsier at denne filhashen er ondsinnet"
-		  }
+	for i := 0; i <= size-1; i++ {
+		if Responses.FrontendResponse[i].EN.Status == "Risk" {
+			Responses.EN.Result = "This filehash has been marked as malicious by atleast one of our threat intelligence sources visiting is not reccomended."
+			Responses.NO.Result = "Denne filhashen har blitt markert som ondsinnet av minst en av våre trusseletteretningskilder, besøk er ikke anbefalt."
 		}
+	}
+	if Responses.EN.Result == "" {
+		Responses.EN.Result = "We do not have any intelligence indicating that this filehash is malicious."
+		Responses.NO.Result = "Vi har ingen informasjon som tilsier at denne filhashen er ondsinnet"
+	}
+}
 
-func SetGenericError(Response *FrontendResponse2){
+func SetGenericError(Response *FrontendResponse2) {
 
 	Response.EN.Status = "ERROR"
 	Response.NO.Status = "ERROR"
 
 	Response.EN.Content = "We have encountered an error"
 	Response.NO.Content = "Vi har støtt på en error"
+}
+
+func SetResultFile(Response *ResultFrontendResponse) {
+	// tell the input to be translated, use standardized output.
 }
