@@ -254,7 +254,7 @@ func TestHybridAnalyisUrl(URL string, VirusTotal *utils.FrontendResponse2, urlsc
 		}
 
 		if !jsonResponse.Finished {
-			time.Sleep(20 * time.Second) //Får prøve å finne en bedre løsning enn dette men det er det jeg har for now.
+			time.Sleep(40 * time.Second) //Får prøve å finne en bedre løsning enn dette men det er det jeg har for now.
 
 			res, err := client.Do(req)
 			if err != nil {
