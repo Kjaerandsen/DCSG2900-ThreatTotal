@@ -32,17 +32,14 @@ import (
 	//"google.golang.org/api/option"
 )
 
-func main() {
-	r := gin.Default()
-
-	r.Use(cors.Default())
-
+// Initialize global variables
+func init() {
 	var err error
 
 	utils.Ctx = context.Background()
 
-	fmt.Println("ClientId: ", os.Getenv("clientId"))
-	fmt.Println("Client secret: ", os.Getenv("clientSecret"))
+	//fmt.Println("ClientId: ", os.Getenv("clientId"))
+	//fmt.Println("Client secret: ", os.Getenv("clientSecret"))
 
 	utils.Config = oauth2.Config{
 		ClientID:     os.Getenv("clientId"),
@@ -61,11 +58,24 @@ func main() {
 		log.Fatal(err)
 	}
 
+	oidcConfig := &oidc.Config{
+		ClientID: utils.Config.ClientID,
+	}
+
+	utils.Verifier = utils.Provider.Verifier(oidcConfig)
+
+	RedisPool := storage.InitPool()
+	utils.Conn = RedisPool.Get()
+}
+
+func main() {
+	r := gin.Default()
+
+	r.Use(cors.Default())
+
 	//_, _ = auth.CodeToToken("")
 
 	// move to init function?
-	RedisPool := storage.InitPool()
-	utils.Conn = RedisPool.Get()
 
 	r.GET("/", func(c *gin.Context) {
 		//c.HTML(http.StatusOK, hello world, gin.H{
@@ -160,6 +170,7 @@ func main() {
 		code := c.Query("code")
 		authenticated, hash := auth.Authenticate(code, "")
 		if authenticated {
+			fmt.Println("hash is: ", hash)
 			c.JSON(http.StatusOK, gin.H{"hash": hash})
 		} else {
 			http.Error(c.Writer, "Failed authenticating with the code.", http.StatusUnauthorized)

@@ -30,7 +30,8 @@ function Indextest() {
     const { t } = useTranslation();
     const queryParams = new URLSearchParams(window.location.search);
     const code = queryParams.get('code');
-    const userAuth = localStorage.getItem('userAuth')
+    const userAuth = queryParams.get('auth')
+    //const userAuth = localStorage.getItem('userAuth')
 
     // Put this on a seperate page with a redirect on completion of the request?
     useEffect(() => {
@@ -43,12 +44,13 @@ function Indextest() {
                 }
             }).then((response) => response.json())
             .then((json) => {
+                console.log(json, json.hash)
                 localStorage.setItem('userAuth', json.hash)
-                window.location.href="/"
+                //window.location.href="/"
             })
             .catch(function(error){
                 console.log(error)
-                window.location.href="/"
+                //window.location.href="/"
             })
         } else if (userAuth != null ) {
             fetch('http://localhost:8081/auth?auth=' + userAuth, {
@@ -63,7 +65,7 @@ function Indextest() {
             })
             .catch(function(error){
                 console.log(error)
-                localStorage.removeItem('userAuth')
+                //localStorage.removeItem('userAuth')
             })
         }
     })

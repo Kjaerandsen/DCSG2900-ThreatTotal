@@ -9,6 +9,9 @@ import (
 )
 
 var Conn redis.Conn
+
+// Oauth / OIDC variables
 var Provider *oidc.Provider
 var Ctx context.Context
 var Config oauth2.Config
+var Verifier *oidc.IDTokenVerifier
