@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"context"
 	"dcsg2900-threattotal/api"
+	"dcsg2900-threattotal/auth"
 	"dcsg2900-threattotal/storage"
 	"dcsg2900-threattotal/utils"
 	"encoding/base64"
@@ -31,21 +32,18 @@ import (
 	//"google.golang.org/api/option"
 )
 
-func main() {
-	r := gin.Default()
-
-	r.Use(cors.Default())
-
+// Initialize global variables
+func init() {
 	var err error
 
 	utils.Ctx = context.Background()
 
-	fmt.Println("ClientId: ", os.Getenv("clientId"))
-	fmt.Println("Client secret: ", os.Getenv("clientSecret"))
+	//fmt.Println("ClientId: ", os.Getenv("clientId"))
+	//fmt.Println("Client secret: ", os.Getenv("clientSecret"))
 
 	utils.Config = oauth2.Config{
 		ClientID:     os.Getenv("clientId"),
-		ClientSecret: "clientSecret",
+		ClientSecret: os.Getenv("clientSecret"),
 		Endpoint: oauth2.Endpoint{
 			AuthURL:  "https://auth.dataporten.no/oauth/authorization",
 			TokenURL: "https://auth.dataporten.no/oauth/token",
@@ -60,11 +58,24 @@ func main() {
 		log.Fatal(err)
 	}
 
+	oidcConfig := &oidc.Config{
+		ClientID: utils.Config.ClientID,
+	}
+
+	utils.Verifier = utils.Provider.Verifier(oidcConfig)
+
+	RedisPool := storage.InitPool()
+	utils.Conn = RedisPool.Get()
+}
+
+func main() {
+	r := gin.Default()
+
+	r.Use(cors.Default())
+
 	//_, _ = auth.CodeToToken("")
 
 	// move to init function?
-	RedisPool := storage.InitPool()
-	utils.Conn = RedisPool.Get()
 
 	r.GET("/", func(c *gin.Context) {
 		//c.HTML(http.StatusOK, hello world, gin.H{
@@ -121,25 +132,6 @@ func main() {
 
 	})
 
-	/**
-	r.POST("/searchreputation", func(c *gin.Context){
-		//data := c.PostForm("submitted")
-		reqData, err := ioutil.ReadAll(c.Request.Body)
-		var data interface{}
-
-		err = json.Unmarshal(reqData, &data)
-
-		if err!=nil{
-
-		}
-		else{
-
-		c.JSON(http.StatusOK, data)
-		}
-
-	})
-	*/
-
 	/*
 		TODO SEE
 		Perhaps we need a routing to "search" for searching domains, url or file hashes
@@ -172,6 +164,27 @@ func main() {
 		}
 
 		c.Data(http.StatusOK, "application/json", outputData)
+	})
+
+	r.GET("/login", func(c *gin.Context) {
+		code := c.Query("code")
+		authenticated, hash := auth.Authenticate(code, "")
+		if authenticated {
+			fmt.Println("hash is: ", hash)
+			c.JSON(http.StatusOK, gin.H{"hash": hash})
+		} else {
+			http.Error(c.Writer, "Failed authenticating with the code.", http.StatusUnauthorized)
+		}
+	})
+
+	r.GET("/auth", func(c *gin.Context) {
+		auth2 := c.Query("auth")
+		authenticated, _ := auth.Authenticate("", auth2)
+		if authenticated {
+			c.JSON(http.StatusOK, gin.H{"yes": "You are authenticated"})
+		} else {
+			http.Error(c.Writer, "Authentication is invalid or expired, please try to login again.", http.StatusUnauthorized)
+		}
 	})
 
 	// TODO: Upload a file

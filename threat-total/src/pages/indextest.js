@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Navbar from '../components/navbar';
 import MainInput from '../components/mainInput';
 import ntnuLogo from '../img/ntnuLogoUtenSlagOrd.svg';
@@ -23,24 +23,52 @@ function search(e){
     }
 }
 
-/*
-<p className="text-left ml-3">
-                    Input a <u title="A domain, for example: ntnu.edu">domain</u>,&nbsp;
-                    <u title="A webpage, for example: https://www.ntnu.edu/contact">url</u>
-                    &nbsp;or a&nbsp;
-                    <u title="sha256 hash of a file">file hash</u>:
-                </p>
-                <div className="p-0 m-2 border-2 border-gray-400 rounded-lg">
-                <input className="w-full rounded h-14 p-2 m-0 hover:bg-blue-200" placeholder="https://www.ntnu.no"
-                        type="text" name="inputText">
-                </input>
-*/
-
 // Possibly cleaner to use an svg image for the headline text
 
 
 function Indextest() {
     const { t } = useTranslation();
+    const queryParams = new URLSearchParams(window.location.search);
+    const code = queryParams.get('code');
+    const userAuth = queryParams.get('auth')
+    //const userAuth = localStorage.getItem('userAuth')
+
+    // Put this on a seperate page with a redirect on completion of the request?
+    useEffect(() => {
+        if (code != null) {
+            fetch('http://localhost:8081/login?code=' + code, {
+                method: 'GET',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json'
+                }
+            }).then((response) => response.json())
+            .then((json) => {
+                console.log(json, json.hash)
+                localStorage.setItem('userAuth', json.hash)
+                //window.location.href="/"
+            })
+            .catch(function(error){
+                console.log(error)
+                //window.location.href="/"
+            })
+        } else if (userAuth != null ) {
+            fetch('http://localhost:8081/auth?auth=' + userAuth, {
+                method: 'GET',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json'
+                }
+            }).then((response) => response.json())
+            .then((json) => {
+                console.log(json)
+            })
+            .catch(function(error){
+                console.log(error)
+                //localStorage.removeItem('userAuth')
+            })
+        }
+    })
 
     return (
         <div className="grid place-items-center">

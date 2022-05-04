@@ -12,7 +12,7 @@ import (
 
 func UrlIntelligence(c *gin.Context) {
 	url := c.Query("url")
-	
+
 	var completeInt bool
 	var URLint []byte
 
@@ -31,16 +31,16 @@ func UrlIntelligence(c *gin.Context) {
 		}
 
 		// Add the data to the redis backend.
-		if(completeInt){
-		response, err := utils.Conn.Do("SETEX", url, 300, URLint)
-		if err != nil {
-			fmt.Println("Error adding data to redis:" + err.Error())
+		if completeInt {
+			response, err := utils.Conn.Do("SETEX", url, 300, URLint)
+			if err != nil {
+				fmt.Println("Error adding data to redis:" + err.Error())
+			}
+
+			// Print the response to adding the data (should be "OK")
+			fmt.Println("Bool is true")
+			fmt.Println(response)
 		}
-	
-		// Print the response to adding the data (should be "OK")
-		fmt.Println("Bool is true")
-		fmt.Println(response)
-	}
 		//fmt.Println("WHERE IS MY CONTENT 2", responseData2)
 		// Cache hit
 	} else {
@@ -101,8 +101,8 @@ func urlSearch(url string) (data []byte, err error, complete bool) {
 	utils.SetResultURL(setResults, len(responseData))
 
 	complete = checkIfIntelligenceComplete(resultResponse, len(responseData)) //This runs a check to see if the intelligence is complete
-																			//If complete is true the intelligence will be hashed,
-																			//If it is not complete the result won't be cached.
+	//If complete is true the intelligence will be hashed,
+	//If it is not complete the result won't be cached.
 
 	URLint, err = json.Marshal(resultResponse)
 	if err != nil {
@@ -115,14 +115,14 @@ func urlSearch(url string) (data []byte, err error, complete bool) {
 	return URLint, nil, complete
 }
 
-func checkIfIntelligenceComplete(jsonData utils.ResultFrontendResponse, size int)(complete bool){
+func checkIfIntelligenceComplete(jsonData utils.ResultFrontendResponse, size int) (complete bool) {
 	complete = true
 
 	for i := 0; i <= size-1; i++ {
-		if(jsonData.FrontendResponse[i].EN.Status == "Awaiting analysis" || jsonData.FrontendResponse[i].EN.Status == "Error"){
+		if jsonData.FrontendResponse[i].EN.Status == "Awaiting analysis" || jsonData.FrontendResponse[i].EN.Status == "Error" {
 			complete = false
 		}
 	}
 
-return complete
+	return complete
 }
