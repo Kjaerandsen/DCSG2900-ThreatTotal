@@ -46,7 +46,7 @@ func main() {
 
 	utils.Config = oauth2.Config{
 		ClientID:     os.Getenv("clientId"),
-		ClientSecret: "clientSecret",
+		ClientSecret: os.Getenv("clientSecret"),
 		Endpoint: oauth2.Endpoint{
 			AuthURL:  "https://auth.dataporten.no/oauth/authorization",
 			TokenURL: "https://auth.dataporten.no/oauth/token",
@@ -122,25 +122,6 @@ func main() {
 
 	})
 
-	/**
-	r.POST("/searchreputation", func(c *gin.Context){
-		//data := c.PostForm("submitted")
-		reqData, err := ioutil.ReadAll(c.Request.Body)
-		var data interface{}
-
-		err = json.Unmarshal(reqData, &data)
-
-		if err!=nil{
-
-		}
-		else{
-
-		c.JSON(http.StatusOK, data)
-		}
-
-	})
-	*/
-
 	/*
 		TODO SEE
 		Perhaps we need a routing to "search" for searching domains, url or file hashes
@@ -186,8 +167,13 @@ func main() {
 	})
 
 	r.GET("/auth", func(c *gin.Context) {
-
-		c.JSON(http.StatusOK, gin.H{"hash": "eaebd"})
+		auth2 := c.Query("auth")
+		authenticated, _ := auth.Authenticate("", auth2)
+		if authenticated {
+			c.JSON(http.StatusOK, gin.H{"yes": "You are authenticated"})
+		} else {
+			http.Error(c.Writer, "Authentication is invalid or expired, please try to login again.", http.StatusUnauthorized)
+		}
 	})
 
 	// TODO: Upload a file
