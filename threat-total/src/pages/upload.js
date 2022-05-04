@@ -30,7 +30,7 @@ const Upload = () => {
         fetch('http://localhost:8081/upload', options);
 
         
-        // TODO, can find file, though dont know where to forward it
+        // most things work now, but figure a good way for doing the request user sends
     }
     else {
         console.log("this is not a file")
@@ -53,13 +53,13 @@ const Upload = () => {
             <form action="/result" method="POST" encType="multipart/form-data" className="flex justify-center place-items-center">
                 <label className="block m-4">
                     
-                    <input type="file" onChange={fileUpload} className="block w-full text-3xl text-slate-500
+                    <input type="file" onChange={fileUpload}  className="block w-full text-3xl text-slate-500
                     file:mr-4 file:py-2 file:px-3
                     file:rounded-full file:border-0
                     file:text-3xl
                     hover:file:bg-blue-500"
                     name = "inputFile"/>
-                    <input type ="submit" value="Submit"/>
+
                 </label>
                 
             </form>
@@ -67,7 +67,7 @@ const Upload = () => {
 
         
         <div className= "container w-full mt-1.5 mb-3 sm:pl-36 sm:pr-36 flex justify-center overflow-hidden">
-            <a href="./result">
+            <a href="/result">
                 <button onClick={fileUpload} className="bg-orange-500 p-2 rounded justify-center">Investigate</button>
                 
             </a>

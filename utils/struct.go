@@ -23,18 +23,6 @@ type Scanners struct {
 	AntiVirusResults []map[string]interface{} `json:"anti_virus_results"`
 }
 
-type ResultFrontendResponse struct {
-	EN struct {
-		Result string
-	}
-
-	NO struct {
-		Result string
-	}
-
-	FrontendResponse []FrontendResponse2
-}
-
 // FrontendResponse struct for the response sent to the frontend to be displayed as cards
 type FrontendResponse struct {
 	ID          int      `json:"id"`
@@ -60,6 +48,44 @@ type FrontendResponse2 struct {
 		Description string `json:"description"`
 		Tags        string `json:"tags"`
 	} `json:"no"`
+}
+
+/*
+Lionic struct {
+
+				} `json:"Lionic"`
+*/
+
+type FrontendResponse3 struct {
+	ID         int    `json:"id"`
+	SourceName string `json:"sourceName"`
+	EN         struct {
+		Status      string `json:"status"`
+		Malicious   int    `json:"malicious"`
+		Harmless    int    `json:"harmless"`
+		Content     string `json:"content"`
+		Description string `json:"description"`
+		Tags        string `json:"tags"` //fjerner denne fra å være []string for now.
+	} `json:"en"`
+	NO struct {
+		Status      string `json:"status"`
+		Malicious   int    `json:"malicious"`
+		Harmless    int    `json:"harmless"`
+		Content     string `json:"content"`
+		Description string `json:"description"`
+		Tags        string `json:"tags"`
+	} `json:"no"`
+}
+
+type FrontendResponse4 struct {
+	Engine struct {
+		Category      string      `json:"category"`
+		EngineName    string      `json:"engine_name"`
+		EngineVersion string      `json:"engine_version"`
+		Result        interface{} `json:"result"`
+		Method        string      `json:"method"`
+		EngineUpdate  string      `json:"engine_update"`
+	} `json:"Engine"`
 }
 
 type GoogleSafeBrowsing struct {
@@ -284,6 +310,18 @@ type AlienVaultHash struct {
 	FalsePositive []interface{} `json:"false_positive"`
 }
 
+type ResultFrontendResponse struct {
+	EN struct {
+		Result string
+	}
+
+	NO struct {
+		Result string
+	}
+
+	FrontendResponse []FrontendResponse2
+}
+
 type VirusTotalUploadID struct {
 	Data struct {
 		Type string `json:"type"`
@@ -291,6 +329,7 @@ type VirusTotalUploadID struct {
 	} `json:"data"`
 }
 
+/*
 type FileUploadData struct {
 	Data struct {
 		Attributes struct {
@@ -903,6 +942,56 @@ type FileUploadData struct {
 			Md5                 string   `json:"md5"`
 			Sha1                string   `json:"sha1"`
 			Magic               string   `json:"magic"`
+			LastAnalysisStats   struct {
+				Harmless         int `json:"harmless"`
+				TypeUnsupported  int `json:"type-unsupported"`
+				Suspicious       int `json:"suspicious"`
+				ConfirmedTimeout int `json:"confirmed-timeout"`
+				Timeout          int `json:"timeout"`
+				Failure          int `json:"failure"`
+				Malicious        int `json:"malicious"`
+				Undetected       int `json:"undetected"`
+			} `json:"last_analysis_stats"`
+			MeaningfulName   string `json:"meaningful_name"`
+			Reputation       int    `json:"reputation"`
+			FirstSeenItwDate int    `json:"first_seen_itw_date"`
+		} `json:"attributes"`
+		Type  string `json:"type"`
+		ID    string `json:"id"`
+		Links struct {
+			Self string `json:"self"`
+		} `json:"links"`
+	} `json:"data"`
+}
+*/
+
+type FileUploadData2 struct {
+	Data struct {
+		Attributes struct {
+			TypeDescription      string   `json:"type_description"`
+			Tlsh                 string   `json:"tlsh"`
+			Vhash                string   `json:"vhash"`
+			Names                []string `json:"names"`
+			LastModificationDate int      `json:"last_modification_date"`
+			TypeTag              string   `json:"type_tag"`
+			TimesSubmitted       int      `json:"times_submitted"`
+			TotalVotes           struct {
+				Harmless  int `json:"harmless"`
+				Malicious int `json:"malicious"`
+			} `json:"total_votes"`
+			Size                int                          `json:"size"`
+			TypeExtension       string                       `json:"type_extension"`
+			LastSubmissionDate  int                          `json:"last_submission_date"`
+			LastAnalysisResults map[string]FrontendResponse4 `json:"last_analysis_results"`
+			Sha256              string                       `json:"sha256"`
+			Tags                []string                     `json:"tags"`
+			LastAnalysisDate    int                          `json:"last_analysis_date"`
+			UniqueSources       int                          `json:"unique_sources"`
+			FirstSubmissionDate int                          `json:"first_submission_date"`
+			Ssdeep              string                       `json:"ssdeep"`
+			Md5                 string                       `json:"md5"`
+			Sha1                string                       `json:"sha1"`
+			Magic               string                       `json:"magic"`
 			LastAnalysisStats   struct {
 				Harmless         int `json:"harmless"`
 				TypeUnsupported  int `json:"type-unsupported"`
