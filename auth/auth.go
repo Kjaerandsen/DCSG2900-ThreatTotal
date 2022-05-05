@@ -5,6 +5,7 @@ import (
 	"dcsg2900-threattotal/utils"
 	"encoding/json"
 	"fmt"
+	"net/http"
 	"time"
 )
 
@@ -24,7 +25,7 @@ func Authenticate(code string, token string) (authenticated bool, hash string) {
 		fmt.Println("Returning: ", authenticated, hash)
 		return authenticated, hash
 	} else if token != "" {
-		authenticated = checkAuth(token)
+		_, authenticated = getAuth(token)
 		return
 	}
 	return
@@ -118,28 +119,27 @@ func CodeToToken(code string) (token string, authenticated bool) {
 	return hash, true
 }
 
-// Checks if a token is valid, returns a bool
-func checkAuth(token string) (authenticated bool) {
-	value, err := utils.Conn.Do("GET", token)
+func getAuth(hash string) (token string, err bool) {
+	value, error := utils.Conn.Do("GET", hash)
 	if value == nil {
-		if err != nil {
-			fmt.Println("Error:" + err.Error())
+		if error != nil {
+			fmt.Println("Error:" + error.Error())
 		}
 		fmt.Println("No Cache hit")
-		return false
+		return "", false
 	} else {
 
 		var responseData utils.IdAndJwt
-		err := json.Unmarshal(value.([]byte), &responseData)
-		if err != nil {
+		error := json.Unmarshal(value.([]byte), &responseData)
+		if error != nil {
 			fmt.Println("Error unmarshalling")
 			// If there is an error delete the key
-			value, err := utils.Conn.Do("DEL", token)
-			if err != nil {
+			value, error := utils.Conn.Do("DEL", token)
+			if error != nil {
 				fmt.Println("Failed deleting key in redis: ", err)
 			}
 			fmt.Println("Redis delete response: ", value)
-			return false
+			return "", false
 		}
 
 		//fmt.Println("marhaslled data: ", responseData)
@@ -147,7 +147,7 @@ func checkAuth(token string) (authenticated bool) {
 		// If email is needed a helper which checks the expiration of the jwt
 		// and requests a new one is needed.
 
-		return true
+		return responseData.Oauth2Token.AccessToken, true
 	}
 }
 
@@ -158,4 +158,29 @@ func tokenToHash(code string) (hash string) {
 	fileHash.Write([]byte(code))
 
 	return string(fileHash.Sum(nil))
+}
+
+func Logout(hash string) bool {
+	// Get the login details from the database
+	userToken, err := getAuth(hash)
+	if !err {
+		return false
+	}
+
+	// Delete the database item
+	_, error := utils.Conn.Do("DEL", hash)
+	if error != nil {
+		fmt.Println("Error removing data from redis:" + error.Error())
+		return false
+	}
+
+	// Send a logout request to feide
+	resp, error := http.Get("https://auth.dataporten.no/openid/endsession?id_token_hint=" + userToken)
+	if error != nil {
+		fmt.Println("Error logging out from feide:" + error.Error() + ". HTTP status code: " + resp.Status)
+		return false
+	}
+
+	// Return true if successfull
+	return true
 }

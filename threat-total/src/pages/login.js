@@ -9,7 +9,7 @@ function logoutRequest(){
 
     localStorage.removeItem('userAuth')
 
-    fetch('http://localhost:8081/logout?hash=' + userAuth, {
+    fetch('http://localhost:8081/login?hash=' + userAuth, {
                 method: 'DELETE',
                 headers: {
                     Accept: 'application/json',

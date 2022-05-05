@@ -174,6 +174,17 @@ func main() {
 		}
 	})
 
+	r.DELETE("/login", func(c *gin.Context) {
+		hash := c.Query("userAuth")
+		err := auth.Logout(hash)
+
+		if !err {
+			http.Error(c.Writer, "Failed logging out the user. Either the user was not logged in, or the login was expired.", http.StatusUnauthorized)
+		} else {
+			c.JSON(http.StatusOK, gin.H{"Logoutstatus": "Successfull"})
+		}
+	})
+
 	r.GET("/auth", func(c *gin.Context) {
 		auth2 := c.Query("auth")
 		authenticated, _ := auth.Authenticate("", auth2)
