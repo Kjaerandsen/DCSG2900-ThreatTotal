@@ -157,7 +157,7 @@ func tokenToHash(code string) (hash string) {
 	fileHash := sha256.New()
 	fileHash.Write([]byte(code))
 
-	return string(fileHash.Sum(nil))
+	return fmt.Sprintf("%x", fileHash.Sum(nil))
 }
 
 func Logout(hash string) bool {

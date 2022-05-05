@@ -25,7 +25,15 @@ const Logout = () => {
         </div>
 
         <div>
+            <a href="https://auth.dataporten.no/oauth/authorization?
+                    client_id=b798a173-514b-4f52-ad14-2838dacde3f1&
+                    response_type=code&
+                    redirect_uri=http://localhost:3000&
+                    scope=openid&
+                    state=whatever&
+                    secret=198cb677-d113-446c-807e-8d9ad81ab8e0">
             <button className='bg-blue-400 border-2 rounded-lg p-2'>{t("loginButton")}</button>
+            </a>
         </div>
 
     <CookieDisclosure />

@@ -21,7 +21,7 @@ function Result() {
             console.log({hash})
             setIsLoading(true);
             // Send an api request to the backend with hash data
-            fetch('http://localhost:8081/hash-intelligence?hash=' + hash, {
+            fetch('http://localhost:8081/hash-intelligence?hash=' + hash + "&userAuth=" + userAuth, {
                 method: 'GET',
                 headers: {
                     Accept: 'application/json',
@@ -41,7 +41,7 @@ function Result() {
         } else if (url != null  && userAuth != null){
             setIsLoading(true);
             // Send an api request to the backend with url data
-            fetch('http://localhost:8081/url-intelligence?url=' + url, {
+            fetch('http://localhost:8081/url-intelligence?url=' + url + "&userAuth=" + userAuth, {
                 method: 'GET',
                 headers: {
                     Accept: 'application/json',
