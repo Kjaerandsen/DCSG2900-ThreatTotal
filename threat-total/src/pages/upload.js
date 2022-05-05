@@ -16,6 +16,7 @@ const Upload = () => {
         formData.append('file', object["inputFile"]);
         
         const options = {
+          credentials: 'same-origin',
           method: 'POST',
           body: formData,
           // If you add this, upload won't work
@@ -24,8 +25,14 @@ const Upload = () => {
           // }
         };
         
-        fetch('http://localhost:8081/upload', options);  
-
+        // forward ID only not object
+        fetch('http://localhost:8081/upload', options)
+        .then(response => response.json()).then(json => window.location.href= "/result?file="+encodeURIComponent(json.id))
+        // error handle for non-successful page redirects, either refresh page og write out error
+        .catch(function(error){
+            console.log(error)        
+        })
+        
         /*fetch('http://localhost:3000/result', {
             method: 'POST',
             headers: {

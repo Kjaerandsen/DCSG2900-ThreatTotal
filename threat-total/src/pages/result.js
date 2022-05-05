@@ -10,6 +10,7 @@ function Result() {
     const queryParams = new URLSearchParams(window.location.search);
     const hash = queryParams.get('hash');
     const url = queryParams.get('url');
+    const file = queryParams.get('file');
     const [JsonData, setJsonData] = useState([""])
     const [Err, setErr] = useState(false)
     const { t } = useTranslation();
@@ -56,7 +57,26 @@ function Result() {
                 setErr(true)
                 setIsLoading(false)
             })
-        } else {
+        } else if (file != null){
+            setIsLoading(true);
+            // Send an api request to the backend with url data
+            fetch('http://localhost:8081/upload?file=' + file, {
+                method: 'GET',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json'
+                }
+            }).then((response) => response.json())
+            .then((json) => {
+                setJsonData(json);
+                setIsLoading(false)
+            })
+            .catch(function(error){
+                console.log(error)
+                setErr(true)
+                setIsLoading(false)
+            })
+        }else {
             // Redirect to index if no parameters are provided
             //window.location.href= "/"
             // Send an api request to the backend with url data
