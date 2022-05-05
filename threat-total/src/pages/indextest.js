@@ -46,26 +46,11 @@ function Indextest() {
             .then((json) => {
                 console.log(json, json.hash)
                 localStorage.setItem('userAuth', json.hash)
-                //window.location.href="/"
+                window.location.href="/"
             })
             .catch(function(error){
                 console.log(error)
-                //window.location.href="/"
-            })
-        } else if (userAuth != null ) {
-            fetch('http://localhost:8081/auth?auth=' + userAuth, {
-                method: 'GET',
-                headers: {
-                    Accept: 'application/json',
-                    'Content-Type': 'application/json'
-                }
-            }).then((response) => response.json())
-            .then((json) => {
-                console.log(json)
-            })
-            .catch(function(error){
-                console.log(error)
-                //localStorage.removeItem('userAuth')
+                window.location.href="/"
             })
         }
     })
