@@ -1,6 +1,7 @@
 package auth
 
 import (
+	"crypto/sha256"
 	"dcsg2900-threattotal/utils"
 	"encoding/json"
 	"fmt"
@@ -83,14 +84,15 @@ func CodeToToken(code string) (token string, authenticated bool) {
 		return "", false
 	}
 
+	hash := tokenToHash(oauth2Token.AccessToken)
+
 	// Add to the database
-	response, err := utils.Conn.Do("SETEX", oauth2Token.AccessToken, (oauth2Token.Expiry.Unix() - time.Now().Unix()), marshalledTokens)
+	_, err = utils.Conn.Do("SETEX", hash, (oauth2Token.Expiry.Unix() - time.Now().Unix()), marshalledTokens)
 	if err != nil {
 		fmt.Println("Error adding data to redis:" + err.Error())
 		return "", false
 	}
-
-	fmt.Println(response)
+	//fmt.Println(response)
 
 	// Uses the old token to get the userinfo again if expired
 	/*
@@ -113,8 +115,7 @@ func CodeToToken(code string) (token string, authenticated bool) {
 	// Return it
 
 	// If everything is successfull return true and the authentication code for the frontend user.
-	fmt.Println("codeToToken: ", oauth2Token.AccessToken, true)
-	return oauth2Token.AccessToken, true
+	return hash, true
 }
 
 // Checks if a token is valid, returns a bool
@@ -152,6 +153,9 @@ func checkAuth(token string) (authenticated bool) {
 
 // Func which takes an authentication token and returns a hash.
 func tokenToHash(code string) (hash string) {
+	// Create the sha256 hash
+	fileHash := sha256.New()
+	fileHash.Write([]byte(code))
 
-	return ""
+	return string(fileHash.Sum(nil))
 }
