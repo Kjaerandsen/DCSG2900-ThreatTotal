@@ -2,6 +2,7 @@ import React from 'react';
 import Navbar from '../components/navbar';
 import CookieDisclosure from '../components/cookieDisclosure';
 import { useTranslation } from 'react-i18next';
+import ntnuLogo from '../img/ntnuLogoUtenSlagOrd.svg';
 import { t } from 'i18next';
 
 const Logout = () => {
@@ -12,18 +13,21 @@ const Logout = () => {
 		
 		<Navbar />
 		
+        
         <div className='flex justify-center mt-6 sm:mt-8'>
-            <h1 className="text-4xl sm:text-8xl font-bold sm:ml-4 ml-2 pt-2 sm:pt-4 w-auto"> Threat Total </h1>
+            <img src={ntnuLogo} className="h-20 sm:h-35 md:h-40 w-auto" alt="NTNU Logo"/>
+            <h1 className="text-4xl sm:text-6xl md:text-8xl font-bold sm:ml-4 ml-2 pt-2 sm:pt-4 w-auto"> Threat Total </h1>
         </div>
-		
-        <div className="container w-full mt-3 mb-3 pl-2 pr-2 sm:pl-36">
-            <h1>{t("logoutMessage")}</h1>
+
+        <div className='container pt-6 pb-6 sm:pt-12 sm:pb-8 pl-2 pr-2 sm:pl-16 sm:pr-16 xl:pl-36 xl:pr-36'>
+            <h1 className='text-center text-2xl'>{t("logoutMessage")}</h1>
             <br></br>
         </div>
 
         <div>
-            <button className='bg-gray-400 border-2 rounded-lg p-2'>{t("loginButton")}</button>
+            <button className='bg-blue-400 border-2 rounded-lg p-2'>{t("loginButton")}</button>
         </div>
+
     <CookieDisclosure />
 
     </div>

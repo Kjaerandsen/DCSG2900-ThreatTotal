@@ -38,9 +38,6 @@ func init() {
 
 	utils.Ctx = context.Background()
 
-	//fmt.Println("ClientId: ", os.Getenv("clientId"))
-	//fmt.Println("Client secret: ", os.Getenv("clientSecret"))
-
 	utils.Config = oauth2.Config{
 		ClientID:     os.Getenv("clientId"),
 		ClientSecret: os.Getenv("clientSecret"),
@@ -174,6 +171,17 @@ func main() {
 			c.JSON(http.StatusOK, gin.H{"hash": hash})
 		} else {
 			http.Error(c.Writer, "Failed authenticating with the code.", http.StatusUnauthorized)
+		}
+	})
+
+	r.DELETE("/login", func(c *gin.Context) {
+		hash := c.Query("userAuth")
+		err := auth.Logout(hash)
+
+		if !err {
+			http.Error(c.Writer, "Failed logging out the user. Either the user was not logged in, or the login was expired.", http.StatusUnauthorized)
+		} else {
+			c.JSON(http.StatusOK, gin.H{"Logoutstatus": "Successfull"})
 		}
 	})
 

@@ -30,8 +30,8 @@ function Indextest() {
     const { t } = useTranslation();
     const queryParams = new URLSearchParams(window.location.search);
     const code = queryParams.get('code');
-    const userAuth = queryParams.get('auth')
-    //const userAuth = localStorage.getItem('userAuth')
+    //const userAuth = queryParams.get('auth')
+    const userAuth = localStorage.getItem('userAuth')
 
     // Put this on a seperate page with a redirect on completion of the request?
     useEffect(() => {

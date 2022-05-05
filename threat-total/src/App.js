@@ -6,6 +6,7 @@ import Investigate from './pages/investigate';
 import Result from './pages/result';
 import About from './pages/about';
 import Logout from './pages/logout'
+import Login from './pages/login'
 import { BrowserRouter as Router, Routes, Route}
     from 'react-router-dom';
 //const domain = process.env.REACT_APP_OAUTH_DOMAIN
@@ -21,6 +22,7 @@ function App() {
     <Route path='/result' element={<Result />} />
     <Route path='/about' element={<About />} />
     <Route path='/logout' element={<Logout />} />
+    <Route path='/login' element={<Login />} />
 	  </Routes>
 	</Router>
   );
