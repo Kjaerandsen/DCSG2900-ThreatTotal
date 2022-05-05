@@ -254,7 +254,6 @@ func main() {
 		// as well as deactivate the key from the account, as it's leaked.
 		req.Header.Add("x-apikey", APIKey)
 
-		log.Println(req)
 		// perform the prepared API request
 		res, err := http.DefaultClient.Do(req)
 
@@ -269,11 +268,8 @@ func main() {
 		// read the response
 		contents, _ := ioutil.ReadAll(res.Body)
 
-		log.Println(string(contents))
-
 		var jsonResponse utils.VirusTotalUploadID
 
-		log.Println(res)
 		unmarshalledID := json.Unmarshal(contents, &jsonResponse)
 
 		if unmarshalledID != nil {
@@ -331,53 +327,55 @@ func main() {
 		log.Println("here is the test output we maybe want")
 		i := 0
 
-		for key, val := range vtResponse.Data.Attributes.LastAnalysisResults {
-			log.Printf("testing, %s, %s", key, val)
-			//test3[i] = val
-			test3[i].Engine.Category = val.Engine.Category
-			// seems we are allowed to do this after all, interesting
+		var testStruct = make([]utils.FrontendResponse2, len(vtResponse.Data.Attributes.LastAnalysisResults))
 
-			log.Println("yall")
-			log.Println(test3[i].Engine.Result)
+		// iterate through results
+		for _, val := range vtResponse.Data.Attributes.LastAnalysisResults {
+			//log.Printf("testing, %s, %s", key, val)
+			// initialize struct
+			test3[i] = val
+			// print
+			log.Println(test3[i])
+
+			// save engine name
+			testStruct[i].ID = i + 1
+			testStruct[i].SourceName = test3[i].EngineName
+			// resolution of AV
+			testStruct[i].EN.Status = test3[i].Category
+
+			testStruct[i].EN.Content = vtResponse.Data.Attributes.MeaningfulName
+			testStruct[i].EN.Description = vtResponse.Data.Attributes.Magic
+			testStruct[i].EN.Tags = vtResponse.Data.Attributes.TypeTag
+
+			//testStruct.EN.Description =
+
+			// can also display the total status (last analysis stats)
+			// this is an int ^^ so cant fill it in frontendresponse2
+			// question is, do we do it here or later
+
 			i++
 		}
-		log.Println(test3)
-		//fmt.Println(test3)
-		//var response []utils.FrontendResponse3
+		log.Println(testStruct)
 
-		//response[0].EN.Description = reflect.TypeOf(vtResponse.Data.Attributes.LastAnalysisResults).Name()
-		log.Println("aijsdhasduhughaushduahdasuhdudhsadusahd")
-		/*
-			for i := 0; i < lengthOfTest2; i++ {
-				response[i].EN.Content = vtResponse.Data.Attributes.MeaningfulName
-				response[i].EN.Harmless = vtResponse.Data.Attributes.LastAnalysisStats.Harmless
-				response[i].EN.Malicious = vtResponse.Data.Attributes.LastAnalysisStats.Malicious
+		var totalVerdict utils.ResultFrontendResponse
+		// IMPORTANT TODO, FIGURE ROUTING
 
-				response[i].NO.Content = vtResponse.Data.Attributes.MeaningfulName
-				response[i].NO.Harmless = vtResponse.Data.Attributes.LastAnalysisStats.Harmless
-				response[i].NO.Malicious = vtResponse.Data.Attributes.LastAnalysisStats.Malicious
+		if vtResponse.Data.Attributes.LastAnalysisStats.Malicious == 0 && vtResponse.Data.Attributes.LastAnalysisStats.Suspicious == 0 {
+			totalVerdict.EN.Result = "File is considered safe"
+			// osv totalVerdict.EN.Result = fmt.Sprintf("File is considered safe", x av y)
+		} else if vtResponse.Data.Attributes.TotalVotes.Malicious > 0 && vtResponse.Data.Attributes.LastAnalysisStats.Suspicious >= 0 {
+			totalVerdict.EN.Result = "File is unsafe"
+		} else if vtResponse.Data.Attributes.LastAnalysisStats.Harmless > 0 && vtResponse.Data.Attributes.LastAnalysisStats.Malicious == 0 {
+			totalVerdict.EN.Result = "File is confirmed Harmless"
+		}
 
-			}
-		*/
-		// figure out how to make a decision here based on the results of harmless vs malicious
-		//log.Println(response)
-		// we see that
-		/*test2 := reflect.ValueOf(vtResponse.Data.Attributes.LastAnalysisResults)
-		lengthOfTest2 := test2.NumField()
-		log.Println(test2)
-		log.Println(lengthOfTest2)
+		utils.SetResultFile(&totalVerdict)
+		log.Println(totalVerdict.EN.Result)
+		//log.Print(test3)
 
-		log.Println(vtResponse.Data.Attributes.LastAnalysisResults)
-
-		*/
-		/*
-			len(vtResponse.Data.Attributes.LastAnalysisResults)
-
-			response[0].EN.Status = vtResponse.Data.Attributes.LastAnalysisResults.ALYac.Result */
-		// sender struct nå til en ny struct, som heter frontendresponse 3 elns
-		// denne henter ut f.eks category, engine name og result
 		// total votes feltet virker relevant
 		// LAST ANALYSIS STATS - MALICIOUS
+
 	})
 
 	/**
