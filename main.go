@@ -66,6 +66,7 @@ func init() {
 }
 
 func main() {
+
 	r := gin.Default()
 
 	r.Use(cors.Default())
@@ -486,7 +487,13 @@ func main() {
 	})*/
 
 	r.GET("/url-intelligence", func(c *gin.Context) {
-		api.UrlIntelligence(c)
+		hash := c.Query("userAuth")
+		authenticated, _ := auth.Authenticate("", hash)
+		if !authenticated {
+			c.JSON(http.StatusUnauthorized, gin.H{"authenticated": "You are not authenticated. User login is invalid."})
+		} else {
+			api.UrlIntelligence(c)
+		}
 	})
 
 	r.GET("/url-intelligence2", func(c *gin.Context) {

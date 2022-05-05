@@ -8,8 +8,8 @@ function logoutRequest(){
     const userAuth = localStorage.getItem('userAuth');
 
     localStorage.removeItem('userAuth')
-
-    fetch('http://localhost:8081/login?hash=' + userAuth, {
+    console.log("logging out")
+    fetch('http://localhost:8081/login?userAuth=' + userAuth, {
                 method: 'DELETE',
                 headers: {
                     Accept: 'application/json',
@@ -84,7 +84,7 @@ function Login(){
                 <br></br>
             </p>         
             </div>
-            <button onclick={logoutRequest} className='bg-blue-400 border-2 rounded-lg p-2'>{t("logoutButton")}</button> 
+            <button onClick={logoutRequest} className='bg-blue-400 border-2 rounded-lg p-2'>{t("logoutButton")}</button> 
             </>}
 
             <CookieDisclosure />

@@ -15,13 +15,14 @@ function Result() {
     const [Err, setErr] = useState(false)
     const { t } = useTranslation();
     const [isLoading, setIsLoading] = useState(false);
+    const userAuth = localStorage.getItem('userAuth')
     
     useEffect(() => {
-        if (hash != null) {
+        if (hash != null && userAuth != null) {
             console.log({hash})
             setIsLoading(true);
             // Send an api request to the backend with hash data
-            fetch('http://localhost:8081/hash-intelligence?hash=' + hash, {
+            fetch('http://localhost:8081/hash-intelligence?hash=' + hash + "&userAuth=" + userAuth, {
                 method: 'GET',
                 headers: {
                     Accept: 'application/json',
@@ -38,10 +39,10 @@ function Result() {
                 setErr(true)
                 setIsLoading(false)
             })
-        } else if (url != null){
+        } else if (url != null  && userAuth != null){
             setIsLoading(true);
             // Send an api request to the backend with url data
-            fetch('http://localhost:8081/url-intelligence?url=' + url, {
+            fetch('http://localhost:8081/url-intelligence?url=' + url + "&userAuth=" + userAuth, {
                 method: 'GET',
                 headers: {
                     Accept: 'application/json',
@@ -76,10 +77,11 @@ function Result() {
                 setErr(true)
                 setIsLoading(false)
             })
-        }else {
+        } else if (url == null && hash == null && file == null){
             // Redirect to index if no parameters are provided
-            //window.location.href= "/"
+            window.location.href= "/"
             // Send an api request to the backend with url data
+            /*
             setIsLoading(true);
             fetch('http://localhost:8081/result', {
                 method: 'GET',
@@ -97,8 +99,11 @@ function Result() {
                 setErr(true)
                 setIsLoading(false)
             })
+            */
+        } else {
+            // If a valid parameter is sent, but there is no login redirect to login page
+            window.location.href="/login"
         }
-        // Need error handling when the backend is unavailable
     }, []);
 
     console.log(JsonData)
