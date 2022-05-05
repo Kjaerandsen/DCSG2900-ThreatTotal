@@ -231,20 +231,19 @@ func main() {
 			log.Println(err)
 		}
 
-		// dynamically set content type, based on the formdata writer
-		req.Header.Set("Content-Type", writer.FormDataContentType())
-
-		// VT key has been added. REMEMBER TO DEACTIVATE AND CHANGE BEFORE FINAL RELEASE.
 		content, err := ioutil.ReadFile("./APIKey/virusTotal.txt")
 		if err != nil {
 			//log.Fatal(err)
 			fmt.Println(err)
 		}
-		// Convert []byte to string and print to screen
+
 		APIKey := string(content)
-		// remember to change api key, and reference it to a file instead
-		// as well as deactivate the key from the account, as it's leaked.
-		req.Header.Add("x-apikey", APIKey)
+
+		req.Header.Add("X-Apikey", APIKey)
+		// error handle here, user should not be able to send requests without api key
+
+		// dynamically set content type, based on the formdata writer
+		req.Header.Set("Content-Type", writer.FormDataContentType())
 
 		// perform the prepared API request
 		res, err := http.DefaultClient.Do(req)
@@ -282,9 +281,33 @@ func main() {
 		if err != nil {
 			log.Println(err)
 		}
+		// return json object ID
+		c.JSON(http.StatusOK, gin.H{"id": trimID})
+		// handle error
+	})
 
-		url := fmt.Sprintf("https://www.virustotal.com/api/v3/files/%s", trimID[0])
-		log.Println(url)
+	r.GET("/upload", func(c *gin.Context) {
+
+		// VT key has been added. REMEMBER TO DEACTIVATE AND CHANGE BEFORE FINAL RELEASE.
+		// prepare request towards API
+
+		content, err := ioutil.ReadFile("./APIKey/virusTotal.txt")
+		if err != nil {
+			//log.Fatal(err)
+			fmt.Println(err)
+		}
+		// Convert []byte to string and print to screen
+		APIKey := string(content)
+		// remember to change api key, and reference it to a file instead
+		// as well as deactivate the key from the account, as it's leaked.
+
+		id := c.Query("id")
+		if id == "" {
+			log.Println("error, ID is empty")
+		}
+
+		url := fmt.Sprintf("https://www.virustotal.com/api/v3/files/%s", id)
+		log.Println(id)
 
 		vtReq, _ := http.NewRequest("GET", url, nil)
 
@@ -294,7 +317,7 @@ func main() {
 
 		vtRes, _ := http.DefaultClient.Do(vtReq)
 
-		defer res.Body.Close()
+		defer vtReq.Body.Close()
 
 		vtBody, _ := ioutil.ReadAll(vtRes.Body)
 
@@ -319,6 +342,7 @@ func main() {
 		log.Println("here is the test output we maybe want")
 		i := 0
 
+		// TODO for later, remove teststruct, as it's only used to put into totalverdict, later
 		var testStruct = make([]utils.FrontendResponse2, len(vtResponse.Data.Attributes.LastAnalysisResults))
 
 		// iterate through results
@@ -350,20 +374,30 @@ func main() {
 		log.Println(testStruct)
 
 		var totalVerdict utils.ResultFrontendResponse
+		totalVerdict.FrontendResponse = testStruct
 		// IMPORTANT TODO, FIGURE ROUTING
 
+		// Possible to add more cases in the future, for more accurate assessements
 		if vtResponse.Data.Attributes.LastAnalysisStats.Malicious == 0 && vtResponse.Data.Attributes.LastAnalysisStats.Suspicious == 0 {
-			totalVerdict.EN.Result = "File is considered safe"
+			totalVerdict.EN.Result = "safe"
 			// osv totalVerdict.EN.Result = fmt.Sprintf("File is considered safe", x av y)
 		} else if vtResponse.Data.Attributes.TotalVotes.Malicious > 0 && vtResponse.Data.Attributes.LastAnalysisStats.Suspicious >= 0 {
-			totalVerdict.EN.Result = "File is unsafe"
+			totalVerdict.EN.Result = "unsafe"
 		} else if vtResponse.Data.Attributes.LastAnalysisStats.Harmless > 0 && vtResponse.Data.Attributes.LastAnalysisStats.Malicious == 0 {
-			totalVerdict.EN.Result = "File is confirmed Harmless"
+			totalVerdict.EN.Result = "benign"
 		}
 
-		utils.SetResultFile(&totalVerdict)
-		log.Println(totalVerdict.EN.Result)
+		var engines int = len(vtResponse.Data.Attributes.LastAnalysisResults)
+
+		utils.SetResultFile(&totalVerdict, engines)
+
+		log.Println("look here")
+		log.Println(totalVerdict)
+
+		fmt.Println(totalVerdict)
 		//log.Print(test3)
+
+		// hent resultat via cache
 
 		// total votes feltet virker relevant
 		// LAST ANALYSIS STATS - MALICIOUS

@@ -219,6 +219,31 @@ func SetGenericError(Response *FrontendResponse2) {
 	Response.NO.Content = "Vi har støtt på en error"
 }
 
-func SetResultFile(Response *ResultFrontendResponse) {
+func SetResultFile(Response *ResultFrontendResponse, size int) {
 	// tell the input to be translated, use standardized output.
+
+	for i := 0; i < size; i++ {
+		switch Response.FrontendResponse[i].EN.Status {
+		case "safe":
+			Response.FrontendResponse[i].EN.Status = "Safe"
+			Response.FrontendResponse[i].EN.Content = "This file has not been marked as malicious, and can be considered safe"
+
+			Response.FrontendResponse[i].NO.Status = "Trygg"
+			Response.FrontendResponse[i].NO.Content = "Denne filen har ikke blitt merket som mistenksom, og kan vurderes som trygg"
+		case "unsafe":
+			Response.FrontendResponse[i].EN.Status = "Unsafe"
+			Response.FrontendResponse[i].EN.Content = "This file has been marked as malicious by known sources, it is advised not to interact with this file."
+
+			Response.FrontendResponse[i].NO.Status = "Utrygg"
+			Response.FrontendResponse[i].NO.Content = "Denne filen er markert som utrygg basert på kjente kilder, det anbefales å ikke videre behandle denne filen"
+		case "benign":
+			Response.FrontendResponse[i].EN.Status = "Confirmed safe"
+			Response.FrontendResponse[i].EN.Content = "This file has been marked as benign, based on known sources. Further handling of this file is considered safe"
+
+			Response.FrontendResponse[i].NO.Status = "Bekreftet trygg"
+			Response.FrontendResponse[i].NO.Content = "Denne filen har blitt bekreftet som godartet, basert på kjente kilder. Håndtering av denne filen er trygt."
+
+		}
+
+	}
 }

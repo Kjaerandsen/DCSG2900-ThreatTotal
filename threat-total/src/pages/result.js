@@ -4,7 +4,6 @@ import Sources from "../components/sources";
 import { useTranslation } from 'react-i18next';
 import CookieDisclosure from "../components/cookieDisclosure";
 import { Oval } from 'react-loader-spinner';
-import i18next from '../i18next';
 
 function Result() {
     const queryParams = new URLSearchParams(window.location.search);
@@ -40,7 +39,7 @@ function Result() {
         } else if (url != null){
             setIsLoading(true);
             // Send an api request to the backend with url data
-            fetch('http://localhost:8081/url-intelligence?url=' + url, {
+            fetch('http://localhost:8081/url-testing?url=' + url, {
                 method: 'GET',
                 headers: {
                     Accept: 'application/json',
@@ -82,21 +81,19 @@ function Result() {
     }, []);
 
     console.log(JsonData)
-    if (JsonData != undefined){
-        i18next.addResources('en', 'translation', JsonData.EN);
-        i18next.addResources('no', 'translation', JsonData.NO);
-    }
 
     const renderResult = (
         <div className="container text-center break-words sm:justify-center">
         
-            <h1 className="text-4xl font-bold p-0 mb-8 sm:mt-12 sm:mb-12 w-auto">
+            <h1 className="text-3xl font-bold p-0 mb-8 sm:mt-12 sm:mb-12 w-auto">
                 {t("resultTitle")}
             </h1>
-            <p className="text-middle text-2xl m-2 pl-2 pr-2 sm:pl-16 sm:pr-16 xl:pl-36 xl:pr-36">
-                {t("Result")}
-                <br></br><br></br>
-                <br></br>
+            <p className="text-left m-2 pl-2 pr-2 sm:pl-16 sm:pr-16 xl:pl-36 xl:pr-36">
+            This page poses a risk or potential risk to visit according to 2/3 of our sources. 
+            Please use proper caution and avoid visiting at all if possible. 
+            <br></br><br></br>Forandre denne til en api respons?
+            <br></br>
+            <br></br>
             </p>
             <div className="container">
                 

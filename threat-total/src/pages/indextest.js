@@ -24,7 +24,7 @@ function search(e){
 }
 
 // Possibly cleaner to use an svg image for the headline text
-
+// consider renaming the file? our main function file probably shouldn't contain "test"
 
 function Indextest() {
     const { t } = useTranslation();

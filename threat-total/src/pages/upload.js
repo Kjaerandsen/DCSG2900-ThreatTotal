@@ -23,14 +23,17 @@ const Upload = () => {
           //   'Content-Type': 'multipart/form-data',
           // }
         };
-
-        // WORKAROUND did not work, however we discovered that the content type is likely to break the request
-        // attempt to figure way to send file to backend, and only use api key as header
         
-        fetch('http://localhost:8081/upload', options);
+        fetch('http://localhost:8081/upload', options);  
 
-        
-        // most things work now, but figure a good way for doing the request user sends
+        /*fetch('http://localhost:3000/result', {
+            method: 'POST',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json'
+            }
+        }).then((response) => response.json()) */
+              
     }
     else {
         console.log("this is not a file")
@@ -53,7 +56,7 @@ const Upload = () => {
             <form action="/result" method="POST" encType="multipart/form-data" className="flex justify-center place-items-center">
                 <label className="block m-4">
                     
-                    <input type="file" onChange={fileUpload}  className="block w-full text-3xl text-slate-500
+                    <input type="file" className="block w-full text-3xl text-slate-500
                     file:mr-4 file:py-2 file:px-3
                     file:rounded-full file:border-0
                     file:text-3xl
@@ -61,18 +64,14 @@ const Upload = () => {
                     name = "inputFile"/>
 
                 </label>
-                
-            </form>
+                <div className= "container w-full mt-1.5 mb-3 sm:pl-36 sm:pr-36 flex justify-center overflow-hidden">
+
+                <input type="button" onClick={fileUpload}  value="Investigate" className="bg-orange-500 p-2 rounded justify-center"/>
+                </div>
+            </form> 
         </div>
 
-        
-        <div className= "container w-full mt-1.5 mb-3 sm:pl-36 sm:pr-36 flex justify-center overflow-hidden">
-            <a href="/result">
-                <button onClick={fileUpload} className="bg-orange-500 p-2 rounded justify-center">Investigate</button>
-                
-            </a>
-        </div>
-
+            
     <CookieDisclosure />
 
     </div>
