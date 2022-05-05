@@ -49,8 +49,15 @@ function Result() {
                 }
             }).then((response) => response.json())
             .then((json) => {
-                setJsonData(json);
-                setIsLoading(false)
+                // If the authentication response is invalid remove the authentication
+                // locally and redirect to the login page.
+                if (json.authenticated != undefined){
+                    localStorage.removeItem('userAuth')
+                    window.location.href="/login"
+                } else {
+                    setJsonData(json);
+                    setIsLoading(false)
+                }
             })
             .catch(function(error){
                 console.log(error)
@@ -60,26 +67,6 @@ function Result() {
         } else if (url == null && hash == null){
             // Redirect to index if no parameters are provided
             window.location.href= "/"
-            // Send an api request to the backend with url data
-            /*
-            setIsLoading(true);
-            fetch('http://localhost:8081/result', {
-                method: 'GET',
-                headers: {
-                    Accept: 'application/json',
-                    'Content-Type': 'application/json'
-                }
-            }).then((response) => response.json())
-            .then((json) => {
-                setJsonData(json)
-                setIsLoading(false)
-            })
-            .catch(function(error){
-                console.log(error)
-                setErr(true)
-                setIsLoading(false)
-            })
-            */
         } else {
             // If a valid parameter is sent, but there is no login redirect to login page
             window.location.href="/login"
