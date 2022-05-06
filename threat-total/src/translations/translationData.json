@@ -32,7 +32,8 @@
 			"loginPage": "log in",
 			"logoutPage": "log out",
 			"resultPage": "result",
-			"uploadPage": "upload"
+			"uploadPage": "upload",
+			"home":""
 		},
 		"about":{
 			"about": "About",
@@ -98,7 +99,8 @@
 			"loginPage": "logg inn",
 			"logoutPage": "logg ut",
 			"resultPage": "resultat",
-			"uploadPage": "last opp"
+			"uploadPage": "last opp",
+			"home":""
 		},
 		"about":{
 			"about": "Om:",

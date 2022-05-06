@@ -5,6 +5,7 @@ import (
 	"context"
 	"dcsg2900-threattotal/api"
 	"dcsg2900-threattotal/auth"
+	logging "dcsg2900-threattotal/logs"
 	"dcsg2900-threattotal/storage"
 	"dcsg2900-threattotal/utils"
 	"encoding/base64"
@@ -18,7 +19,6 @@ import (
 	"os"
 	"strings"
 	"sync"
-	"dcsg2900-threattotal/logs"
 
 	// External
 	//webrisk "cloud.google.com/go/webrisk/apiv1"
@@ -64,6 +64,9 @@ func init() {
 
 	RedisPool := storage.InitPool()
 	utils.Conn = RedisPool.Get()
+
+	// Get api keys as environment variables here
+
 }
 
 func main() {
@@ -206,7 +209,6 @@ func main() {
 
 		log.Println("Fileupload worked")
 		logging.Loginfo("Fileupload worked")
-		
 
 		uri := "https://www.virustotal.com/api/v3/files"
 		body := &bytes.Buffer{}
