@@ -2,6 +2,7 @@ package api
 
 import (
 	"dcsg2900-threattotal/utils"
+	"dcsg2900-threattotal/logs"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
@@ -19,6 +20,7 @@ func CallAlienVaultUrl(url string) (response utils.FrontendResponse) {
 	if err != nil {
 		//log.Fatal(err)
 		fmt.Println(err)
+		logging.Logerror(err)
 	}
 
 	// Convert []byte to string and print to screen
@@ -137,6 +139,7 @@ func TestAlienVaultUrl(url string, response *utils.FrontendResponse2, wg *sync.W
 	if err != nil {
 		//log.Fatal(err)
 		fmt.Println(err)
+		logging.Logerror(err)
 	}
 
 	// Convert []byte to string and print to screen

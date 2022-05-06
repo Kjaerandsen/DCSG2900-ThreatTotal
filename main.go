@@ -18,6 +18,7 @@ import (
 	"os"
 	"strings"
 	"sync"
+	"dcsg2900-threattotal/logs"
 
 	// External
 	//webrisk "cloud.google.com/go/webrisk/apiv1"
@@ -204,6 +205,8 @@ func main() {
 	r.POST("/upload", func(c *gin.Context) {
 
 		log.Println("Fileupload worked")
+		logging.Loginfo("Fileupload worked")
+		
 
 		uri := "https://www.virustotal.com/api/v3/files"
 		body := &bytes.Buffer{}
@@ -224,13 +227,14 @@ func main() {
 		_, err = io.Copy(part, file3)
 
 		if err != nil {
-			log.Println(err)
+			logging.Logerror(err)
 		}
 		// close writer
 		err = writer.Close()
 
 		if err != nil {
 			log.Println(err)
+			logging.Logerror(err)
 		}
 
 		// prepare request towards API
@@ -238,12 +242,14 @@ func main() {
 
 		if err != nil {
 			log.Println(err)
+			logging.Logerror(err)
 		}
 
 		content, err := ioutil.ReadFile("./APIKey/virusTotal.txt")
 		if err != nil {
 			//log.Fatal(err)
 			fmt.Println(err)
+			logging.Logerror(err)
 		}
 
 		APIKey := string(content)
@@ -259,6 +265,7 @@ func main() {
 
 		if err != nil {
 			log.Println(err)
+			logging.Logerror(err)
 		}
 
 		defer res.Body.Close()
@@ -274,6 +281,7 @@ func main() {
 
 		if unmarshalledID != nil {
 			log.Println(unmarshalledID)
+			logging.Logerror(err)
 		}
 
 		encodedID := jsonResponse.Data.ID
@@ -304,6 +312,7 @@ func main() {
 		if err != nil {
 			//log.Fatal(err)
 			fmt.Println(err)
+			logging.Logerror(err)
 		}
 		// Convert []byte to string and print to screen
 		APIKey := string(content)
@@ -315,6 +324,7 @@ func main() {
 		log.Println(id)
 		if id == "" {
 			log.Println("error, ID is empty")
+			logging.Logerrorinfo("Error, ID is empty - Upload")
 		}
 
 		url := fmt.Sprintf("https://www.virustotal.com/api/v3/files/%s", id)
@@ -566,6 +576,7 @@ func main() {
 		Hashint, err := json.Marshal(resultResponse)
 		if err != nil {
 			fmt.Println(err)
+			logging.Logerror(err)
 			//c.Data(http.StatusInternalServerError, "application/json", )
 		}
 
