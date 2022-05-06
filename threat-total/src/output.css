@@ -636,6 +636,10 @@ Ensure the default browser behavior of the `hidden` attribute.
   height: 3.5rem;
 }
 
+.h-8 {
+  height: 2rem;
+}
+
 .w-full {
   width: 100%;
 }
@@ -842,6 +846,10 @@ Ensure the default browser behavior of the `hidden` attribute.
   padding-bottom: 2.5rem;
 }
 
+.pl-1 {
+  padding-left: 0.25rem;
+}
+
 .text-left {
   text-align: left;
 }
@@ -1034,6 +1042,10 @@ Ensure the default browser behavior of the `hidden` attribute.
 
   .sm\:h-40 {
     height: 10rem;
+  }
+
+  .sm\:h-12 {
+    height: 3rem;
   }
 
   .sm\:grid-cols-2 {

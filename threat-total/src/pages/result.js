@@ -1,6 +1,7 @@
 import React, { useEffect, useState} from "react";
 import Navbar from "../components/navbar";
 import Sources from "../components/sources";
+import SubNavbar from '../components/subNavbar'
 import { useTranslation } from 'react-i18next';
 import CookieDisclosure from "../components/cookieDisclosure";
 import { Oval } from 'react-loader-spinner';
@@ -102,6 +103,7 @@ function Result() {
         <div className="grid place-items-center">
         
             <Navbar />
+            <SubNavbar />
 
             <div className="pt-10 pb-10">
             {isLoading ? <Oval height="100" width="100" color="grey"/> : renderResult}

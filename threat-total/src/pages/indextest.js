@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import Navbar from '../components/navbar';
 import MainInput from '../components/mainInput';
+import SubNavbar from '../components/subNavbar'
 import ntnuLogo from '../img/ntnuLogoUtenSlagOrd.svg';
 import CookieDisclosure from '../components/cookieDisclosure';
 import { useTranslation } from 'react-i18next';
@@ -57,6 +58,7 @@ function Indextest() {
         <div className="grid place-items-center">
             
             <Navbar />
+            <SubNavbar />
 
             <div className='flex justify-center mt-6 sm:mt-8'>
                 <img src={ntnuLogo} className="h-20 sm:h-35 md:h-40 w-auto" alt="NTNU Logo"/>
