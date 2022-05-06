@@ -9,7 +9,7 @@ function CookieDisclosure () {
     const { t } = useTranslation();
 
     useEffect(() => {
-        if (localStorage.getItem("cookiesEnabled") != "true") {
+        if (localStorage.getItem("cookiesEnabled") !== "true") {
             console.log("True")
             document.getElementById("cookieDisclosure").style.display = "block"
         }

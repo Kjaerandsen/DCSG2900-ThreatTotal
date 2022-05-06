@@ -4,9 +4,10 @@ import CookieDisclosure from '../components/cookieDisclosure';
 import SubNavbar from '../components/subNavbar'
 import { useTranslation } from 'react-i18next';
 import ntnuLogo from '../img/ntnuLogoUtenSlagOrd.svg';
-import { t } from 'i18next';
 
 const Logout = () => {
+
+  const { t } = useTranslation();
 
   return (
     <>

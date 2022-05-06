@@ -29,14 +29,13 @@ function logoutRequest(){
 
 function Login(){
     const { t } = useTranslation();
-    const userAuth = localStorage.getItem('userAuth');
     const [isLoggedIn, setIsLoggedIn] = useState(false);
 
     useEffect(() => {
         if (localStorage.getItem('userAuth') != null) {
             setIsLoggedIn(true)
         }
-    })
+    }, [])
 
     return (
 

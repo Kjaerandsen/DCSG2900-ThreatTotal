@@ -53,7 +53,7 @@ function Result() {
             .then((json) => {
                 // If the authentication response is invalid remove the authentication
                 // locally and redirect to the login page.
-                if (json.authenticated != undefined){
+                if (json.authenticated !== undefined){
                     localStorage.removeItem('userAuth')
                     window.location.href="/login"
                 } else {
@@ -92,10 +92,10 @@ function Result() {
             // If a valid parameter is sent, but there is no login redirect to login page
             window.location.href="/login"
         }
-    }, []);
+    }, [file, hash, url, userAuth]);
 
     console.log(JsonData)
-    if (JsonData != undefined){
+    if (JsonData !== undefined){
         i18next.addResources('en', 'translation', JsonData.EN);
         i18next.addResources('no', 'translation', JsonData.NO);
     }

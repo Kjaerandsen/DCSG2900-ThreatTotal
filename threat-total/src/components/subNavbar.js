@@ -13,13 +13,13 @@ const SubNavbar = props => {
     )
 
     useEffect(() => {
-        if (props.page == "" || props.page == "home") {
+        if (props.page === "" || props.page === "home") {
             setIsHome(true);
         }
         if (userAuth !== null) {
             setIsLoggedIn(true)
         }
-    })
+    }, [props.page, userAuth])
 
     return (
         <div className="container h-auto pl-2 pr-2 sm:pl-18 sm:pr-18 md:pl-36 md:pr-36">
