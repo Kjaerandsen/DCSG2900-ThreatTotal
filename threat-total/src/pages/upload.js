@@ -2,6 +2,7 @@ import React from 'react';
 import Navbar from '../components/navbar';
 import MainInput from '../components/mainInput';
 import ntnuLogo from '../img/ntnuLogoUtenSlagOrd.svg'
+import SubNavbar from '../components/subNavbar'
 import CookieDisclosure from '../components/cookieDisclosure';
 
 const Upload = () => {
@@ -51,6 +52,7 @@ const Upload = () => {
 	<div className="grid place-items-center">
 		
 		<Navbar />
+        <SubNavbar page="uploadPage"/>
 		
         <div className='flex justify-center mt-6 sm:mt-8'>
             <img src={ntnuLogo} className="h-20 sm:h-40 w-auto" alt="NTNU Logo"/>
