@@ -58,7 +58,7 @@ function Indextest() {
         <div className="grid place-items-center">
             
             <Navbar />
-            <SubNavbar />
+            <SubNavbar page="home"/>
 
             <div className='flex justify-center mt-6 sm:mt-8'>
                 <img src={ntnuLogo} className="h-20 sm:h-35 md:h-40 w-auto" alt="NTNU Logo"/>

@@ -103,7 +103,7 @@ function Result() {
         <div className="grid place-items-center">
         
             <Navbar />
-            <SubNavbar />
+            <SubNavbar page="resultPage"/>
 
             <div className="pt-10 pb-10">
             {isLoading ? <Oval height="100" width="100" color="grey"/> : renderResult}

@@ -9,7 +9,7 @@ const Investigate = () => {
 	<div className="grid place-items-center">
 		
 		<Navbar />
-        <SubNavbar />
+        <SubNavbar page="investigatePage"/>
         
         <div className= "container w-full h-auto">
         <h1 className="text-center text-3xl font-bold pt-12">Investigation:</h1>
