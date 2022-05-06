@@ -291,7 +291,7 @@ func main() {
 			log.Println(err)
 		}
 		// return json object ID
-		c.JSON(http.StatusOK, gin.H{"id": trimID})
+		c.JSON(http.StatusOK, gin.H{"id": trimID[0]})
 		// handle error
 	})
 
@@ -310,12 +310,15 @@ func main() {
 		// remember to change api key, and reference it to a file instead
 		// as well as deactivate the key from the account, as it's leaked.
 
-		id := c.Query("id")
+		// fetch based on url parameter, file = id
+		id := c.Query("file")
+		log.Println(id)
 		if id == "" {
 			log.Println("error, ID is empty")
 		}
 
 		url := fmt.Sprintf("https://www.virustotal.com/api/v3/files/%s", id)
+		log.Println(url)
 		log.Println(id)
 
 		vtReq, _ := http.NewRequest("GET", url, nil)
@@ -326,7 +329,7 @@ func main() {
 
 		vtRes, _ := http.DefaultClient.Do(vtReq)
 
-		defer vtReq.Body.Close()
+		//defer vtRes.Body.Close()
 
 		vtBody, _ := ioutil.ReadAll(vtRes.Body)
 
@@ -387,13 +390,16 @@ func main() {
 		// IMPORTANT TODO, FIGURE ROUTING
 
 		// Possible to add more cases in the future, for more accurate assessements
+		// very realisitc that we need more cases, too narrow for accurate results per now.
 		if vtResponse.Data.Attributes.LastAnalysisStats.Malicious == 0 && vtResponse.Data.Attributes.LastAnalysisStats.Suspicious == 0 {
-			totalVerdict.EN.Result = "safe"
+			totalVerdict.EN.Result = "File is safe."
 			// osv totalVerdict.EN.Result = fmt.Sprintf("File is considered safe", x av y)
 		} else if vtResponse.Data.Attributes.TotalVotes.Malicious > 0 && vtResponse.Data.Attributes.LastAnalysisStats.Suspicious >= 0 {
-			totalVerdict.EN.Result = "unsafe"
+			totalVerdict.EN.Result = "File has malicious indicators, consider escalating. "
 		} else if vtResponse.Data.Attributes.LastAnalysisStats.Harmless > 0 && vtResponse.Data.Attributes.LastAnalysisStats.Malicious == 0 {
-			totalVerdict.EN.Result = "benign"
+			totalVerdict.EN.Result = "File has been confirmed benign."
+		} else {
+			totalVerdict.EN.Result = "File is suspicious."
 		}
 
 		var engines int = len(vtResponse.Data.Attributes.LastAnalysisResults)
@@ -404,6 +410,20 @@ func main() {
 		log.Println(totalVerdict)
 
 		fmt.Println(totalVerdict)
+
+		// return here
+
+		fileInt, err := json.Marshal(totalVerdict)
+		if err != nil {
+			fmt.Println(err)
+			//c.Data(http.StatusInternalServerError, "application/json", )
+		}
+
+		//fmt.Println("WHERE IS MY CONTENT", responseData)
+
+		c.Data(http.StatusOK, "application/json", fileInt)
+
+		// sort list based on what is malicious
 		//log.Print(test3)
 
 		// hent resultat via cache
