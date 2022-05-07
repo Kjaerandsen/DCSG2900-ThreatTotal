@@ -21,6 +21,7 @@ While the frontend is located in the "threat-total" folder.
 - Google Safebrowsing Api
 - HybridAnalysis Falcon Sandbox Public Api
 - Alienvault Open Threat Exchange Api
+- VirustTotal Api
 
 
 ### Frontend structure:
