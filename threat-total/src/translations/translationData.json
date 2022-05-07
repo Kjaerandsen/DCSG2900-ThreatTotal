@@ -27,13 +27,13 @@
 			"source": "Source: ",
 			"shortForm": "Shortform: ",
 			"assessment": "Assessment: ",
-			"aboutPage": "about",
-			"investigatePage": "investigate",
-			"loginPage": "log in",
-			"logoutPage": "log out",
-			"resultPage": "result",
-			"uploadPage": "upload",
-			"Home":""
+			"aboutPage": "About",
+			"investigatePage": "Investigate",
+			"loginPage": "Log in",
+			"logoutPage": "Log out",
+			"resultPage": "Result",
+			"uploadPage": "Upload",
+			"Home":"Home"
 		},
 		"about":{
 			"about": "About",
@@ -94,13 +94,13 @@
 			"source": "Kilde: ",
 			"shortForm": "Kortform: ",
 			"assessment": "Vurdering: ",
-			"aboutPage": "om",
-			"investigatePage": "undersøk",
-			"loginPage": "logg inn",
-			"logoutPage": "logg ut",
-			"resultPage": "resultat",
-			"uploadPage": "last opp",
-			"Home":""
+			"aboutPage": "Om",
+			"investigatePage": "Undersøk",
+			"loginPage": "Logg inn",
+			"logoutPage": "Logg ut",
+			"resultPage": "Resultat",
+			"uploadPage": "Last opp",
+			"Home":"Hjem"
 		},
 		"about":{
 			"about": "Om:",
