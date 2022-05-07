@@ -12,7 +12,8 @@ const Upload = () => {
     var formData = new FormData(e.target.form);
     var object={};
     formData.forEach((value, key) => object[key] = value);
-    if (object["inputFile"] instanceof File && userAuth != null) {
+    if (object["inputFile"] instanceof File) {
+        if (userAuth !== null) {
         console.log("loaded file, is in fact a file.")
         console.log(object["inputFile"])
 
@@ -39,22 +40,18 @@ const Upload = () => {
                 window.location.href= "/result?file="+encodeURIComponent(json.id)
             }
         })
-        // error handle for non-successful page redirects, either refresh page og write out error
+        // error handle for non-successful requests
         .catch(function(error){
             console.log(error)        
         })
-        
-        /*fetch('http://localhost:3000/result', {
-            method: 'POST',
-            headers: {
-                Accept: 'application/json',
-                'Content-Type': 'application/json'
-            }
-        }).then((response) => response.json()) */
-              
+        } else {
+            // If the user is not logged in redirect to the login screen
+            window.location.href="/login"
+        }    
     }
     else {
         console.log("this is not a file")
+        window.alert("Invalid file")
     }
   }
 
