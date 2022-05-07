@@ -33,7 +33,7 @@
 			"logoutPage": "log out",
 			"resultPage": "result",
 			"uploadPage": "upload",
-			"home":""
+			"Home":""
 		},
 		"about":{
 			"about": "About",
@@ -100,7 +100,7 @@
 			"logoutPage": "logg ut",
 			"resultPage": "resultat",
 			"uploadPage": "last opp",
-			"home":""
+			"Home":""
 		},
 		"about":{
 			"about": "Om:",
