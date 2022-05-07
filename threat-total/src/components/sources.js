@@ -19,7 +19,7 @@ export default function Sources(props) {
     } else {
         console.log ("sourceData: " + props.sourceData)
         return (
-            <div className="bg-gray-200">
+            <div className="bg-gray-200 rounded-lg">
                 <h1 className="text-2xl font-bold">{t("sourceTitle")}</h1>
                 <div className='bg-yellow-500 bg-red-600 bg-green-600'></div>
                 <div className='grid grid-cols-1 p-2 md:grid-cols-2 xl:grid-cols-3'>
