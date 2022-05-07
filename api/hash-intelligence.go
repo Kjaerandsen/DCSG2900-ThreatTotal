@@ -33,7 +33,7 @@ func HashIntelligence(c *gin.Context) {
 		}
 
 		// Add the data to the database
-		response, err := utils.Conn.Do("SETEX", "hash:"+hash, 300, hashInt)
+		response, err := utils.Conn.Do("SETEX", "hash:"+hash, utils.CacheDurationHash, hashInt)
 		if err != nil {
 			fmt.Println("Error adding data to redis:" + err.Error())
 		}

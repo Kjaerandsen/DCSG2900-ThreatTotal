@@ -32,7 +32,7 @@ func UrlIntelligence(c *gin.Context) {
 
 		// Add the data to the redis backend.
 		if completeInt {
-			response, err := utils.Conn.Do("SETEX", "url:"+url, 300, URLint)
+			response, err := utils.Conn.Do("SETEX", "url:"+url, utils.CacheDurationUrl, URLint)
 			if err != nil {
 				fmt.Println("Error adding data to redis:" + err.Error())
 			}

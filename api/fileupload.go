@@ -47,7 +47,7 @@ func UploadFileRetrieve(c *gin.Context) {
 		}
 
 		// Add the data to the database
-		response, err := utils.Conn.Do("SETEX", "file:"+id, 300, fileData)
+		response, err := utils.Conn.Do("SETEX", "file:"+id, utils.CacheDurationFile, fileData)
 		if err != nil {
 			fmt.Println("Error adding data to redis:" + err.Error())
 		}
