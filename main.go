@@ -66,108 +66,10 @@ func init() {
 func main() {
 
 	r := gin.Default()
-
 	r.Use(cors.Default())
 
-	//_, _ = auth.CodeToToken("")
-
-	// move to init function?
-
-	/*
-		r.GET("/", func(c *gin.Context) {
-			//c.HTML(http.StatusOK, hello world, gin.H{
-			//	"isSelected": true,
-			log.Println("Messsage")
-		})
-	*/
-
-	/*
-		r.GET("/url-testing", func(c *gin.Context) {
-
-			url := c.Query("url")
-			lng := c.Query("lng")
-
-			var wg sync.WaitGroup
-			var responseData [4]utils.FrontendResponse2
-
-			if lng != "no" {
-				fmt.Println("Language english")
-			}
-
-			var p, VirusTotal, urlscanio, alienvault *utils.FrontendResponse2
-			p = &responseData[0]
-			VirusTotal = &responseData[1]
-			urlscanio = &responseData[2]
-			alienvault = &responseData[3]
-
-			fmt.Println(url)
-
-			wg.Add(3)
-			go api.TestGoGoogleUrl(url, p, &wg)
-			go api.TestHybridAnalyisUrl(url, VirusTotal, urlscanio, &wg)
-			go api.TestAlienVaultUrl(url, alienvault, &wg)
-			wg.Wait()
-
-			//responseData2 := FR122(responseData[:])
-			var resultResponse utils.ResultFrontendResponse
-
-			resultResponse.FrontendResponse = responseData[:]
-
-			var setResults *utils.ResultFrontendResponse
-			setResults = &resultResponse
-
-			utils.SetResultURL(setResults, len(responseData))
-
-			URLint, err := json.Marshal(resultResponse)
-
-			if err != nil {
-				fmt.Println(err)
-			}
-
-			fmt.Println("WHERE IS MY CONTENT 1", responseData)
-			//fmt.Println("WHERE IS MY CONTENT 2", responseData2)
-
-			c.Data(http.StatusOK, "application/json", URLint)
-
-		})
-	*/
-
-	/*
-		TODO SEE
-		Perhaps we need a routing to "search" for searching domains, url or file hashes
-		then we have another routing for "upload", where we upload files from local machine, and send that
-
-	*/
-	/*
-		r.POST("/", func(c *gin.Context) {
-			var outputData []byte
-			jsonData, err := ioutil.ReadAll(c.Request.Body)
-			if err != nil {
-				http.Error(c.Writer, "Failed to read request", http.StatusInternalServerError)
-			}
-
-			var test map[string]interface{}
-			err = json.Unmarshal(jsonData, &test)
-			if err != nil { // Handled error
-				http.Error(c.Writer, "Failed to unmarshal data", http.StatusInternalServerError)
-			}
-			fmt.Println(test)
-			if test["inputText"] == "ntnu.no" {
-				outputData, err = json.Marshal("YESYESYESYESYES")
-				if err != nil {
-					http.Error(c.Writer, "Failed to marshal data", http.StatusInternalServerError)
-				}
-			} else {
-				outputData, err = json.Marshal("NONONONONONO")
-				if err != nil {
-					http.Error(c.Writer, "Invalid format, please enter a valid domain", http.StatusForbidden)
-				}
-			}
-
-			c.Data(http.StatusOK, "application/json", outputData)
-		})
-	*/
-
+	// Login function which takes a code, uses it to retrieve a token and return a hash of the token to the user for
+	// authentication.
 	r.GET("/login", func(c *gin.Context) {
 		code := c.Query("code")
 		authenticated, hash := auth.Authenticate(code, "")
@@ -179,6 +81,7 @@ func main() {
 		}
 	})
 
+	// Logout function which deletes a user from the database and sends a logout request to Feide.
 	r.DELETE("/login", func(c *gin.Context) {
 		hash := c.Query("userAuth")
 		err := auth.Logout(hash)
@@ -190,6 +93,7 @@ func main() {
 		}
 	})
 
+	// Auth function which authenticates a user using a hash of the token.
 	r.GET("/auth", func(c *gin.Context) {
 		auth2 := c.Query("auth")
 		authenticated, _ := auth.Authenticate("", auth2)
@@ -200,88 +104,7 @@ func main() {
 		}
 	})
 
-	// TODO: Upload a file
-	// figure out routing here, where are we supposted to have/deliver a file?
-	// do we make a new route that says "search" instead? discuss this tomorrow
-	// inspiration from https://github.com/dutchcoders/go-virustotal/blob/24cc8e6fa329f020c70a3b32330b5743f1ba7971/virustotal.go#L305
-
-	r.POST("/upload", func(c *gin.Context) {
-
-		hash := c.Query("userAuth")
-
-		authenticated, _ := auth.Authenticate("", hash)
-		if !authenticated {
-			c.JSON(http.StatusUnauthorized, gin.H{"authenticated": "You are not authenticated. User login is invalid."})
-		} else {
-			api.UploadFile(c)
-		}
-	})
-
-	r.GET("/upload", func(c *gin.Context) {
-
-		hash := c.Query("userAuth")
-
-		authenticated, _ := auth.Authenticate("", hash)
-		if !authenticated {
-			c.JSON(http.StatusUnauthorized, gin.H{"authenticated": "You are not authenticated. User login is invalid."})
-		} else {
-			api.UploadFileRetrieve(c)
-		}
-	})
-
-	/**
-	* Function should gather DATA from public intelligence sources
-	* Implementing functionality for OTX, SafeBrowser API.
-	*
-	 */
-
-	//GOLANG API STUFF:
-
-	/**
-	r.GET("/public-intelligence", func(c *gin.Context) {
-		//fmt.Println(c.Query("url"))
-
-		//url := c.Query("url")
-
-		//Google
-
-		//safebrowserResponse := api.CallGoogleUrl(url)
-
-		//fmt.Println("safebrowser response::", safebrowserResponse.Status)
-
-		//Alienvault
-		//var otxAlienVaultRespone [1]utils.FrontendResponse
-
-		//otxAlienVaultRespone[0] = api.CallAlienVaultUrl(url)
-
-		//fmt.Println("safebrowser response::", safebrowserResponse)
-
-		//fmt.Println("ALIENVAULT RESPONSE:::", otxAlienVaultRespone[0].Status)
-
-		filehash := "a7a665a695ec3c0f862a0d762ad55aff6ce6014359647e7c7f7e3c4dc3be81b7"
-
-		filehashAV := api.CallAlienVaultHash(filehash)
-
-		fmt.Println("AlienVAULT FILEHASH LOOKUP::::::::::", filehashAV)
-
-		//Hybrid Analysis:
-
-		//filehashHybrid := "77682670694bb1ab1a48091d83672c9005431b6fc731d6c6deb466a16081f4d1"
-
-		//ResultHybridA := api.CallHybridAnalysisHash(filehashHybrid)
-
-		//fmt.Println("\n\n\n\n\n HYBRID ANALYSIS!!!!::::::::!!!\n\n\n", ResultHybridA)
-
-		/**
-
-		HybridTestURL := "https://testsafebrowsing.appspot.com/s/malware.html"
-
-		ResultURLHybridA := api.CallHybridAnalyisUrl(HybridTestURL)
-
-		fmt.Println("\n\n\n\n\n HYBRID URL:\n\n", ResultURLHybridA)
-
-	})*/
-
+	// Url intelligence takes a url and returns data on the url from our third-party sources.
 	r.GET("/url-intelligence", func(c *gin.Context) {
 		hash := c.Query("userAuth")
 		authenticated, _ := auth.Authenticate("", hash)
@@ -292,6 +115,7 @@ func main() {
 		}
 	})
 
+	// Hash intelligence takes a filehash and returns data on the file from our third-party sources.
 	r.GET("/hash-intelligence", func(c *gin.Context) {
 
 		var wg sync.WaitGroup
@@ -329,37 +153,37 @@ func main() {
 
 	})
 
+	// inspiration from https://github.com/dutchcoders/go-virustotal/blob/24cc8e6fa329f020c70a3b32330b5743f1ba7971/virustotal.go#L305
+	// Upload function which allows the user to upload a file to virustotal, returns the id of the file in virustotal.
+	r.POST("/upload", func(c *gin.Context) {
+
+		hash := c.Query("userAuth")
+
+		authenticated, _ := auth.Authenticate("", hash)
+		if !authenticated {
+			c.JSON(http.StatusUnauthorized, gin.H{"authenticated": "You are not authenticated. User login is invalid."})
+		} else {
+			api.UploadFile(c)
+		}
+	})
+
+	// Upload retrieve function which takes a file id and returns the information on the file retrieved from virustotal.
+	r.GET("/upload", func(c *gin.Context) {
+
+		hash := c.Query("userAuth")
+
+		authenticated, _ := auth.Authenticate("", hash)
+		if !authenticated {
+			c.JSON(http.StatusUnauthorized, gin.H{"authenticated": "You are not authenticated. User login is invalid."})
+		} else {
+			api.UploadFileRetrieve(c)
+		}
+	})
+
 	log.Fatal(r.Run(":8081"))
 	// These don't do anything, and can't be placed above the line above as they stop the connections prematurely then.
 	/*
 		conn.Close()      // Close the connection
 		redisPool.Close() // Close the pool
 	*/
-}
-
-// Temporary helper function to create translations from the input
-
-func FR122(input []utils.FrontendResponse) (output []utils.FrontendResponse2) {
-	length := len(input)
-
-	fmt.Println("input: ", input)
-
-	output = make([]utils.FrontendResponse2, 4)
-
-	for i := 0; i < length; i++ {
-		output[i].ID = input[i].ID
-		output[i].SourceName = input[i].SourceName
-		output[i].EN.Content = input[i].Content
-		output[i].EN.Description = input[i].Description
-		output[i].EN.Status = input[i].Status
-		//output[i].EN.Tags = input[i].Tags
-		output[i].NO.Content = input[i].Content + "norsk"
-		output[i].NO.Description = input[i].Description + "norsk"
-		output[i].NO.Status = input[i].Status + "norsk"
-		//output[i].NO.Tags = input[i].Tags
-	}
-
-	fmt.Println()
-
-	return output
 }
