@@ -292,49 +292,6 @@ func main() {
 		}
 	})
 
-	r.GET("/url-intelligence2", func(c *gin.Context) {
-
-		responseData := make([]utils.FrontendResponse2, 2)
-
-		responseData[0].SourceName = "Test"
-		responseData[1].SourceName = "test2"
-		responseData[0].ID = 0
-		responseData[1].ID = 1
-		responseData[0].EN.Status = "risk1"
-		responseData[0].EN.Description = "risk1"
-		responseData[0].EN.Content = "risk1"
-		responseData[0].NO.Description = "riskno1"
-		responseData[0].NO.Status = "riskno1"
-		responseData[0].NO.Content = "riskno1"
-		responseData[1].EN.Status = "risk2"
-		responseData[1].EN.Description = "risk2"
-		responseData[1].EN.Content = "risk2"
-		responseData[1].NO.Description = "riskno2"
-		responseData[1].NO.Status = "riskno2"
-		responseData[1].NO.Content = "riskno2"
-
-		URLint, err := json.Marshal(responseData)
-		if err != nil {
-			fmt.Println(err)
-		}
-
-		fmt.Println("WHERE IS MY CONTENT 2", responseData)
-
-		c.Data(http.StatusOK, "application/json", URLint)
-
-		/* Backup of old code
-
-		URLint, err := json.Marshal(responseData)
-		if err != nil {
-			fmt.Println(err)
-		}
-
-		fmt.Println("WHERE IS MY CONTENT", responseData)
-
-		c.Data(http.StatusOK, "application/json", URLint)
-		*/
-	})
-
 	r.GET("/hash-intelligence", func(c *gin.Context) {
 
 		var wg sync.WaitGroup
