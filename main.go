@@ -5,6 +5,7 @@ import (
 	"context"
 	"dcsg2900-threattotal/api"
 	"dcsg2900-threattotal/auth"
+	logging "dcsg2900-threattotal/logs"
 	"dcsg2900-threattotal/storage"
 	"dcsg2900-threattotal/utils"
 	"encoding/base64"
@@ -63,6 +64,9 @@ func init() {
 
 	RedisPool := storage.InitPool()
 	utils.Conn = RedisPool.Get()
+
+	// Get api keys as environment variables here
+
 }
 
 func main() {
@@ -75,60 +79,64 @@ func main() {
 
 	// move to init function?
 
-	r.GET("/", func(c *gin.Context) {
-		//c.HTML(http.StatusOK, hello world, gin.H{
-		//	"isSelected": true,
-		log.Println("Messsage")
-	})
+	/*
+		r.GET("/", func(c *gin.Context) {
+			//c.HTML(http.StatusOK, hello world, gin.H{
+			//	"isSelected": true,
+			log.Println("Messsage")
+		})
+	*/
 
-	r.GET("/url-testing", func(c *gin.Context) {
+	/*
+		r.GET("/url-testing", func(c *gin.Context) {
 
-		url := c.Query("url")
-		lng := c.Query("lng")
+			url := c.Query("url")
+			lng := c.Query("lng")
 
-		var wg sync.WaitGroup
-		var responseData [4]utils.FrontendResponse2
+			var wg sync.WaitGroup
+			var responseData [4]utils.FrontendResponse2
 
-		if lng != "no" {
-			fmt.Println("Language english")
-		}
+			if lng != "no" {
+				fmt.Println("Language english")
+			}
 
-		var p, VirusTotal, urlscanio, alienvault *utils.FrontendResponse2
-		p = &responseData[0]
-		VirusTotal = &responseData[1]
-		urlscanio = &responseData[2]
-		alienvault = &responseData[3]
+			var p, VirusTotal, urlscanio, alienvault *utils.FrontendResponse2
+			p = &responseData[0]
+			VirusTotal = &responseData[1]
+			urlscanio = &responseData[2]
+			alienvault = &responseData[3]
 
-		fmt.Println(url)
+			fmt.Println(url)
 
-		wg.Add(3)
-		go api.TestGoGoogleUrl(url, p, &wg)
-		go api.TestHybridAnalyisUrl(url, VirusTotal, urlscanio, &wg)
-		go api.TestAlienVaultUrl(url, alienvault, &wg)
-		wg.Wait()
+			wg.Add(3)
+			go api.TestGoGoogleUrl(url, p, &wg)
+			go api.TestHybridAnalyisUrl(url, VirusTotal, urlscanio, &wg)
+			go api.TestAlienVaultUrl(url, alienvault, &wg)
+			wg.Wait()
 
-		//responseData2 := FR122(responseData[:])
-		var resultResponse utils.ResultFrontendResponse
+			//responseData2 := FR122(responseData[:])
+			var resultResponse utils.ResultFrontendResponse
 
-		resultResponse.FrontendResponse = responseData[:]
+			resultResponse.FrontendResponse = responseData[:]
 
-		var setResults *utils.ResultFrontendResponse
-		setResults = &resultResponse
+			var setResults *utils.ResultFrontendResponse
+			setResults = &resultResponse
 
-		utils.SetResultURL(setResults, len(responseData))
+			utils.SetResultURL(setResults, len(responseData))
 
-		URLint, err := json.Marshal(resultResponse)
+			URLint, err := json.Marshal(resultResponse)
 
-		if err != nil {
-			fmt.Println(err)
-		}
+			if err != nil {
+				fmt.Println(err)
+			}
 
-		fmt.Println("WHERE IS MY CONTENT 1", responseData)
-		//fmt.Println("WHERE IS MY CONTENT 2", responseData2)
+			fmt.Println("WHERE IS MY CONTENT 1", responseData)
+			//fmt.Println("WHERE IS MY CONTENT 2", responseData2)
 
-		c.Data(http.StatusOK, "application/json", URLint)
+			c.Data(http.StatusOK, "application/json", URLint)
 
-	})
+		})
+	*/
 
 	/*
 		TODO SEE
@@ -136,33 +144,35 @@ func main() {
 		then we have another routing for "upload", where we upload files from local machine, and send that
 
 	*/
-	r.POST("/", func(c *gin.Context) {
-		var outputData []byte
-		jsonData, err := ioutil.ReadAll(c.Request.Body)
-		if err != nil {
-			http.Error(c.Writer, "Failed to read request", http.StatusInternalServerError)
-		}
-
-		var test map[string]interface{}
-		err = json.Unmarshal(jsonData, &test)
-		if err != nil { // Handled error
-			http.Error(c.Writer, "Failed to unmarshal data", http.StatusInternalServerError)
-		}
-		fmt.Println(test)
-		if test["inputText"] == "ntnu.no" {
-			outputData, err = json.Marshal("YESYESYESYESYES")
+	/*
+		r.POST("/", func(c *gin.Context) {
+			var outputData []byte
+			jsonData, err := ioutil.ReadAll(c.Request.Body)
 			if err != nil {
-				http.Error(c.Writer, "Failed to marshal data", http.StatusInternalServerError)
+				http.Error(c.Writer, "Failed to read request", http.StatusInternalServerError)
 			}
-		} else {
-			outputData, err = json.Marshal("NONONONONONO")
-			if err != nil {
-				http.Error(c.Writer, "Invalid format, please enter a valid domain", http.StatusForbidden)
-			}
-		}
 
-		c.Data(http.StatusOK, "application/json", outputData)
-	})
+			var test map[string]interface{}
+			err = json.Unmarshal(jsonData, &test)
+			if err != nil { // Handled error
+				http.Error(c.Writer, "Failed to unmarshal data", http.StatusInternalServerError)
+			}
+			fmt.Println(test)
+			if test["inputText"] == "ntnu.no" {
+				outputData, err = json.Marshal("YESYESYESYESYES")
+				if err != nil {
+					http.Error(c.Writer, "Failed to marshal data", http.StatusInternalServerError)
+				}
+			} else {
+				outputData, err = json.Marshal("NONONONONONO")
+				if err != nil {
+					http.Error(c.Writer, "Invalid format, please enter a valid domain", http.StatusForbidden)
+				}
+			}
+
+			c.Data(http.StatusOK, "application/json", outputData)
+		})
+	*/
 
 	r.GET("/login", func(c *gin.Context) {
 		code := c.Query("code")
@@ -203,96 +213,109 @@ func main() {
 
 	r.POST("/upload", func(c *gin.Context) {
 
-		log.Println("Fileupload worked")
+		hash := c.Query("userAuth")
 
-		uri := "https://www.virustotal.com/api/v3/files"
-		body := &bytes.Buffer{}
-		writer := multipart.NewWriter(body)
+		authenticated, _ := auth.Authenticate("", hash)
+		if !authenticated {
+			c.JSON(http.StatusUnauthorized, gin.H{"authenticated": "You are not authenticated. User login is invalid."})
+		} else {
+			log.Println("Fileupload worked")
+			logging.Loginfo("Fileupload worked")
 
-		// fetch the file contents
-		file2, _ := c.FormFile("file")
-		// open the file
-		file3, _ := file2.Open()
+			uri := "https://www.virustotal.com/api/v3/files"
+			body := &bytes.Buffer{}
+			writer := multipart.NewWriter(body)
 
-		// use file contents to fetch file name, associate it with the "file" form header.
-		part, err := writer.CreateFormFile("file", file2.Filename)
+			// fetch the file contents
+			file2, _ := c.FormFile("file")
+			// open the file
+			file3, _ := file2.Open()
 
-		if err != nil {
-			log.Println(err)
+			// use file contents to fetch file name, associate it with the "file" form header.
+			part, err := writer.CreateFormFile("file", file2.Filename)
+
+			if err != nil {
+				log.Println(err)
+			}
+			// copy file locally
+			_, err = io.Copy(part, file3)
+
+			if err != nil {
+				logging.Logerror(err)
+			}
+			// close writer
+			err = writer.Close()
+
+			if err != nil {
+				log.Println(err)
+				logging.Logerror(err)
+			}
+
+			// prepare request towards API
+			req, err := http.NewRequest("POST", uri, body)
+
+			if err != nil {
+				log.Println(err)
+				logging.Logerror(err)
+			}
+
+			content, err := ioutil.ReadFile("./APIKey/virusTotal.txt")
+			if err != nil {
+				//log.Fatal(err)
+				fmt.Println(err)
+				logging.Logerror(err)
+			}
+
+			APIKey := string(content)
+
+			req.Header.Add("X-Apikey", APIKey)
+			// error handle here, user should not be able to send requests without api key
+
+			// dynamically set content type, based on the formdata writer
+			req.Header.Set("Content-Type", writer.FormDataContentType())
+
+			// perform the prepared API request
+			res, err := http.DefaultClient.Do(req)
+
+			if err != nil {
+				log.Println(err)
+				logging.Logerror(err)
+			}
+
+			defer res.Body.Close()
+
+			// så lenge status 200
+
+			// read the response
+			contents, _ := ioutil.ReadAll(res.Body)
+
+			var jsonResponse utils.VirusTotalUploadID
+
+			unmarshalledID := json.Unmarshal(contents, &jsonResponse)
+
+			if unmarshalledID != nil {
+				log.Println(unmarshalledID)
+				logging.Logerror(err)
+			}
+
+			encodedID := jsonResponse.Data.ID
+
+			// decode provided values for virustotal report
+			decode64, err := base64.RawStdEncoding.DecodeString(encodedID)
+			log.Println("decoded here")
+			log.Println(string(decode64))
+
+			// extract ID for virustotal report
+			trimID := strings.Split((string(decode64)), ":")
+			log.Println("TRIMMED")
+			log.Println(trimID[0])
+			if err != nil {
+				log.Println(err)
+			}
+			// return json object ID
+			c.JSON(http.StatusOK, gin.H{"id": trimID[0]})
+			// handle error
 		}
-		// copy file locally
-		_, err = io.Copy(part, file3)
-
-		if err != nil {
-			log.Println(err)
-		}
-		// close writer
-		err = writer.Close()
-
-		if err != nil {
-			log.Println(err)
-		}
-
-		// prepare request towards API
-		req, err := http.NewRequest("POST", uri, body)
-
-		if err != nil {
-			log.Println(err)
-		}
-
-		content, err := ioutil.ReadFile("./APIKey/virusTotal.txt")
-		if err != nil {
-			//log.Fatal(err)
-			fmt.Println(err)
-		}
-
-		APIKey := string(content)
-
-		req.Header.Add("X-Apikey", APIKey)
-		// error handle here, user should not be able to send requests without api key
-
-		// dynamically set content type, based on the formdata writer
-		req.Header.Set("Content-Type", writer.FormDataContentType())
-
-		// perform the prepared API request
-		res, err := http.DefaultClient.Do(req)
-
-		if err != nil {
-			log.Println(err)
-		}
-
-		defer res.Body.Close()
-
-		// så lenge status 200
-
-		// read the response
-		contents, _ := ioutil.ReadAll(res.Body)
-
-		var jsonResponse utils.VirusTotalUploadID
-
-		unmarshalledID := json.Unmarshal(contents, &jsonResponse)
-
-		if unmarshalledID != nil {
-			log.Println(unmarshalledID)
-		}
-
-		encodedID := jsonResponse.Data.ID
-
-		// decode provided values for virustotal report
-		decode64, err := base64.RawStdEncoding.DecodeString(encodedID)
-		log.Println("decoded here")
-		log.Println(string(decode64))
-
-		// extract ID for virustotal report
-		trimID := strings.Split((string(decode64)), ":")
-		log.Println("TRIMMED")
-		log.Println(trimID[0])
-		if err != nil {
-			log.Println(err)
-		}
-		// return json object ID
-		c.JSON(http.StatusOK, gin.H{"id": trimID[0]})
-		// handle error
 	})
 
 	r.GET("/upload", func(c *gin.Context) {
@@ -304,6 +327,7 @@ func main() {
 		if err != nil {
 			//log.Fatal(err)
 			fmt.Println(err)
+			logging.Logerror(err)
 		}
 		// Convert []byte to string and print to screen
 		APIKey := string(content)
@@ -315,6 +339,7 @@ func main() {
 		log.Println(id)
 		if id == "" {
 			log.Println("error, ID is empty")
+			logging.Logerrorinfo("Error, ID is empty - Upload")
 		}
 
 		url := fmt.Sprintf("https://www.virustotal.com/api/v3/files/%s", id)
@@ -566,6 +591,7 @@ func main() {
 		Hashint, err := json.Marshal(resultResponse)
 		if err != nil {
 			fmt.Println(err)
+			logging.Logerror(err)
 			//c.Data(http.StatusInternalServerError, "application/json", )
 		}
 

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import Navbar from '../components/navbar';
+import SubNavbar from '../components/subNavbar'
 import ntnuLogo from '../img/ntnuLogoUtenSlagOrd.svg';
 import CookieDisclosure from '../components/cookieDisclosure';
 import { useTranslation } from 'react-i18next';
@@ -31,13 +32,14 @@ function toggleQ4 () {
 	<div className="grid place-items-center">
 		
 		<Navbar />
+        <SubNavbar page="aboutPage"/>
         
         <div className='flex justify-center mt-6 sm:mt-8'>
             <img src={ntnuLogo} className="h-20 sm:h-35 md:h-40 w-auto" alt="NTNU Logo"/>
             <h1 className="text-4xl sm:text-6xl md:text-8xl font-bold sm:ml-4 ml-2 pt-2 sm:pt-4 w-auto"> Threat Total </h1>
         </div>
 		
-        <div className='container pt-6 pb-6 sm:pt-12 sm:pb-8 pl-2 pr-2 sm:pl-16 sm:pr-16 xl:pl-36 xl:pr-36'>
+        <div className='container pt-6 pb-4 sm:pt-12 sm:pb-6 pl-2 pr-2 sm:pl-16 sm:pr-16 xl:pl-36 xl:pr-36'>
             <h1 className='text-center'> {t("about:about")} </h1>
             <br></br>
 
@@ -51,6 +53,9 @@ function toggleQ4 () {
                 <br></br>
                 <br id='cookie'></br>
                 {t("about:text3")}
+                <br></br>
+                <br id="login"></br>
+                {t("about:text4")}
             </p>          
         </div>
 
@@ -111,6 +116,10 @@ function toggleQ4 () {
                             <tr className='bg-gray-100'>
                                 <td className='border-r-2 p-1'>{t("about:q4table5")}</td>
                                 <td>{t("about:q4table6")}</td>
+                            </tr>
+                            <tr>
+                                <td className='border-r-2 p-1'>{t("about:q4table7")}</td>
+                                <td>{t("about:q4table8")}</td>
                             </tr>
                             </tbody>
                         </table>

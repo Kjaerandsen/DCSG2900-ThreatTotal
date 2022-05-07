@@ -171,7 +171,7 @@ type AlienVaultURL struct {
 	Indicator     string        `json:"indicator"`
 	Type          string        `json:"type"`
 	TypeTitle     string        `json:"type_title"`
-	Validation    []interface{} `json:"validation"`
+	Validation    []ValidationAlienVault `json:"validation"`
 	BaseIndicator struct {
 	} `json:"base_indicator"`
 	PulseInfo struct {
@@ -365,4 +365,10 @@ type IdAndJwt struct {
 	Oauth2Token oauth2.Token           `json:"oauth2Token"`
 	Jwt         oidc.IDToken           `json:"jwt"`
 	Claims      map[string]interface{} `json:"email"`
+}
+
+type ValidationAlienVault struct {
+	Source  string `json:"source"`
+	Message string `json:"message"`
+	Name    string `json:"name"`
 }

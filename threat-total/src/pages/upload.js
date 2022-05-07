@@ -2,14 +2,17 @@ import React from 'react';
 import Navbar from '../components/navbar';
 import MainInput from '../components/mainInput';
 import ntnuLogo from '../img/ntnuLogoUtenSlagOrd.svg'
+import SubNavbar from '../components/subNavbar'
 import CookieDisclosure from '../components/cookieDisclosure';
 
 const Upload = () => {
+  const userAuth = localStorage.getItem('userAuth')
+
   const fileUpload = e => {
     var formData = new FormData(e.target.form);
     var object={};
     formData.forEach((value, key) => object[key] = value);
-    if (object["inputFile"] instanceof File) {
+    if (object["inputFile"] instanceof File && userAuth != null) {
         console.log("loaded file, is in fact a file.")
         console.log(object["inputFile"])
 
@@ -26,8 +29,16 @@ const Upload = () => {
         };
         
         // forward ID only not object
-        fetch('http://localhost:8081/upload', options)
-        .then(response => response.json()).then(json => window.location.href= "/result?file="+encodeURIComponent(json.id))
+        fetch('http://localhost:8081/upload?userAuth=' + userAuth, options)
+        .then(response => response.json())
+        .then((json) => {
+            if (json.authenticated !== undefined){
+                localStorage.removeItem('userAuth')
+                window.location.href="/login"
+            } else {
+                window.location.href= "/result?file="+encodeURIComponent(json.id)
+            }
+        })
         // error handle for non-successful page redirects, either refresh page og write out error
         .catch(function(error){
             console.log(error)        
@@ -46,11 +57,14 @@ const Upload = () => {
         console.log("this is not a file")
     }
   }
+
+
   return (
     <>
 	<div className="grid place-items-center">
 		
 		<Navbar />
+        <SubNavbar page="uploadPage"/>
 		
         <div className='flex justify-center mt-6 sm:mt-8'>
             <img src={ntnuLogo} className="h-20 sm:h-40 w-auto" alt="NTNU Logo"/>

@@ -1,6 +1,7 @@
 import React, { useEffect, useState} from "react";
 import Navbar from "../components/navbar";
 import Sources from "../components/sources";
+import SubNavbar from '../components/subNavbar'
 import { useTranslation } from 'react-i18next';
 import CookieDisclosure from "../components/cookieDisclosure";
 import { Oval } from 'react-loader-spinner';
@@ -52,7 +53,7 @@ function Result() {
             .then((json) => {
                 // If the authentication response is invalid remove the authentication
                 // locally and redirect to the login page.
-                if (json.authenticated != undefined){
+                if (json.authenticated !== undefined){
                     localStorage.removeItem('userAuth')
                     window.location.href="/login"
                 } else {
@@ -91,10 +92,10 @@ function Result() {
             // If a valid parameter is sent, but there is no login redirect to login page
             window.location.href="/login"
         }
-    }, []);
+    }, [file, hash, url, userAuth]);
 
     console.log(JsonData)
-    if (JsonData != undefined){
+    if (JsonData !== undefined){
         i18next.addResources('en', 'translation', JsonData.EN);
         i18next.addResources('no', 'translation', JsonData.NO);
     }
@@ -122,6 +123,7 @@ function Result() {
         <div className="grid place-items-center">
         
             <Navbar />
+            <SubNavbar page="resultPage"/>
 
             <div className="pt-10 pb-10">
             {isLoading ? <Oval height="100" width="100" color="grey"/> : renderResult}

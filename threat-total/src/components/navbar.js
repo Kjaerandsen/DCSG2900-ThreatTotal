@@ -26,7 +26,7 @@ const Navbar = () => {
 				</a>
 			</div>
 			<div className="h-full ml-3 w-full flex items-center">
-				<a href="/about" className="p-2 text-gray-500 font-semibold m-auto">{t("about")}</a>
+				<a href="/about" className="p-2 text-gray-500 font-semibold m-auto hover:underline">{t("about")}</a>
 			</div>
 			<div className="float float-right w-full h-12 sm:h-full sm:pr-3">
 				<div className="float-right place-items-center h-12 mt-2 sm:mt-3">

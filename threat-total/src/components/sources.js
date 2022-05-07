@@ -9,7 +9,7 @@ export default function Sources(props) {
     const { t } = useTranslation();
     var BG = ""
     // Checks if an error has occured while connecting to the backend, if true return an error message
-    if (props.err || props.sourceData == undefined || props.sourceData == "") {
+    if (props.err || props.sourceData.FrontendResponse === undefined || props.sourceData.FrontendResponse === "") {
         return (
             <div className='bg-white border-2 border-gray-400 rounded-lg p-2 m-4'>
                 <h1>{t("backendError")}</h1>

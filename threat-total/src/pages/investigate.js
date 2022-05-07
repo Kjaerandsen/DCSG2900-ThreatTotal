@@ -1,5 +1,6 @@
 import React from 'react';
 import Navbar from '../components/navbar';
+import SubNavbar from '../components/subNavbar'
 import CookieDisclosure from '../components/cookieDisclosure';
   
 const Investigate = () => {
@@ -8,6 +9,7 @@ const Investigate = () => {
 	<div className="grid place-items-center">
 		
 		<Navbar />
+        <SubNavbar page="investigatePage"/>
         
         <div className= "container w-full h-auto">
         <h1 className="text-center text-3xl font-bold pt-12">Investigation:</h1>
