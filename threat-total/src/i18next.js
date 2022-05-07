@@ -10,7 +10,7 @@ i18n
     resources,
     ns: ['translation', 'translation2', 'about'],
     fallbackLng: "en", // default language
-    debug: true,
+    debug: false,
     detector: {
       order: ['queryString', 'localStorage', 'cookie'],
       caches: ['localStorage', 'cookie']
