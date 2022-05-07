@@ -23,13 +23,7 @@ func CallHybridAnalysisHash(hash string, response *utils.FrontendResponse2, wg *
 
 	response.SourceName = "Hybrid Analysis"
 
-	content, err := ioutil.ReadFile("./APIKey/HybridAnalysisAPI.txt")
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	// Convert []byte to string and print to screen
-	APIKey := string(content)
+	APIKey := utils.APIKeyHybridAnalysis
 
 	postURL := "https://www.hybrid-analysis.com/api/v2/search/hash"
 
@@ -51,13 +45,13 @@ func CallHybridAnalysisHash(hash string, response *utils.FrontendResponse2, wg *
 	defer res.Body.Close()
 
 	fmt.Println("\nStatus paa request", res.Status)
-	if(res.StatusCode == 200){
+	if res.StatusCode == 200 {
 
-	//fmt.Println("response Status:", res.Status)
-	//fmt.Print("Response Headers:", res.Header)
+		//fmt.Println("response Status:", res.Status)
+		//fmt.Print("Response Headers:", res.Header)
 		body, _ := ioutil.ReadAll(res.Body)
 		fmt.Println("\nBody", string(body))
-	//fmt.Println("response Body:", string(body))
+		//fmt.Println("response Body:", string(body))
 
 		var jsonResponse utils.HybridAnalysishash
 
@@ -65,18 +59,18 @@ func CallHybridAnalysisHash(hash string, response *utils.FrontendResponse2, wg *
 		if err != nil {
 			fmt.Println(string(body))
 			fmt.Println(err)
-			if len(string(body)) == 2 {		//If this statement is true it means that the request
-											//is sucessful but it cant be unmarshalled because it returns empty
-											//It returns empty because HybridAnalysis does not have any information on the hash.
-				utils.SetResponseObjectHybridAnalysisHash(jsonResponse, response)	//This function will then parse this as unknown.
-			}else{
+			if len(string(body)) == 2 { //If this statement is true it means that the request
+				//is sucessful but it cant be unmarshalled because it returns empty
+				//It returns empty because HybridAnalysis does not have any information on the hash.
+				utils.SetResponseObjectHybridAnalysisHash(jsonResponse, response) //This function will then parse this as unknown.
+			} else {
 				utils.SetGenericError(response) //If it did not return empty but still failed it means something else went wrong,											//Returning an error
 			}
-			return		//Returning
+			return //Returning
 		}
 
-	utils.SetResponseObjectHybridAnalysisHash(jsonResponse, response)
-	}else{
+		utils.SetResponseObjectHybridAnalysisHash(jsonResponse, response)
+	} else {
 		utils.SetGenericError(response)
 	}
 }

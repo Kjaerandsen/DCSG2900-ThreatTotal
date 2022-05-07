@@ -33,7 +33,7 @@ func init() {
 			AuthURL:  "https://auth.dataporten.no/oauth/authorization",
 			TokenURL: "https://auth.dataporten.no/oauth/token",
 		},
-		RedirectURL: "http://localhost:3000",
+		RedirectURL: os.Getenv("feideRedirectUrl"),
 		Scopes:      []string{oidc.ScopeOpenID, "email"},
 	}
 
@@ -53,7 +53,10 @@ func init() {
 	utils.Conn = RedisPool.Get()
 
 	// Get api keys as environment variables here
-
+	utils.APIKeyVirusTotal = os.Getenv("APIKeyVirusTotal")
+	utils.APIKeyGoogle = os.Getenv("APIKeyGoogle")
+	utils.APIKeyHybridAnalysis = os.Getenv("APIKeyHybridAnalysis")
+	utils.APIKeyOTX = os.Getenv("APIKeyOTX")
 }
 
 func main() {

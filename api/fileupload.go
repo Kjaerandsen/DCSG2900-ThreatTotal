@@ -140,14 +140,7 @@ func UploadFile(c *gin.Context) {
 		logging.Logerror(err)
 	}
 
-	content, err := ioutil.ReadFile("./APIKey/virusTotal.txt")
-	if err != nil {
-		//log.Fatal(err)
-		fmt.Println(err)
-		logging.Logerror(err)
-	}
-
-	APIKey := string(content)
+	APIKey := utils.APIKeyVirusTotal
 
 	req.Header.Add("X-Apikey", APIKey)
 	// error handle here, user should not be able to send requests without api key

@@ -15,3 +15,9 @@ var Provider *oidc.Provider
 var Ctx context.Context
 var Config oauth2.Config
 var Verifier *oidc.IDTokenVerifier
+
+// Api keys
+var APIKeyOTX string
+var APIKeyHybridAnalysis string
+var APIKeyVirusTotal string
+var APIKeyGoogle string

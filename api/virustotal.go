@@ -14,15 +14,8 @@ import (
 func CallVirusTotal(id string) (response utils.ResultFrontendResponse, err error) {
 	// VT key has been added. REMEMBER TO DEACTIVATE AND CHANGE BEFORE FINAL RELEASE.
 	// prepare request towards API
-	content, err := ioutil.ReadFile("./APIKey/virusTotal.txt")
-	if err != nil {
-		//log.Fatal(err)
-		fmt.Println(err)
-		logging.Logerror(err)
-		return
-	}
 	// Convert []byte to string and print to screen
-	APIKey := string(content)
+	APIKey := utils.APIKeyVirusTotal
 	// remember to change api key, and reference it to a file instead
 	// as well as deactivate the key from the account, as it's leaked.
 	if id == "" {

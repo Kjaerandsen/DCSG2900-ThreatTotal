@@ -1,8 +1,8 @@
 package api
 
 import (
+	logging "dcsg2900-threattotal/logs"
 	"dcsg2900-threattotal/utils"
-	"dcsg2900-threattotal/logs"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
@@ -42,10 +42,10 @@ func CallAlienVaultUrl(url string) (response utils.FrontendResponse) {
 	defer res.Body.Close()
 
 	body, err := ioutil.ReadAll(res.Body)
-	if(err != nil){
-	fmt.Println("ERROR READING JSON DATA", err)
+	if err != nil {
+		fmt.Println("ERROR READING JSON DATA", err)
 	}
-	
+
 	var jsonResponse utils.AlienVaultURL
 
 	err = json.Unmarshal(body, &jsonResponse)
@@ -56,13 +56,13 @@ func CallAlienVaultUrl(url string) (response utils.FrontendResponse) {
 	//output:= string(body)
 	//fmt.Println(output)
 	//fmt.Println("\n\nAMOUNT OF PULSES:::::: ", jsonResponse.PulseInfo.Count)
-	if(jsonResponse.PulseInfo.Count == 0){
+	if jsonResponse.PulseInfo.Count == 0 {
 		response.Status = "Safe"
-	}else{
+	} else {
 		response.Status = "Risk"
 	}
 
-	response.SourceName="AlienVault"
+	response.SourceName = "AlienVault"
 
 	//response = string(body)
 
@@ -73,7 +73,7 @@ func CallAlienVaultUrl(url string) (response utils.FrontendResponse) {
 func CallAlienVaultHash(hash string, response *utils.FrontendResponse2, wg *sync.WaitGroup) {
 
 	defer wg.Done()
-	response.SourceName="AlienVault"
+	response.SourceName = "AlienVault"
 
 	content, err := ioutil.ReadFile("./APIKey/OTXapikey.txt")
 	if err != nil {
@@ -97,29 +97,29 @@ func CallAlienVaultHash(hash string, response *utils.FrontendResponse2, wg *sync
 		fmt.Println("ERROR IN Request", err)
 		utils.SetGenericError(response)
 	}
-	if(res.StatusCode == 200){
-	defer res.Body.Close()
+	if res.StatusCode == 200 {
+		defer res.Body.Close()
 
-	body, _ := ioutil.ReadAll(res.Body)
+		body, _ := ioutil.ReadAll(res.Body)
 
-	if(err != nil){
-		fmt.Println("ERROR READING JSON DATA", err)
-		utils.SetGenericError(response)
+		if err != nil {
+			fmt.Println("ERROR READING JSON DATA", err)
+			utils.SetGenericError(response)
 		}
-		
+
 		var jsonResponse utils.AlienVaultHash
-	
+
 		err = json.Unmarshal(body, &jsonResponse)
 		if err != nil {
 			utils.SetGenericError(response)
 			fmt.Println(err)
 		}
-	
+
 		//output:= string(body)
 		//fmt.Println(output)
 		//fmt.Println("\n\nAMOUNT OF PULSES:::::: ", jsonResponse.PulseInfo.Count)
 		utils.SetResponseObjectAlienVaultHash(jsonResponse, response)
-	}else{
+	} else {
 
 		response.EN.Content = "We have encountered an error, check if the filehash is a valid filehash."
 		response.EN.Status = "ERROR"
@@ -135,15 +135,8 @@ func TestAlienVaultUrl(url string, response *utils.FrontendResponse2, wg *sync.W
 	defer wg.Done()
 	//DENNE FUNKSJONEN KAN UTARBEIDES TIL Å BARE RETURNERE MALCICIOUS / SUSPCIOUS OM DET BEFINNER SEG NEVNT I NOEN
 	// PULSEES (Problemet her er at ting som er OK kan være i pulse... Må tenke litt her)
-	content, err := ioutil.ReadFile("./APIKey/OTXapikey.txt")
-	if err != nil {
-		//log.Fatal(err)
-		fmt.Println(err)
-		logging.Logerror(err)
-	}
-
 	// Convert []byte to string and print to screen
-	APIKey := string(content)
+	APIKey := utils.APIKeyOTX
 
 	getURL := "https://otx.alienvault.com//api/v1/indicators/url/" + url + "/general"
 
@@ -161,10 +154,10 @@ func TestAlienVaultUrl(url string, response *utils.FrontendResponse2, wg *sync.W
 	defer res.Body.Close()
 
 	body, err := ioutil.ReadAll(res.Body)
-	if(err != nil){
-	fmt.Println("ERROR READING JSON DATA", err)
+	if err != nil {
+		fmt.Println("ERROR READING JSON DATA", err)
 	}
-	
+
 	var jsonResponse utils.AlienVaultURL
 
 	err = json.Unmarshal(body, &jsonResponse)
@@ -173,18 +166,18 @@ func TestAlienVaultUrl(url string, response *utils.FrontendResponse2, wg *sync.W
 	}
 
 	/*
-	//output:= string(body)
-	//fmt.Println(output)
-	//fmt.Println("\n\nAMOUNT OF PULSES:::::: ", jsonResponse.PulseInfo.Count)
-	if(jsonResponse.PulseInfo.Count == 0){
-		response.Status = "Safe"
-	}else{
-		response.Status = "Risk"
-	}
+		//output:= string(body)
+		//fmt.Println(output)
+		//fmt.Println("\n\nAMOUNT OF PULSES:::::: ", jsonResponse.PulseInfo.Count)
+		if(jsonResponse.PulseInfo.Count == 0){
+			response.Status = "Safe"
+		}else{
+			response.Status = "Risk"
+		}
 
-	response.SourceName="AlienVault"
+		response.SourceName="AlienVault"
 	*/
 
 	//response = string(body)
-	utils.SetResponeObjectAlienVault(jsonResponse , response)
+	utils.SetResponeObjectAlienVault(jsonResponse, response)
 }

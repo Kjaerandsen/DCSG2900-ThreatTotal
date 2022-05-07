@@ -3,6 +3,7 @@ package storage
 import (
 	"dcsg2900-threattotal/utils"
 	"fmt"
+	"os"
 
 	"github.com/gomodule/redigo/redis"
 )
@@ -29,8 +30,8 @@ func InitPool() *redis.Pool {
 		MaxActive: 12000,
 		Dial: func() (redis.Conn, error) {
 			c, err := redis.Dial("tcp",
-				Host+":"+Port,
-				redis.DialPassword(Password))
+				os.Getenv("redisUrl"),
+				redis.DialPassword(os.Getenv("redisPassword")))
 			if err != nil {
 				panic(err.Error())
 			}
