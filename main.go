@@ -2,29 +2,22 @@ package main
 
 import (
 	"context"
-	"dcsg2900-threattotal/api"
-	"dcsg2900-threattotal/auth"
-	logging "dcsg2900-threattotal/logs"
-	"dcsg2900-threattotal/storage"
-	"dcsg2900-threattotal/utils"
-	"encoding/json"
 	"fmt"
 	"log"
 	"net/http"
 	"os"
-	"sync"
+
+	// Internal
+	"dcsg2900-threattotal/api"
+	"dcsg2900-threattotal/auth"
+	"dcsg2900-threattotal/storage"
+	"dcsg2900-threattotal/utils"
 
 	// External
-	//webrisk "cloud.google.com/go/webrisk/apiv1"
 	"github.com/coreos/go-oidc/v3/oidc"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"golang.org/x/oauth2"
-	//"google.golang.org/grpc/status"
-	//"google.golang.org/api/option"
-	//webriskpb "google.golang.org/genproto/googleapis/cloud/webrisk/v1"
-	//"google.golang.org/api/webrisk/v1"
-	//"google.golang.org/api/option"
 )
 
 // Initialize global variables
@@ -118,39 +111,14 @@ func main() {
 	// Hash intelligence takes a filehash and returns data on the file from our third-party sources.
 	r.GET("/hash-intelligence", func(c *gin.Context) {
 
-		var wg sync.WaitGroup
-		hash := c.Query("hash")
+		hash := c.Query("userAuth")
 
-		var responseData [2]utils.FrontendResponse2
-
-		var hybridApointer, AlienVaultpointer *utils.FrontendResponse2
-
-		hybridApointer = &responseData[0]
-		AlienVaultpointer = &responseData[1]
-
-		wg.Add(2)
-		go api.CallHybridAnalysisHash(hash, hybridApointer, &wg)
-		go api.CallAlienVaultHash(hash, AlienVaultpointer, &wg)
-		wg.Wait()
-
-		var resultResponse utils.ResultFrontendResponse
-
-		resultResponse.FrontendResponse = responseData[:]
-		var resultPointer = &resultResponse
-
-		utils.SetResultHash(resultPointer, len(responseData))
-
-		Hashint, err := json.Marshal(resultResponse)
-		if err != nil {
-			fmt.Println(err)
-			logging.Logerror(err)
-			//c.Data(http.StatusInternalServerError, "application/json", )
+		authenticated, _ := auth.Authenticate("", hash)
+		if !authenticated {
+			c.JSON(http.StatusUnauthorized, gin.H{"authenticated": "You are not authenticated. User login is invalid."})
+		} else {
+			api.HashIntelligence(c)
 		}
-
-		//fmt.Println("WHERE IS MY CONTENT", responseData)
-
-		c.Data(http.StatusOK, "application/json", Hashint)
-
 	})
 
 	// inspiration from https://github.com/dutchcoders/go-virustotal/blob/24cc8e6fa329f020c70a3b32330b5743f1ba7971/virustotal.go#L305
