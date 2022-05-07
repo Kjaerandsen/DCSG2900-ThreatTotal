@@ -221,7 +221,7 @@ func SetGenericError(Response *FrontendResponse2) {
 
 func SetResultFile(Response *ResultFrontendResponse, size int) {
 	// tell the input to be translated, use standardized output.
-
+	// probably more edits to be done here, figure out which fields are actually printed out
 	// type-unsupported, timeout == not relevant to show
 	for i := 0; i < size; i++ {
 		switch Response.FrontendResponse[i].EN.Status {
