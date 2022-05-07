@@ -19,75 +19,83 @@ function Result() {
     const userAuth = localStorage.getItem('userAuth')
     
     useEffect(() => {
-        if (hash != null && userAuth != null) {
-            console.log({hash})
-            setIsLoading(true);
-            // Send an api request to the backend with hash data
-            fetch('http://localhost:8081/hash-intelligence?hash=' + hash + "&userAuth=" + userAuth, {
-                method: 'GET',
-                headers: {
-                    Accept: 'application/json',
-                    'Content-Type': 'application/json'
-                }
-            }).then((response) => response.json())
-            .then((json) => {
-                setJsonData(json)
-                //setJsonData(JSON.parse(json))
-                setIsLoading(false)
-            })
-            .catch(function(error){
-                console.log(error)
-                setErr(true)
-                setIsLoading(false)
-            })
-        } else if (url != null  && userAuth != null){
-            setIsLoading(true);
-            // Send an api request to the backend with url data
-            fetch('http://localhost:8081/url-intelligence?url=' + url + "&userAuth=" + userAuth, {
-                method: 'GET',
-                headers: {
-                    Accept: 'application/json',
-                    'Content-Type': 'application/json'
-                }
-            }).then((response) => response.json())
-            .then((json) => {
-                // If the authentication response is invalid remove the authentication
-                // locally and redirect to the login page.
-                if (json.authenticated !== undefined){
-                    localStorage.removeItem('userAuth')
-                    window.location.href="/login"
-                } else {
-                    setJsonData(json);
+        if (userAuth != null) {
+            if (hash != null) {
+                console.log({hash})
+                setIsLoading(true);
+                // Send an api request to the backend with hash data
+                fetch('http://localhost:8081/hash-intelligence?hash=' + hash + "&userAuth=" + userAuth, {
+                    method: 'GET',
+                    headers: {
+                        Accept: 'application/json',
+                        'Content-Type': 'application/json'
+                    }
+                }).then((response) => response.json())
+                .then((json) => {
+                    setJsonData(json)
                     setIsLoading(false)
-                }
-            })
-            .catch(function(error){
-                console.log(error)
-                setErr(true)
-                setIsLoading(false)
-            })
-        } else if (file != null){
-            setIsLoading(true);
-            // Send an api request to the backend with url data
-            fetch('http://localhost:8081/upload?file=' + file, {
-                method: 'GET',
-                headers: {
-                    Accept: 'application/json',
-                    'Content-Type': 'application/json'
-                }
-            }).then((response) => response.json())
-            .then((json) => {
-                setJsonData(json);
-                setIsLoading(false)
-            })
-            .catch(function(error){
-                console.log(error)
-                setErr(true)
-                setIsLoading(false)
-            })
-        } else if (url == null && hash == null && file == null){
-            // Redirect to index if no parameters are provided
-            window.location.href= "/"
+                })
+                .catch(function(error){
+                    console.log(error)
+                    setErr(true)
+                    setIsLoading(false)
+                })
+            } else if (url != null ){
+                setIsLoading(true);
+                // Send an api request to the backend with url data
+                fetch('http://localhost:8081/url-intelligence?url=' + url + "&userAuth=" + userAuth, {
+                    method: 'GET',
+                    headers: {
+                        Accept: 'application/json',
+                        'Content-Type': 'application/json'
+                    }
+                }).then((response) => response.json())
+                .then((json) => {
+                    // If the authentication response is invalid remove the authentication
+                    // locally and redirect to the login page.
+                    if (json.authenticated !== undefined){
+                        localStorage.removeItem('userAuth')
+                        window.location.href="/login"
+                    } else {
+                        setJsonData(json);
+                        setIsLoading(false)
+                    }
+                })
+                .catch(function(error){
+                    console.log(error)
+                    setErr(true)
+                    setIsLoading(false)
+                })
+            } else if (file != null){
+                setIsLoading(true);
+                // Send an api request to the backend with upload file id
+                fetch('http://localhost:8081/upload?file=' + file + "&userAuth=" + userAuth, {
+                    method: 'GET',
+                    headers: {
+                        Accept: 'application/json',
+                        'Content-Type': 'application/json'
+                    }
+                }).then((response) => response.json())
+                .then((json) => {
+                    // If the authentication response is invalid remove the authentication
+                    // locally and redirect to the login page.
+                    if (json.authenticated !== undefined){
+                        localStorage.removeItem('userAuth')
+                        window.location.href="/login"
+                    } else {
+                        setJsonData(json);
+                        setIsLoading(false)
+                    }
+                })
+                .catch(function(error){
+                    console.log(error)
+                    setErr(true)
+                    setIsLoading(false)
+                })
+            } else {
+                // If no valid search is provided redirect to the home page
+                window.location.href= "/"
+            }
         } else {
             // If a valid parameter is sent, but there is no login redirect to login page
             window.location.href="/login"
