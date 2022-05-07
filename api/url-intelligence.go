@@ -17,7 +17,7 @@ func UrlIntelligence(c *gin.Context) {
 	var URLint []byte
 
 	//var URLint utils.APIresponseResult
-	value, err := utils.Conn.Do("GET", url)
+	value, err := utils.Conn.Do("GET", "url:"+url)
 	if value == nil {
 		if err != nil {
 			fmt.Println("Error:" + err.Error())
@@ -32,7 +32,7 @@ func UrlIntelligence(c *gin.Context) {
 
 		// Add the data to the redis backend.
 		if completeInt {
-			response, err := utils.Conn.Do("SETEX", url, 300, URLint)
+			response, err := utils.Conn.Do("SETEX", "url:"+url, 300, URLint)
 			if err != nil {
 				fmt.Println("Error adding data to redis:" + err.Error())
 			}

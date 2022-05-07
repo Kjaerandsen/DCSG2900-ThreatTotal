@@ -30,7 +30,7 @@ func UploadFileRetrieve(c *gin.Context) {
 		return
 	}
 
-	value, err := utils.Conn.Do("GET", id)
+	value, err := utils.Conn.Do("GET", "file:"+id)
 	if value == nil {
 		if err != nil {
 			fmt.Println("Error:" + err.Error())
@@ -47,7 +47,7 @@ func UploadFileRetrieve(c *gin.Context) {
 		}
 
 		// Add the data to the database
-		response, err := utils.Conn.Do("SETEX", id, 300, fileData)
+		response, err := utils.Conn.Do("SETEX", "file:"+id, 300, fileData)
 		if err != nil {
 			fmt.Println("Error adding data to redis:" + err.Error())
 		}
@@ -115,7 +115,6 @@ func UploadFile(c *gin.Context) {
 
 	// use file contents to fetch file name, associate it with the "file" form header.
 	part, err := writer.CreateFormFile("file", file2.Filename)
-
 	if err != nil {
 		log.Println(err)
 	}

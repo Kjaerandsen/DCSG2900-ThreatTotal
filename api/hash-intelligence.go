@@ -18,7 +18,7 @@ func HashIntelligence(c *gin.Context) {
 
 	hash := c.Query("hash")
 
-	value, err := utils.Conn.Do("GET", hash)
+	value, err := utils.Conn.Do("GET", "hash:"+hash)
 	if value == nil {
 		if err != nil {
 			fmt.Println("Error:" + err.Error())
@@ -33,7 +33,7 @@ func HashIntelligence(c *gin.Context) {
 		}
 
 		// Add the data to the database
-		response, err := utils.Conn.Do("SETEX", hash, 300, hashInt)
+		response, err := utils.Conn.Do("SETEX", "hash:"+hash, 300, hashInt)
 		if err != nil {
 			fmt.Println("Error adding data to redis:" + err.Error())
 		}

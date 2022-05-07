@@ -88,7 +88,7 @@ func CodeToToken(code string) (token string, authenticated bool) {
 	hash := tokenToHash(oauth2Token.AccessToken)
 
 	// Add to the database
-	_, err = utils.Conn.Do("SETEX", hash, (oauth2Token.Expiry.Unix() - time.Now().Unix()), marshalledTokens)
+	_, err = utils.Conn.Do("SETEX", "user:"+hash, (oauth2Token.Expiry.Unix() - time.Now().Unix()), marshalledTokens)
 	if err != nil {
 		fmt.Println("Error adding data to redis:" + err.Error())
 		return "", false
@@ -120,7 +120,7 @@ func CodeToToken(code string) (token string, authenticated bool) {
 }
 
 func getAuth(hash string) (token string, err bool) {
-	value, error := utils.Conn.Do("GET", hash)
+	value, error := utils.Conn.Do("GET", "user:"+hash)
 	if value == nil {
 		if error != nil {
 			fmt.Println("Error:" + error.Error())
