@@ -65,3 +65,32 @@ Install the dependencies with:
 Run the backend with:
 
 `go run main.go`
+
+For the backend to run you need to set the following environemnt variables:
+
+"clientId": Set to the clientId of your feide application.
+
+"clientSecret": Set to the clientSecret of your feide application.
+
+"feideRedirectUrl": Set to your feide redirect url.
+
+"APIKeyOTX": Set to your OTX api key.
+
+"APIKeyHybridAnalysis": Set to your Hybrid Analysis api key.
+
+"APIKeyVirusTotal": Set to your VirusTotal api key.
+
+"APIKeyGoogle": Set to your Google api key.
+
+"redisPassword": Set to your redis instance password
+
+"redisUrl": Set to your redis instance url in the format "ip:port"
+
+
+And have a redis instance up and running with the following config:
+
+Password set to the password defined in your environment variable.
+`CONFIG SET requirepass "your password here"`
+If your redis instance is running on a different ip address you also need to set
+protected mode to no.
+Which can be done through the redis-cli with `CONFIG SET protected-mode no`
