@@ -17,7 +17,88 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// to be implemented, functions for displaying fileupload results to frontend
+func UploadFileRetrieve(c *gin.Context) {
+	var fileData []byte
+
+	// fetch based on url parameter, file = id
+	id := c.Query("file")
+	log.Println(id)
+	if id == "" {
+		log.Println("error, ID is empty")
+		logging.Logerrorinfo("Error, ID is empty - Upload")
+		http.Error(c.Writer, "No ID provided.", http.StatusInternalServerError)
+		return
+	}
+
+	value, err := utils.Conn.Do("GET", id)
+	if value == nil {
+		if err != nil {
+			fmt.Println("Error:" + err.Error())
+		}
+		fmt.Println("No Cache hit")
+
+		// Perform the request
+		fileData, err = uploadFileRetrieveCall(id)
+		if err != nil {
+			log.Println("error, uploadFile id data request.")
+			logging.Logerrorinfo("Error, performing api uploadFile id data request.")
+			http.Error(c.Writer, "Failed retrieving api data.", http.StatusInternalServerError)
+			return
+		}
+
+		// Add the data to the database
+		response, err := utils.Conn.Do("SETEX", id, 300, fileData)
+		if err != nil {
+			fmt.Println("Error adding data to redis:" + err.Error())
+		}
+
+		fmt.Println(response)
+
+	} else {
+		fmt.Println("Cache hit")
+		responseBytes, err := json.Marshal(value)
+		if err != nil {
+			fmt.Println("Error handling redis response:" + err.Error())
+			http.Error(c.Writer, "Failed retrieving api data.", http.StatusInternalServerError)
+			return
+			// Maybe do another call to delete the key from the database?
+		}
+		/**
+		//var checkData utils.ResultFrontendResponse
+		err = json.Unmarshal(responseBytes, &checkdata)
+		if err!=nil {
+			fmt.Println(string(checkData))
+		}
+		fmt.Println(string(checkData))
+		*/
+		err = json.Unmarshal(responseBytes, &fileData)
+		if err != nil {
+			fmt.Println("Error handling redis response:" + err.Error())
+			http.Error(c.Writer, "Failed retrieving api data.", http.StatusInternalServerError)
+			return
+			// Maybe do another call to delete the key from the database?
+		}
+	}
+
+	c.Data(http.StatusOK, "application/json", fileData)
+}
+
+func uploadFileRetrieveCall(id string) (data []byte, err error) {
+	var responseData utils.ResultFrontendResponse
+	responseData, err = CallVirusTotal(id)
+	if err != nil {
+		return nil, err
+	}
+
+	fileData, err := json.Marshal(responseData)
+	if err != nil {
+		fmt.Println(err)
+		logging.Logerror(err)
+		return nil, err
+	}
+
+	return fileData, nil
+}
 
 func UploadFile(c *gin.Context) {
 	log.Println("Fileupload worked")
@@ -116,43 +197,4 @@ func UploadFile(c *gin.Context) {
 	// return json object ID
 	c.JSON(http.StatusOK, gin.H{"id": trimID[0]})
 	// handle error
-}
-
-func UploadFileRetrieve(c *gin.Context) {
-	// fetch based on url parameter, file = id
-	id := c.Query("file")
-	log.Println(id)
-	if id == "" {
-		log.Println("error, ID is empty")
-		logging.Logerrorinfo("Error, ID is empty - Upload")
-		http.Error(c.Writer, "No ID provided.", http.StatusInternalServerError)
-		return
-	}
-
-	fileData, err := uploadFileRetrieveCall(id)
-	if err != nil {
-		log.Println("error, uploadFile id data request.")
-		logging.Logerrorinfo("Error, performing api uploadFile id data request.")
-		http.Error(c.Writer, "Failed retrieving api data.", http.StatusInternalServerError)
-		return
-	}
-
-	c.Data(http.StatusOK, "application/json", fileData)
-}
-
-func uploadFileRetrieveCall(id string) (data []byte, err error) {
-	var responseData utils.ResultFrontendResponse
-	responseData, err = CallVirusTotal(id)
-	if err != nil {
-		return nil, err
-	}
-
-	fileData, err := json.Marshal(responseData)
-	if err != nil {
-		fmt.Println(err)
-		logging.Logerror(err)
-		return nil, err
-	}
-
-	return fileData, nil
 }
