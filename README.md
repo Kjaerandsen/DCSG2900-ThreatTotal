@@ -2,7 +2,6 @@
 
 Threat total is a threat intelligence service which allows you to get a quick overlook over the safety of using a particular website, 
 domain or application. 
-We retrieve data from the NTNU soc database, as well as external sources such as: .... 
 
 ## Team members:
 
