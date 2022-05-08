@@ -2,12 +2,13 @@ package api
 
 import (
 	"bytes"
+	logging "dcsg2900-threattotal/logs"
 	"dcsg2900-threattotal/utils"
-	"dcsg2900-threattotal/logs"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"strings"
 	"sync"
 	//"dcsg2900-threattotal/main"
 )
@@ -20,6 +21,28 @@ func CallGoogleUrl(url string) (response utils.FrontendResponse) {
 	APIKey := utils.APIKeyGoogle
 
 	postURL := "https://safebrowsing.googleapis.com/v4/threatMatches:find?key=" + APIKey
+
+	if strings.Contains(url, "https://") {
+		httpsSearchURL := url
+		container := strings.SplitAfter(url, "https://")
+
+		httpSearchURL := "http://" + container[1]
+
+		fmt.Println("1 : This is the HTTP URL after splitting and concatinating", httpSearchURL)
+		fmt.Println("1 : This is the HTTPs URL after splitting and concatinating", httpsSearchURL)
+	} else if strings.Contains(url, "http://") {
+		httpSearchURL := url
+		container := strings.SplitAfter(url, "http://")
+		httpsSearchURL := "http://" + container[1]
+
+		fmt.Println("2 : This is the HTTP URL after splitting and concatinating", httpSearchURL)
+		fmt.Println("2 : This is the HTTPs URL after splitting and concatinating", httpsSearchURL)
+	} else {
+		httpSearchURL := "http://" + url
+		httpsSearchURL := "https://" + url
+		fmt.Println("3 : This is the HTTP URL after splitting and concatinating", httpSearchURL)
+		fmt.Println("4 : This is the HTTPs URL after splitting and concatinating", httpsSearchURL)
+	}
 
 	var jsonData = []byte(`
 		{
@@ -103,6 +126,30 @@ func TestGoGoogleUrl(url string, response *utils.FrontendResponse2, wg *sync.Wai
 	// å avgjøre om det er malicious eller ikke.
 	defer wg.Done()
 
+	var httpSearchURL, httpsSearchURL string
+
+	if strings.Contains(url, "https://") {
+		httpsSearchURL = url
+		container := strings.SplitAfter(url, "https://")
+
+		httpSearchURL = "http://" + container[1]
+
+		fmt.Println("1 : This is the HTTP URL after splitting and concatinating", httpSearchURL)
+		fmt.Println("1 : This is the HTTPs URL after splitting and concatinating", httpsSearchURL)
+	} else if strings.Contains(url, "http://") {
+		httpSearchURL = url
+		container := strings.SplitAfter(url, "http://")
+		httpsSearchURL = "https://" + container[1]
+
+		fmt.Println("2 : This is the HTTP URL after splitting and concatinating", httpSearchURL)
+		fmt.Println("2 : This is the HTTPs URL after splitting and concatinating", httpsSearchURL)
+	} else {
+		httpSearchURL = "http://" + url
+		httpsSearchURL = "https://" + url
+		fmt.Println("3 : This is the HTTP URL after splitting and concatinating", httpSearchURL)
+		fmt.Println("4 : This is the HTTPs URL after splitting and concatinating", httpsSearchURL)
+	}
+
 	APIKey := utils.APIKeyGoogle
 
 	postURL := "https://safebrowsing.googleapis.com/v4/threatMatches:find?key=" + APIKey
@@ -118,8 +165,8 @@ func TestGoGoogleUrl(url string, response *utils.FrontendResponse2, wg *sync.Wai
 			  "platformTypes":    ["ANY_PLATFORM"],
 			  "threatEntryTypes": ["URL"],
 			  "threatEntries": [
-				{"url": "https://` + url + `" },
-				{"url": "http://` + url + `"}
+				{"url": "`+ httpsSearchURL +`" },
+				{"url": "`+ httpSearchURL +`"}
 			  ]
 			}
 		}`)
