@@ -32,7 +32,7 @@ const Upload = () => {
         };
         
         // forward ID only not object
-        fetch('http://localhost:8081/upload?userAuth=' + userAuth, options)
+        fetch(process.env.REACT_APP_BACKEND_URL+'/upload?userAuth=' + userAuth, options)
         .then(response => response.json())
         .then((json) => {
             if (json.authenticated !== undefined){
