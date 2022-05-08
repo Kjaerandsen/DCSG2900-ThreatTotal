@@ -87,6 +87,12 @@ For the backend to run you need to set the following environemnt variables:
 
 "redisUrl": Set to your redis instance url in the format "ip:port"
 
+For the frontend you need to create a `.env` file under the `threat-total` folder. It should contain the following on seperate lines:
+
+"REACT_APP_FEIDELOGINURL=": Set to the login url to feide, including a client_id, redirect_uri, response_type and a state.
+For example: "https://auth.dataporten.no/oauth/authorization?client_id=YourIDHere&response_type=code&redirect_uri=YourRedirectHere&scope=openid&state=whatever"
+
+"REACT_APP_BACKEND_URL=": Set to the port and ip of your backend. For example for localhost "https://127.0.0.1:8081"
 
 And have a redis instance up and running with the following config:
 
