@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
-	"log"
 	"net/http"
 	"net/url"
 	"strings"
@@ -87,13 +86,7 @@ func CallHybridAnalyisUrl(URL string) (VirusTotal utils.FrontendResponse, urlsca
 	// Vi har CAP på 2000 request i timen hos Hybrid Analyis, dette burde vell holde??? - 200 max i minuttet.
 	// https://www.hybrid-analysis.com/docs/api/v2#/Quick%20Scan/post_quick_scan_url Dokumentasjon for dette API endpointet.
 
-	content, err := ioutil.ReadFile("./APIKey/HybridAnalysisAPI.txt")
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	// Convert []byte to string and print to screen
-	APIKey := string(content)
+	APIKey := utils.APIKeyHybridAnalysis
 
 	postURL := "https://www.hybrid-analysis.com/api/v2/quick-scan/url"
 
@@ -192,13 +185,7 @@ func TestHybridAnalyisUrl(URL string, VirusTotal *utils.FrontendResponse2, urlsc
 	// Vi har CAP på 2000 request i timen hos Hybrid Analyis, dette burde vell holde??? - 200 max i minuttet.
 	// https://www.hybrid-analysis.com/docs/api/v2#/Quick%20Scan/post_quick_scan_url Dokumentasjon for dette API endpointet.
 
-	content, err := ioutil.ReadFile("./APIKey/HybridAnalysisAPI.txt")
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	// Convert []byte to string and print to screen
-	APIKey := string(content)
+	APIKey := utils.APIKeyHybridAnalysis
 
 	postURL := "https://www.hybrid-analysis.com/api/v2/quick-scan/url"
 
