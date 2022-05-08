@@ -1,12 +1,10 @@
 package api
 
 import (
-	logging "dcsg2900-threattotal/logs"
 	"dcsg2900-threattotal/utils"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
-	"log"
 	"net/http"
 	"sync"
 )
@@ -16,15 +14,8 @@ func CallAlienVaultUrl(url string) (response utils.FrontendResponse) {
 
 	//DENNE FUNKSJONEN KAN UTARBEIDES TIL Å BARE RETURNERE MALCICIOUS / SUSPCIOUS OM DET BEFINNER SEG NEVNT I NOEN
 	// PULSEES (Problemet her er at ting som er OK kan være i pulse... Må tenke litt her)
-	content, err := ioutil.ReadFile("./APIKey/OTXapikey.txt")
-	if err != nil {
-		//log.Fatal(err)
-		fmt.Println(err)
-		logging.Logerror(err)
-	}
-
 	// Convert []byte to string and print to screen
-	APIKey := string(content)
+	APIKey := utils.APIKeyOTX
 
 	getURL := "https://otx.alienvault.com//api/v1/indicators/url/" + url + "/general"
 
@@ -75,11 +66,7 @@ func CallAlienVaultHash(hash string, response *utils.FrontendResponse2, wg *sync
 	defer wg.Done()
 	response.SourceName = "AlienVault"
 
-	content, err := ioutil.ReadFile("./APIKey/OTXapikey.txt")
-	if err != nil {
-		log.Fatal(err)
-	}
-	APIKey := string(content)
+	APIKey := utils.APIKeyOTX
 
 	getURL := "https://otx.alienvault.com//api/v1/indicators/file/" + hash + "/general"
 
