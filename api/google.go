@@ -6,7 +6,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
-	"log"
 	"net/http"
 	"sync"
 	//"dcsg2900-threattotal/main"
@@ -99,13 +98,8 @@ func TestGoGoogleUrl(url string, response *utils.FrontendResponse2, wg *sync.Wai
 	// Google API returnerer [] om den ikke kjenner til domenet / URL. Kan bruke dette til
 	// å avgjøre om det er malicious eller ikke.
 	defer wg.Done()
-	content, err := ioutil.ReadFile("./APIKey/Apikey.txt")
-	if err != nil {
-		log.Fatal(err)
-	}
 
-	// Convert []byte to string and print to screen
-	APIKey := string(content)
+	APIKey := utils.APIKeyGoogle
 
 	postURL := "https://safebrowsing.googleapis.com/v4/threatMatches:find?key=" + APIKey
 
