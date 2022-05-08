@@ -91,7 +91,7 @@ const Upload = () => {
                 <br></br>
                 <br></br>
                 <br></br>
-                <input type="button" onClick={fileUpload}  value="Investigate" className="bg-orange-500 p-2 rounded justify-center cursor-pointer"/>
+                <input type="button" onClick={fileUpload}  value={t("investigate")} className="bg-orange-500 p-2 rounded justify-center cursor-pointer"/>
                 </div>
             </form> 
         </div>
