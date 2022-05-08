@@ -1,7 +1,7 @@
 import './output.css';
 import './App.css';
+import Homepage from './pages/homepage';
 import Upload from './pages/upload'
-import Indextest from './pages/indextest';
 import Investigate from './pages/investigate';
 import Result from './pages/result';
 import About from './pages/about';
@@ -16,7 +16,7 @@ function App() {
   return (
 	<Router>
     <Routes>
-		<Route path='/' element={<Indextest />} />
+		<Route path='/' element={<Homepage />} />
     <Route path='/upload' element={<Upload />} />
     <Route path='/investigate' element={<Investigate />} />
     <Route path='/result' element={<Result />} />

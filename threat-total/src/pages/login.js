@@ -10,7 +10,7 @@ function logoutRequest(){
 
     localStorage.removeItem('userAuth')
     console.log("logging out")
-    fetch('http://localhost:8081/login?userAuth=' + userAuth, {
+    fetch(process.env.REACT_APP_BACKEND_URL+'/login?userAuth=' + userAuth, {
                 method: 'DELETE',
                 headers: {
                     Accept: 'application/json',
@@ -64,13 +64,7 @@ function Login(){
             </div>
 
             <div className= "container w-full mb-3 sm:pl-36 sm:pr-36 flex justify-center overflow-hidden">
-            <a href="https://auth.dataporten.no/oauth/authorization?
-                    client_id=b798a173-514b-4f52-ad14-2838dacde3f1&
-                    response_type=code&
-                    redirect_uri=http://localhost:3000&
-                    scope=openid&
-                    state=whatever&
-                    secret=198cb677-d113-446c-807e-8d9ad81ab8e0">
+            <a href={process.env.FEIDELOGINURL}>
             <button className='bg-blue-400 border-2 rounded-lg p-2'>{t("loginButton")}</button>
             </a>
             

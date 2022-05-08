@@ -584,6 +584,14 @@ Ensure the default browser behavior of the `hidden` attribute.
   margin-bottom: 2rem;
 }
 
+.ml-auto {
+  margin-left: auto;
+}
+
+.mr-auto {
+  margin-right: auto;
+}
+
 .block {
   display: block;
 }
@@ -628,16 +636,16 @@ Ensure the default browser behavior of the `hidden` attribute.
   height: 2.5rem;
 }
 
+.h-8 {
+  height: 2rem;
+}
+
 .h-20 {
   height: 5rem;
 }
 
 .h-14 {
   height: 3.5rem;
-}
-
-.h-8 {
-  height: 2rem;
 }
 
 .w-full {
@@ -654,6 +662,10 @@ Ensure the default browser behavior of the `hidden` attribute.
 
 .table-auto {
   table-layout: auto;
+}
+
+.cursor-pointer {
+  cursor: pointer;
 }
 
 .grid-cols-1 {
@@ -782,6 +794,21 @@ Ensure the default browser behavior of the `hidden` attribute.
   background-color: rgb(96 165 250 / var(--tw-bg-opacity));
 }
 
+.bg-black {
+  --tw-bg-opacity: 1;
+  background-color: rgb(0 0 0 / var(--tw-bg-opacity));
+}
+
+.bg-gray-400 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(156 163 175 / var(--tw-bg-opacity));
+}
+
+.bg-green-500 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(34 197 94 / var(--tw-bg-opacity));
+}
+
 .p-1 {
   padding: 0.25rem;
 }
@@ -808,6 +835,10 @@ Ensure the default browser behavior of the `hidden` attribute.
 
 .pr-1 {
   padding-right: 0.25rem;
+}
+
+.pl-1 {
+  padding-left: 0.25rem;
 }
 
 .pt-2 {
@@ -844,10 +875,6 @@ Ensure the default browser behavior of the `hidden` attribute.
 
 .pb-10 {
   padding-bottom: 2.5rem;
-}
-
-.pl-1 {
-  padding-left: 0.25rem;
 }
 
 .text-left {
@@ -909,6 +936,14 @@ Ensure the default browser behavior of the `hidden` attribute.
 .underline {
   -webkit-text-decoration-line: underline;
           text-decoration-line: underline;
+}
+
+.file\:m-auto::-webkit-file-upload-button {
+  margin: auto;
+}
+
+.file\:m-auto::file-selector-button {
+  margin: auto;
 }
 
 .file\:mr-4::-webkit-file-upload-button {
@@ -1042,10 +1077,6 @@ Ensure the default browser behavior of the `hidden` attribute.
 
   .sm\:h-40 {
     height: 10rem;
-  }
-
-  .sm\:h-12 {
-    height: 3rem;
   }
 
   .sm\:grid-cols-2 {

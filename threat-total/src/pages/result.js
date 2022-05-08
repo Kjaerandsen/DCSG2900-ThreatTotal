@@ -24,7 +24,7 @@ function Result() {
                 console.log({hash})
                 setIsLoading(true);
                 // Send an api request to the backend with hash data
-                fetch('http://localhost:8081/hash-intelligence?hash=' + hash + "&userAuth=" + userAuth, {
+                fetch(process.env.REACT_APP_BACKEND_URL+'/hash-intelligence?hash=' + hash + "&userAuth=" + userAuth, {
                     method: 'GET',
                     headers: {
                         Accept: 'application/json',
@@ -43,7 +43,7 @@ function Result() {
             } else if (url != null ){
                 setIsLoading(true);
                 // Send an api request to the backend with url data
-                fetch('http://localhost:8081/url-intelligence?url=' + url + "&userAuth=" + userAuth, {
+                fetch(process.env.REACT_APP_BACKEND_URL+'/url-intelligence?url=' + url + "&userAuth=" + userAuth, {
                     method: 'GET',
                     headers: {
                         Accept: 'application/json',
@@ -69,7 +69,7 @@ function Result() {
             } else if (file != null){
                 setIsLoading(true);
                 // Send an api request to the backend with upload file id
-                fetch('http://localhost:8081/upload?file=' + file + "&userAuth=" + userAuth, {
+                fetch(process.env.REACT_APP_BACKEND_URL+'/upload?file=' + file + "&userAuth=" + userAuth, {
                     method: 'GET',
                     headers: {
                         Accept: 'application/json',

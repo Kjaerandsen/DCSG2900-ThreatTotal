@@ -9,3 +9,4 @@ log
 logs/errorlog
 logs/log
 logs/infolog
+.env
