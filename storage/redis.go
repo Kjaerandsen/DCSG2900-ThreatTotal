@@ -8,15 +8,6 @@ import (
 	"github.com/gomodule/redigo/redis"
 )
 
-// Alternatively use https://github.com/go-redis/redis
-
-// TODO: move theese to the utils library when done testing
-const Host = "localhost"
-const Port = "6379"
-
-// TODO: password in authentication file or as system args?
-const Password = "admin"
-
 // password can be set in the redis-cli using the command: 'CONFIG SET requirepass "password"'
 
 // If the server is on another machine you need to set protected-mode to off
