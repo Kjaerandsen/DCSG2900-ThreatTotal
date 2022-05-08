@@ -2,6 +2,7 @@ package storage
 
 import (
 	"dcsg2900-threattotal/utils"
+	"dcsg2900-threattotal/logs"
 	"fmt"
 	"os"
 
@@ -37,6 +38,8 @@ func AddToPool(key string, timeout int, data string) {
 	response, err := utils.Conn.Do("SETEX", key, timeout, data)
 	if err != nil {
 		fmt.Println("Error:" + err.Error())
+		logging.Logerror(err, "Error adding to redis pool redis.go:")
+
 	}
 	// Print the response to adding the data (should be "OK"
 	fmt.Println(response)

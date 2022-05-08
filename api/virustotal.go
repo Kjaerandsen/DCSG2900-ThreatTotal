@@ -55,6 +55,7 @@ func CallVirusTotal(id string) (response utils.ResultFrontendResponse, err error
 
 	if unmarshalledBody != nil {
 		log.Println(unmarshalledBody)
+		logging.Logerror(unmarshalledBody, "")
 	}
 
 	var test3 = make([]utils.FrontendResponse4, len(vtResponse.Data.Attributes.LastAnalysisResults))
@@ -113,7 +114,6 @@ func CallVirusTotal(id string) (response utils.ResultFrontendResponse, err error
 
 	utils.SetResultFile(&response, engines)
 
-	log.Println("look here")
 	log.Println(response)
 
 	fmt.Println(response)

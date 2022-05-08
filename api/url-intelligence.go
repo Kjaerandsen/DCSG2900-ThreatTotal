@@ -2,6 +2,7 @@ package api
 
 import (
 	"dcsg2900-threattotal/utils"
+	"dcsg2900-threattotal/logs"
 	"encoding/json"
 	"fmt"
 	"net/http"
@@ -21,6 +22,8 @@ func UrlIntelligence(c *gin.Context) {
 	if value == nil {
 		if err != nil {
 			fmt.Println("Error:" + err.Error())
+			logging.Logerror(err, "Error in cache lookup - Url-intelligence")
+
 		}
 		fmt.Println("No Cache hit")
 
@@ -35,6 +38,7 @@ func UrlIntelligence(c *gin.Context) {
 			response, err := utils.Conn.Do("SETEX", "url:"+url, utils.CacheDurationUrl, URLint)
 			if err != nil {
 				fmt.Println("Error adding data to redis:" + err.Error())
+				logging.Logerror(err, "Error addding data to redis - Url-intelligence:")
 			}
 
 			// Print the response to adding the data (should be "OK")
@@ -48,6 +52,7 @@ func UrlIntelligence(c *gin.Context) {
 		responseBytes, err := json.Marshal(value)
 		if err != nil {
 			fmt.Println("Error handling redis response:" + err.Error())
+			logging.Logerror(err, "Error handling redis response - Url-intelligence:")
 			http.Error(c.Writer, "Failed retrieving api data.", http.StatusInternalServerError)
 			return
 			// Maybe do another call to delete the key from the database?
@@ -63,6 +68,7 @@ func UrlIntelligence(c *gin.Context) {
 		err = json.Unmarshal(responseBytes, &URLint)
 		if err != nil {
 			fmt.Println("Error handling redis response:" + err.Error())
+			logging.Logerror(err, "Error handling redis response - Url-intelligence:")
 			http.Error(c.Writer, "Failed retrieving api data.", http.StatusInternalServerError)
 			return
 			// Maybe do another call to delete the key from the database?

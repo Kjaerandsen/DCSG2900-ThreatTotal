@@ -22,6 +22,7 @@ func HashIntelligence(c *gin.Context) {
 	if value == nil {
 		if err != nil {
 			fmt.Println("Error:" + err.Error())
+			logging.Logerror(err ,"Error in retrieving cache - hash-intelligence")
 		}
 		fmt.Println("No Cache hit")
 
@@ -36,6 +37,8 @@ func HashIntelligence(c *gin.Context) {
 		response, err := utils.Conn.Do("SETEX", "hash:"+hash, utils.CacheDurationHash, hashInt)
 		if err != nil {
 			fmt.Println("Error adding data to redis:" + err.Error())
+			logging.Logerror(err, "Error adding data to redis, hash-intelligence")
+
 		}
 
 		fmt.Println(response)
@@ -46,6 +49,7 @@ func HashIntelligence(c *gin.Context) {
 		responseBytes, err := json.Marshal(value)
 		if err != nil {
 			fmt.Println("Error handling redis response:" + err.Error())
+			logging.Logerror(err, "ERROR handling redis response, hash-intelligence")
 			http.Error(c.Writer, "Failed retrieving api data.", http.StatusInternalServerError)
 			return
 			// Maybe do another call to delete the key from the database?
@@ -61,6 +65,7 @@ func HashIntelligence(c *gin.Context) {
 		err = json.Unmarshal(responseBytes, &hashInt)
 		if err != nil {
 			fmt.Println("Error handling redis response:" + err.Error())
+			logging.Logerror(err, "Error unmarshalling response, hash-intelligence")
 			http.Error(c.Writer, "Failed retrieving api data.", http.StatusInternalServerError)
 			return
 			// Maybe do another call to delete the key from the database?
@@ -95,7 +100,7 @@ func hashSearch(hash string) (data []byte, err error) {
 	hashInt, err := json.Marshal(resultResponse)
 	if err != nil {
 		fmt.Println(err)
-		logging.Logerror(err)
+		logging.Logerror(err, "")
 		return nil, err
 	}
 

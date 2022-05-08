@@ -34,6 +34,7 @@ func UploadFileRetrieve(c *gin.Context) {
 	if value == nil {
 		if err != nil {
 			fmt.Println("Error:" + err.Error())
+			logging.Logerror(err, "ERROR getting file, Fileupload API")
 		}
 		fmt.Println("No Cache hit")
 
@@ -50,6 +51,7 @@ func UploadFileRetrieve(c *gin.Context) {
 		response, err := utils.Conn.Do("SETEX", "file:"+id, utils.CacheDurationFile, fileData)
 		if err != nil {
 			fmt.Println("Error adding data to redis:" + err.Error())
+			logging.Logerror(err, "ERROR adding data to Redis, Fileupload API")
 		}
 
 		fmt.Println(response)
@@ -59,6 +61,7 @@ func UploadFileRetrieve(c *gin.Context) {
 		responseBytes, err := json.Marshal(value)
 		if err != nil {
 			fmt.Println("Error handling redis response:" + err.Error())
+			logging.Logerror(err, "ERROR in RedisResponse, Fileupload API")
 			http.Error(c.Writer, "Failed retrieving api data.", http.StatusInternalServerError)
 			return
 			// Maybe do another call to delete the key from the database?
@@ -74,6 +77,7 @@ func UploadFileRetrieve(c *gin.Context) {
 		err = json.Unmarshal(responseBytes, &fileData)
 		if err != nil {
 			fmt.Println("Error handling redis response:" + err.Error())
+			logging.Logerror(err, "ERROR handling redis response, fileupload API")
 			http.Error(c.Writer, "Failed retrieving api data.", http.StatusInternalServerError)
 			return
 			// Maybe do another call to delete the key from the database?
@@ -93,7 +97,7 @@ func uploadFileRetrieveCall(id string) (data []byte, err error) {
 	fileData, err := json.Marshal(responseData)
 	if err != nil {
 		fmt.Println(err)
-		logging.Logerror(err)
+		logging.Logerror(err, "")
 		return nil, err
 	}
 
@@ -117,19 +121,20 @@ func UploadFile(c *gin.Context) {
 	part, err := writer.CreateFormFile("file", file2.Filename)
 	if err != nil {
 		log.Println(err)
+		logging.Logerror(err, "")
 	}
 	// copy file locally
 	_, err = io.Copy(part, file3)
 
 	if err != nil {
-		logging.Logerror(err)
+		logging.Logerror(err, "")
 	}
 	// close writer
 	err = writer.Close()
 
 	if err != nil {
 		log.Println(err)
-		logging.Logerror(err)
+		logging.Logerror(err, "")
 	}
 
 	// prepare request towards API
@@ -137,7 +142,7 @@ func UploadFile(c *gin.Context) {
 
 	if err != nil {
 		log.Println(err)
-		logging.Logerror(err)
+		logging.Logerror(err, "")
 	}
 
 	APIKey := utils.APIKeyVirusTotal
@@ -153,7 +158,7 @@ func UploadFile(c *gin.Context) {
 
 	if err != nil {
 		log.Println(err)
-		logging.Logerror(err)
+		logging.Logerror(err, "")
 	}
 
 	defer res.Body.Close()
@@ -169,7 +174,7 @@ func UploadFile(c *gin.Context) {
 
 	if unmarshalledID != nil {
 		log.Println(unmarshalledID)
-		logging.Logerror(err)
+		logging.Logerror(err, "")
 	}
 
 	encodedID := jsonResponse.Data.ID

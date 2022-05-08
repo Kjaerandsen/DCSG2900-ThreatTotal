@@ -6,7 +6,7 @@ import (
     "os"
 )
 
-func Logerror(msg error) {
+func Logerror(err error, msg string) {
     // log to custom file
     LOG_FILE := "./logs/errorlog"
     // open log file
@@ -22,7 +22,8 @@ func Logerror(msg error) {
     // optional: log date-time, filename, and line number
     log.SetFlags(log.Lshortfile | log.LstdFlags)
 
-	log.Println(msg)
+
+	log.Println(msg, err)
 }
 
 func Loginfo(msg string){

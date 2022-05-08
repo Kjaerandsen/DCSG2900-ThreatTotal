@@ -3,6 +3,7 @@ package api
 import (
 	"bytes"
 	"dcsg2900-threattotal/utils"
+	"dcsg2900-threattotal/logs"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
@@ -41,6 +42,7 @@ func CallGoogleUrl(url string) (response utils.FrontendResponse) {
 	req, err := http.NewRequest("POST", postURL, bytes.NewBuffer(jsonData))
 	if err != nil {
 		fmt.Println("Error: reading sending google api request")
+		logging.Logerror(err, "ERROR sending REQUEST, Google API")
 	}
 	req.Header.Set("Content-Type", "application/json; charset=UTF-8")
 
@@ -57,6 +59,7 @@ func CallGoogleUrl(url string) (response utils.FrontendResponse) {
 	body, err := ioutil.ReadAll(res.Body)
 	if err != nil {
 		fmt.Println("Error: reading google api response")
+		logging.Logerror(err, "ERROR reading google api response, Google API")
 	}
 
 	var jsonResponse utils.GoogleSafeBrowsing
@@ -64,6 +67,7 @@ func CallGoogleUrl(url string) (response utils.FrontendResponse) {
 	err = json.Unmarshal(body, &jsonResponse)
 	if err != nil {
 		fmt.Println(err)
+		logging.Logerror(err, "ERROR Unmarshalling google api response, Google API")
 	}
 	output := string(body)
 	fmt.Println("BODY::!", output)
@@ -129,6 +133,8 @@ func TestGoGoogleUrl(url string, response *utils.FrontendResponse2, wg *sync.Wai
 	req, err := http.NewRequest("POST", postURL, bytes.NewBuffer(jsonData))
 	if err != nil {
 		fmt.Println("Error: reading sending google api request")
+		logging.Logerror(err, "ERROR Sending google api request, Google API")
+
 	}
 	req.Header.Set("Content-Type", "application/json; charset=UTF-8")
 
@@ -145,6 +151,8 @@ func TestGoGoogleUrl(url string, response *utils.FrontendResponse2, wg *sync.Wai
 	body, err := ioutil.ReadAll(res.Body)
 	if err != nil {
 		fmt.Println("Error: reading google api response")
+		logging.Logerror(err, "ERROR reading google api response, Google API")
+
 	}
 
 	var jsonResponse utils.GoogleSafeBrowsing

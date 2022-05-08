@@ -3,6 +3,7 @@ package auth
 import (
 	"crypto/sha256"
 	"dcsg2900-threattotal/utils"
+	"dcsg2900-threattotal/logs"
 	"encoding/json"
 	"fmt"
 	"net/http"
@@ -59,6 +60,7 @@ func CodeToToken(code string) (token string, authenticated bool) {
 	rawIDToken, error := oauth2Token.Extra("id_token").(string)
 	if !error {
 		fmt.Println("No jwt returned.")
+		logging.Logerror(nil, "No JWT returned AUTH.go:")
 		return "", false
 	}
 
@@ -66,6 +68,7 @@ func CodeToToken(code string) (token string, authenticated bool) {
 	idToken, err := utils.Verifier.Verify(utils.Ctx, rawIDToken)
 	if err != nil {
 		fmt.Println("Failed to validate the jwt.")
+		logging.Logerror(err, "Failed to validate JWT Auth.GO: ")
 		return
 	}
 
@@ -82,6 +85,7 @@ func CodeToToken(code string) (token string, authenticated bool) {
 	marshalledTokens, err := json.Marshal(data)
 	if err != nil {
 		fmt.Println("Error marshalling tokens in CodeToToken")
+		logging.Logerror(err, "Error marshalling tokens in CodeToToken Auth.go:")
 		return "", false
 	}
 
@@ -91,6 +95,7 @@ func CodeToToken(code string) (token string, authenticated bool) {
 	_, err = utils.Conn.Do("SETEX", "user:"+hash, (oauth2Token.Expiry.Unix() - time.Now().Unix()), marshalledTokens)
 	if err != nil {
 		fmt.Println("Error adding data to redis:" + err.Error())
+		logging.Logerror(err, "Error adding data to redis Auth.go:")
 		return "", false
 	}
 	//fmt.Println(response)
@@ -124,6 +129,8 @@ func getAuth(hash string) (token string, err bool) {
 	if value == nil {
 		if error != nil {
 			fmt.Println("Error:" + error.Error())
+			logging.Logerror(error, "Error in CacheSearch getAuth:")
+
 		}
 		fmt.Println("No Cache hit")
 		return "", false
@@ -133,10 +140,14 @@ func getAuth(hash string) (token string, err bool) {
 		error := json.Unmarshal(value.([]byte), &responseData)
 		if error != nil {
 			fmt.Println("Error unmarshalling")
+			logging.Logerror(error, "Error unmarshalling GetAuth:")
+
 			// If there is an error delete the key
 			value, error := utils.Conn.Do("DEL", token)
 			if error != nil {
 				fmt.Println("Failed deleting key in redis: ", err)
+				logging.Logerror(error, "Error Failed deleting redis key, getAuth:")
+
 			}
 			fmt.Println("Redis delete response: ", value)
 			return "", false
@@ -171,6 +182,8 @@ func Logout(hash string) bool {
 	_, error := utils.Conn.Do("DEL", hash)
 	if error != nil {
 		fmt.Println("Error removing data from redis:" + error.Error())
+		logging.Logerror(error, "Error removing data from redis Auth.go:")
+
 		return false
 	}
 
@@ -178,6 +191,8 @@ func Logout(hash string) bool {
 	resp, error := http.Get("https://auth.dataporten.no/openid/endsession?id_token_hint=" + userToken)
 	if error != nil {
 		fmt.Println("Error logging out from feide:" + error.Error() + ". HTTP status code: " + resp.Status)
+		logging.Logerror(error, "Error logging out of feide Auth.go:")
+
 		return false
 	}
 

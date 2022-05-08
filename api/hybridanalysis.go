@@ -2,6 +2,7 @@ package api
 
 import (
 	"dcsg2900-threattotal/utils"
+	"dcsg2900-threattotal/logs"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
@@ -39,6 +40,8 @@ func CallHybridAnalysisHash(hash string, response *utils.FrontendResponse2, wg *
 	res, err := client.Do(req)
 	if err != nil {
 		fmt.Println("Request error HybridA", err)
+		logging.Logerror(err, "Error in request to hybridAnalysis")
+
 		utils.SetGenericError(response)
 	}
 	defer res.Body.Close()
@@ -123,6 +126,8 @@ func CallHybridAnalyisUrl(URL string) (VirusTotal utils.FrontendResponse, urlsca
 	body, err := ioutil.ReadAll(res.Body)
 	if err != nil {
 		fmt.Println("Ioutil error:", err)
+		logging.Logerror(err, "Ioutil error HybridAnalysis: ")
+
 	}
 
 	//var jsonData map[string]interface{}
@@ -145,6 +150,8 @@ func CallHybridAnalyisUrl(URL string) (VirusTotal utils.FrontendResponse, urlsca
 		body, err := ioutil.ReadAll(res.Body)
 		if err != nil {
 			fmt.Println("Ioutil error:", err)
+			logging.Logerror(err, "Ioutil error HybridAnalysis: ")
+
 		}
 
 		var jsonResponse utils.HybridAnalysisURL
@@ -224,6 +231,8 @@ func TestHybridAnalyisUrl(URL string, VirusTotal *utils.FrontendResponse2, urlsc
 		body, err := ioutil.ReadAll(res.Body)
 		if err != nil {
 			fmt.Println("Ioutil error:", err)
+			logging.Logerror(err, "Ioutil error HybridAnalysis: ")
+
 		}
 
 		//var jsonData map[string]interface{}
@@ -246,6 +255,8 @@ func TestHybridAnalyisUrl(URL string, VirusTotal *utils.FrontendResponse2, urlsc
 			body, err := ioutil.ReadAll(res.Body)
 			if err != nil {
 				fmt.Println("Ioutil error:", err)
+				logging.Logerror(err, "Ioutil error HybridAnalysis: ")
+
 			}
 
 			var jsonResponse utils.HybridAnalysisURL

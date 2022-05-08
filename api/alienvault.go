@@ -2,6 +2,7 @@ package api
 
 import (
 	"dcsg2900-threattotal/utils"
+	"dcsg2900-threattotal/logs"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
@@ -35,6 +36,7 @@ func CallAlienVaultUrl(url string) (response utils.FrontendResponse) {
 	body, err := ioutil.ReadAll(res.Body)
 	if err != nil {
 		fmt.Println("ERROR READING JSON DATA", err)
+		logging.Logerror(err, "ERROR READING JSON DATA, AlienVault API")
 	}
 
 	var jsonResponse utils.AlienVaultURL
@@ -42,6 +44,7 @@ func CallAlienVaultUrl(url string) (response utils.FrontendResponse) {
 	err = json.Unmarshal(body, &jsonResponse)
 	if err != nil {
 		fmt.Println("UNMARSHAL ERROR:\n\n", err)
+		logging.Logerror(err, "Unmarshal error AlienVault API")
 	}
 
 	//output:= string(body)
@@ -82,6 +85,7 @@ func CallAlienVaultHash(hash string, response *utils.FrontendResponse2, wg *sync
 	//fmt.Print(string(res.Body))
 	if err != nil {
 		fmt.Println("ERROR IN Request", err)
+		logging.Logerror(err, "ERROR IN REQUEST, AlienVault API")
 		utils.SetGenericError(response)
 	}
 	if res.StatusCode == 200 {
@@ -91,6 +95,7 @@ func CallAlienVaultHash(hash string, response *utils.FrontendResponse2, wg *sync
 
 		if err != nil {
 			fmt.Println("ERROR READING JSON DATA", err)
+			logging.Logerror(err, "ERROR Reading JSON response, AlienVault API")
 			utils.SetGenericError(response)
 		}
 
@@ -143,6 +148,8 @@ func TestAlienVaultUrl(url string, response *utils.FrontendResponse2, wg *sync.W
 	body, err := ioutil.ReadAll(res.Body)
 	if err != nil {
 		fmt.Println("ERROR READING JSON DATA", err)
+		logging.Logerror(err, "ERROR Reading JSON response, AlienVault API")
+
 	}
 
 	var jsonResponse utils.AlienVaultURL
@@ -150,6 +157,7 @@ func TestAlienVaultUrl(url string, response *utils.FrontendResponse2, wg *sync.W
 	err = json.Unmarshal(body, &jsonResponse)
 	if err != nil {
 		fmt.Println("UNMARSHAL ERROR:\n\n", err)
+		logging.Logerror(err, "ERROR unmarshalling, AlienVault URLsearch API")
 	}
 
 	/*
