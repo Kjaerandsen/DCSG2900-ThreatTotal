@@ -10,11 +10,8 @@ export default function Screenshot(screenshot) {
     // Add the translation data from the backend
 if (screenshot.length !== 0) {
 
-    var blob = new Blob([screenshot], { type: "image/jpeg" });
-    var imageUrl = URL.createObjectURL(blob);
-
-var base64Image = 'data:image/png;base64,'+imageUrl;
-
+var base64Image = 'data:image/png;base64,'+screenshot.screenshot;
+    console.log(screenshot)
     
     return(
         <div className='bg-white border-2 m-2 border-gray-400 rounded-lg p-1 text-left'>
