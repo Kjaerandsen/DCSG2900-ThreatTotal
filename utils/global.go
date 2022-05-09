@@ -21,3 +21,5 @@ var APIKeyOTX string
 var APIKeyHybridAnalysis string
 var APIKeyVirusTotal string
 var APIKeyGoogle string
+
+var UrlBlockList []string
