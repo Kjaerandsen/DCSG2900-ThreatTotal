@@ -64,7 +64,7 @@ function Login(){
             </div>
 
             <div className= "container w-full mb-3 sm:pl-36 sm:pr-36 flex justify-center overflow-hidden">
-            <a href={process.env.FEIDELOGINURL}>
+            <a href={process.env.REACT_APP_FEIDELOGINURL}>
             <button className='bg-blue-400 border-2 rounded-lg p-2'>{t("loginButton")}</button>
             </a>
             
