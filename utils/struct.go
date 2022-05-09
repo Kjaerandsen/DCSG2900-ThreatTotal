@@ -300,7 +300,7 @@ type ResultFrontendResponse struct {
 	NO struct {
 		Result string
 	}
-
+	Screenshot []byte
 	FrontendResponse []FrontendResponse2
 }
 

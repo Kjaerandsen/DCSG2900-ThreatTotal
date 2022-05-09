@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next';
 import CookieDisclosure from "../components/cookieDisclosure";
 import { Oval } from 'react-loader-spinner';
 import i18next from '../i18next';
+import Screenshot from "../components/displayScreenshot";
 
 function Result() {
     const queryParams = new URLSearchParams(window.location.search);
@@ -120,7 +121,7 @@ function Result() {
                 <br></br>
             </p>
             <div className="container">
-                
+                <Screenshot screenshot = {JsonData.Screenshot} />
                 <Sources sourceData = {JsonData} err = {Err}/>
 
             </div>
@@ -136,7 +137,6 @@ function Result() {
             <div className="pt-10 pb-10">
             {isLoading ? <Oval height="100" width="100" color="grey"/> : renderResult}
             </div>
-            
         <div className= "container w-full mb-3 sm:pl-36 sm:pr-36 flex justify-center overflow-hidden">
             <a href="./investigate">
                 <button className="bg-orange-500 p-2 rounded justify-center">{t("manualAnalysisBtn")}</button>

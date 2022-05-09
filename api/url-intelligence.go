@@ -106,8 +106,14 @@ func urlSearch(url string) (data []byte, err error, complete bool) {
 
 	utils.SetResultURL(setResults, len(responseData))
 
+	
+	//TESTING FUNCTIONALITY FOR SCREENSHOT OF URLS
+	utils.ScreenshotURL(url, setResults)			////
+													////
+	fmt.Println(len(resultResponse.Screenshot))		////
+	
 	complete = checkIfIntelligenceComplete(resultResponse, len(responseData)) //This runs a check to see if the intelligence is complete
-	//If complete is true the intelligence will be hashed,
+	//If complete is true the intelligence will be cached,
 	//If it is not complete the result won't be cached.
 
 	URLint, err = json.Marshal(resultResponse)
@@ -116,7 +122,7 @@ func urlSearch(url string) (data []byte, err error, complete bool) {
 		return URLint, err, complete
 	}
 
-	fmt.Println("WHERE IS MY CONTENT 1", responseData)
+	//fmt.Println("WHERE IS MY CONTENT 1", responseData)
 
 	return URLint, nil, complete
 }
