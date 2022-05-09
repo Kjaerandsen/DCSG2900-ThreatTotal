@@ -146,6 +146,7 @@ func checkIfIntelligenceComplete(jsonData utils.ResultFrontendResponse, size int
 	return complete
 }
 
+// CheckUrlAgainstFilter function which returns false if an item is whitelisted
 func checkUrlAgainstFilter(url string) bool {
 	for i := 0; i < len(utils.UrlBlockList); i++ {
 		if strings.Contains(url, utils.UrlBlockList[i]) {
@@ -155,6 +156,8 @@ func checkUrlAgainstFilter(url string) bool {
 	return true
 }
 
+// Function which creates a safe response for the google api, used in combination
+// with the filter to demo filter functionality
 func giveTrueGoogleUrl(url string, response *utils.FrontendResponse2) {
 	response.EN.Status = "Safe"
 	response.EN.Content = "Google safebrowsing has no data that indicates this is an unsafe URL/Domain"
