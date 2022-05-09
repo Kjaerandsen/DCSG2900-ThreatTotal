@@ -1,11 +1,12 @@
 package api
 
 import (
+	logging "dcsg2900-threattotal/logs"
 	"dcsg2900-threattotal/utils"
-	"dcsg2900-threattotal/logs"
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"strings"
 	"sync"
 
 	"github.com/gin-gonic/gin"
@@ -90,12 +91,18 @@ func urlSearch(url string) (data []byte, err error, complete bool) {
 	urlscanio = &responseData[2]
 	alienvault = &responseData[3]
 
+	wg.Add(2)
 	fmt.Println(url)
-
-	wg.Add(3)
-	go TestGoGoogleUrl(url, p, &wg)
-	go TestHybridAnalyisUrl(url, VirusTotal, urlscanio, &wg)
-	go TestAlienVaultUrl(url, alienvault, &wg)
+	if checkUrlAgainstFilter(url) {
+		wg.Add(1)
+		go TestGoGoogleUrl(url, p, &wg)
+		go TestHybridAnalyisUrl(url, VirusTotal, urlscanio, &wg)
+		go TestAlienVaultUrl(url, alienvault, &wg)
+	} else {
+		go giveTrueGoogleUrl(url, p)
+		go TestHybridAnalyisUrl(url, VirusTotal, urlscanio, &wg)
+		go TestAlienVaultUrl(url, alienvault, &wg)
+	}
 	wg.Wait()
 
 	var resultResponse utils.ResultFrontendResponse
@@ -131,4 +138,21 @@ func checkIfIntelligenceComplete(jsonData utils.ResultFrontendResponse, size int
 	}
 
 	return complete
+}
+
+func checkUrlAgainstFilter(url string) bool {
+	for i := 0; i < len(utils.UrlBlockList); i++ {
+		if strings.Contains(url, utils.UrlBlockList[i]) {
+			return false
+		}
+	}
+	return true
+}
+
+func giveTrueGoogleUrl(url string, response *utils.FrontendResponse2) {
+	response.EN.Status = "Safe"
+	response.EN.Content = "Google safebrowsing has no data that indicates this is an unsafe URL/Domain"
+	response.NO.Status = "Trygg"
+	response.NO.Content = "Google Safebrowsing har ingen data som indikerer at dette er en utrygg URL/Domene"
+	response.SourceName = "Google SafeBrowsing Api"
 }

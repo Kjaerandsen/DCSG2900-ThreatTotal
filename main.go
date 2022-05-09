@@ -57,6 +57,11 @@ func init() {
 	utils.APIKeyGoogle = os.Getenv("APIKeyGoogle")
 	utils.APIKeyHybridAnalysis = os.Getenv("APIKeyHybridAnalysis")
 	utils.APIKeyOTX = os.Getenv("APIKeyOTX")
+
+	utils.UrlBlockList = make([]string, 3)
+	utils.UrlBlockList[0] = "ntnu.no"
+	utils.UrlBlockList[1] = "ntnu.edu"
+	utils.UrlBlockList[2] = "testsafebrowsing.appspot.com/s/malware.html"
 }
 
 func main() {
