@@ -3,7 +3,7 @@ import React from 'react';
 
 export default function Screenshot(screenshot) {
     
-if (screenshot.screenshot !== undefined && screenshot !== null) {
+if (screenshot.screenshot !== undefined && screenshot.screenshot !== null) {
 
 var base64Image = 'data:image/png;base64,'+screenshot.screenshot;
     
