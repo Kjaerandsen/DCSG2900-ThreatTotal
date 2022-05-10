@@ -101,13 +101,17 @@ func CallVirusTotal(id string) (response utils.ResultFrontendResponse, err error
 	// very realisitc that we need more cases, too narrow for accurate results per now.
 	if vtResponse.Data.Attributes.LastAnalysisStats.Malicious == 0 && vtResponse.Data.Attributes.LastAnalysisStats.Suspicious == 0 {
 		response.EN.Result = "File is safe."
+		response.NO.Result = "Filen er trygg"
 		// osv response.EN.Result = fmt.Sprintf("File is considered safe", x av y)
 	} else if vtResponse.Data.Attributes.TotalVotes.Malicious > 0 && vtResponse.Data.Attributes.LastAnalysisStats.Suspicious >= 0 {
-		response.EN.Result = "File has malicious indicators, consider escalating. "
+		response.EN.Result = "File has malicious indicators, consider escalating to the NTNU SOC. "
+		response.NO.Result = "Filen har ondsinnede indikatorer, vennligst vurder å eskalere videre til NTNU SOC"
 	} else if vtResponse.Data.Attributes.LastAnalysisStats.Harmless > 0 && vtResponse.Data.Attributes.LastAnalysisStats.Malicious == 0 {
-		response.EN.Result = "File has been confirmed benign."
+		response.EN.Result = "File has been confirmed benign. Further handling of the file is safe"
+		response.NO.Result = "Filen er bekreftet godartet, videre håndtering av fil er trygt."
 	} else {
-		response.EN.Result = "File is suspicious."
+		response.EN.Result = "File is suspicious. It is not recommended to further handle this file."
+		response.NO.Result = "Filen er mistenkelig. Det anbefales å ikke videre håndtere filen. "
 	}
 
 	var engines int = len(vtResponse.Data.Attributes.LastAnalysisResults)
