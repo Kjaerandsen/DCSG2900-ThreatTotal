@@ -62,7 +62,7 @@ func ScreenshotURL(url string, Response *ResultFrontendResponse) {
 		SearchURL = url
 
 	} else {
-		SearchURL = "https://" + url
+		SearchURL = "http://" + url
 	}
 
 	ctx, cancel := chromedp.NewContext(
