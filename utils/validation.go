@@ -88,10 +88,10 @@ func SetResponeObjectVirusTotal(jsonResponse HybridAnalysisURL, VirusTotal *Fron
 	if jsonResponse.Scanners[0].Status == "clean" {
 
 		VirusTotal.EN.Status = "Safe"
-		VirusTotal.EN.Content = "VirusTotal has no information that indicates this URL is malicious"
+		VirusTotal.EN.Content = fmt.Sprintf("%s has no information that indicates this URL is malicious", jsonResponse.Scanners[0].Name)
 
 		VirusTotal.NO.Status = "Trygg"
-		VirusTotal.NO.Content = "VirusTotal har ingen informasjon som tilsier at denne URL'en er skadelig."
+		VirusTotal.NO.Content = fmt.Sprintf("%s har ingen informasjon som tilsier at denne URL'en er skadelig.", jsonResponse.Scanners[0].Name)
 	} else if jsonResponse.Scanners[0].Status == "malicious" {
 		VirusTotal.EN.Status = "Risk"
 		VirusTotal.EN.Content = fmt.Sprintf("%d / %d Antivirus agents has detected this URL/Domain as malicious", jsonResponse.Scanners[0].Positives, jsonResponse.Scanners[0].Total)
@@ -108,10 +108,10 @@ func SetResponeObjectVirusTotal(jsonResponse HybridAnalysisURL, VirusTotal *Fron
 	} else if jsonResponse.Scanners[0].Status == "no-result" {
 
 		VirusTotal.EN.Status = "Safe"
-		VirusTotal.EN.Content = "VirusTotal has no information that indicates this URL is malicious"
+		VirusTotal.EN.Content = fmt.Sprintf("%s has no information that indicates this URL is malicious", jsonResponse.Scanners[0].Name)
 
 		VirusTotal.NO.Status = "Trygg"
-		VirusTotal.NO.Content = "VirusTotal har ingen informasjon som tilsier at denne URL'en er skadelig."
+		VirusTotal.NO.Content = fmt.Sprintf("%s har ingen informasjon som tilsier at denne URL'en er skadelig.", jsonResponse.Scanners[0].Name)
 
 	} else {
 		VirusTotal.EN.Status = "Error"
@@ -123,16 +123,16 @@ func SetResponeObjectUrlscanio(jsonResponse HybridAnalysisURL, urlscanio *Fronte
 	if jsonResponse.Scanners[1].Status == "clean" || jsonResponse.Scanners[1].Status == "no-classification" {
 
 		urlscanio.EN.Status = "Safe"
-		urlscanio.EN.Content = "Urlscan has no information that indicates this URL is malicious"
+		urlscanio.EN.Content = fmt.Sprintf("%s has no information that indicates this URL is malicious", jsonResponse.Scanners[1].Name)
 
 		urlscanio.NO.Status = "Trygg"
-		urlscanio.NO.Content = "Urlscan har ingen informasjon som tilsier at denne URL'en er skadelig."
+		urlscanio.NO.Content = fmt.Sprintf("%s har ingen informasjon som tilsier at denne URL'en er skadelig.", jsonResponse.Scanners[1].Name)
 	} else if jsonResponse.Scanners[1].Status == "malicious" {
 		urlscanio.EN.Status = "Risk"
-		urlscanio.EN.Content = "Urlscan has detected this URL/Domain as malicious"
+		urlscanio.EN.Content = fmt.Sprintf("%s has detected this URL/Domain as malicious", jsonResponse.Scanners[1].Name)
 
 		urlscanio.NO.Status = "Utrygg"
-		urlscanio.NO.Content = "Urlscan har detektert denne URLen / domenet som skadelig"
+		urlscanio.NO.Content = fmt.Sprintf("%s har detektert denne URLen / domenet som skadelig", jsonResponse.Scanners[1].Name)
 	} else if jsonResponse.Scanners[1].Status == "in-queue" {
 		urlscanio.EN.Status = "Awaiting analysis"
 		urlscanio.EN.Content = "Awaiting analysis"
