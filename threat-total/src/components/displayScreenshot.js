@@ -8,10 +8,10 @@ if (screenshot.screenshot !== undefined && screenshot.screenshot !== null) {
 var base64Image = 'data:image/png;base64,'+screenshot.screenshot;
     
     return(
-        <div className='bg-white border-2 m-2 border-gray-400 rounded-lg p-1 text-left'>
+        <div>
             <div className='flex'>
-                <div className='border-r-2 grid place-items-center pr-1'>
-                <img src={base64Image} alt="Screenshot" />
+                <div className='grid place-items-center'>
+                <img src={base64Image} className="w-full h-auto border-2 border-gray-400 rounded-lg " alt="Screenshot" />
                 </div>
                 <div className="p-1"> 
                     <br></br>

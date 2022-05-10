@@ -18,6 +18,7 @@ function Result() {
     const { t } = useTranslation();
     const [isLoading, setIsLoading] = useState(false);
     const userAuth = localStorage.getItem('userAuth')
+    const [ScreenshotProvided, setScreenshotProvided] = useState(false)
     
     useEffect(() => {
         if (userAuth != null) {
@@ -59,7 +60,10 @@ function Result() {
                         window.location.href="/login"
                     } else {
                         setJsonData(json);
-                        setIsLoading(false)
+                        setIsLoading(false);
+                        if (json.screenshot !== null) {
+                            setScreenshotProvided(true)
+                        }
                     }
                 })
                 .catch(function(error){
@@ -111,7 +115,8 @@ function Result() {
 
     const renderResult = (
         <div className="container text-center break-words sm:justify-center">
-        
+        <div className={ScreenshotProvided ? "grid p-2 md:grid-cols-2 xl:grid-cols-3" : "grid p-2"}>
+            <div className="xl:col-span-2">
             <h1 className="text-4xl font-bold p-0 mb-8 sm:mt-12 sm:mb-12 w-auto">
                 {t("resultTitle")}
             </h1>
@@ -120,10 +125,13 @@ function Result() {
                 <br></br><br></br>
                 <br></br>
             </p>
+            </div>
+            <div>
+            <Screenshot screenshot = {JsonData.Screenshot} />
+            </div>
+        </div>
             <div className="container">
-                <Screenshot screenshot = {JsonData.Screenshot} />
                 <Sources sourceData = {JsonData} err = {Err}/>
-
             </div>
         </div>
     );
