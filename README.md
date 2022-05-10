@@ -58,11 +58,7 @@ To generate css while working run:
 
 Open the main folder.
 
-Install the dependencies with:
-
-`go mod download`
-
-Run the backend with:
+Install the dependencies and run the backend with:
 
 `go run main.go`
 
