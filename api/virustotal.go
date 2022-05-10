@@ -73,8 +73,8 @@ func CallVirusTotal(id string) (response utils.ResultFrontendResponse, err error
 
 		if val.Category == "undetected" ||
 			val.Category == "malicious" ||
-			val.Category == "malicious" ||
-			val.Category == "malicious" {
+			val.Category == "suspicious" ||
+			val.Category == "harmless" {
 			// save engine name
 			testStruct[i].ID = i + 1
 			testStruct[i].SourceName = val.EngineName
