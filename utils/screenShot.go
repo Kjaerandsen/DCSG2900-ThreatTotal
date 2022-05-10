@@ -85,7 +85,10 @@ func ScreenshotURL(url string, Response *ResultFrontendResponse) {
 	//////
 
 	// capture entire browser viewport, returning png with quality=90
-	if err := chromedp.Run(ctx, fullScreenshot(SearchURL, 90, &screenshotbuf)); err != nil {
+	/*if err := chromedp.Run(ctx, fullScreenshot(SearchURL, 90, &screenshotbuf)); err != nil {
+		log.Fatal(err)
+	}*/
+	if err := chromedp.Run(ctx, screenScreenshot(SearchURL, &screenshotbuf)); err != nil {
 		log.Fatal(err)
 	}
 	/*
@@ -95,6 +98,16 @@ func ScreenshotURL(url string, Response *ResultFrontendResponse) {
 
 	log.Printf("wrote elementScreenshot.png and fullScreenshot.png")
 	Response.Screenshot = screenshotbuf
+}
+
+// Inspired by the emulation example at https://github.com/chromedp/examples/blob/master/emulate/main.go
+// elementScreenshot takes a screenshot of a specific element.
+func screenScreenshot(urlstr string, res *[]byte) chromedp.Tasks {
+	return chromedp.Tasks{
+		chromedp.EmulateViewport(1280, 960),
+		chromedp.Navigate(urlstr),
+		chromedp.CaptureScreenshot(res),
+	}
 }
 
 // fullScreenshot takes a screenshot of the entire browser viewport.
