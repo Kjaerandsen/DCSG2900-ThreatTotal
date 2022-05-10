@@ -17,11 +17,9 @@ func EscalateAnalysis(url string, result string, token string) {
 
 	from := "threattotalv2@gmail.com"
 
-	to := "pederas@stud.ntnu.no"
+	to := getUserEmail(token)
 
-	coolstuff := getUserEmail(token)
-
-	fmt.Println("After return", coolstuff)
+	fmt.Println("After return", to)
 
 	m := gomail.NewMessage()
 
