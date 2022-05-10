@@ -167,10 +167,10 @@ type HybridAnalysisURL struct {
 }
 
 type AlienVaultURL struct {
-	Sections      []string      `json:"sections"`
-	Indicator     string        `json:"indicator"`
-	Type          string        `json:"type"`
-	TypeTitle     string        `json:"type_title"`
+	Sections      []string               `json:"sections"`
+	Indicator     string                 `json:"indicator"`
+	Type          string                 `json:"type"`
+	TypeTitle     string                 `json:"type_title"`
 	Validation    []ValidationAlienVault `json:"validation"`
 	BaseIndicator struct {
 	} `json:"base_indicator"`
@@ -300,7 +300,7 @@ type ResultFrontendResponse struct {
 	NO struct {
 		Result string
 	}
-	Screenshot []byte
+	Screenshot       []byte
 	FrontendResponse []FrontendResponse2
 }
 

@@ -2,8 +2,8 @@ package api
 
 import (
 	"crypto/tls"
+	logging "dcsg2900-threattotal/logs"
 	"dcsg2900-threattotal/utils"
-	"dcsg2900-threattotal/logs"
 	"encoding/json"
 	"fmt"
 	"os"
@@ -53,10 +53,10 @@ func EscalateAnalysis(url string, result string, token string) {
 	}
 }
 
-func getUserEmail(hash string) (email string){
+func getUserEmail(hash string) (email string) {
 
 	fmt.Println("Hash for Redis req:", hash)
-	
+
 	value, err := utils.Conn.Do("GET", "user:"+hash)
 	if value == nil {
 		if err != nil {
@@ -66,18 +66,23 @@ func getUserEmail(hash string) (email string){
 		}
 	}
 	responseBytes, err := json.Marshal(value)
-	if err!= nil{
-		fmt.Println(err)	
+	if err != nil {
+		fmt.Println(err)
 	}
 
+	var test []byte
 	var JWTdata utils.IdAndJwt
 
-	err = json.Unmarshal(responseBytes, &JWTdata)
+	fmt.Println(string(responseBytes))
+	err = json.Unmarshal(responseBytes, &test)
+	json.Unmarshal(test, &JWTdata)
+
+	fmt.Println(test)
+	fmt.Println(string(test))
 
 	fmt.Println(JWTdata)
-	fmt.Println(JWTdata.Claims)
+	fmt.Println(JWTdata.Claims["email"])
 
-	//email = JWTdata.Claims["email"] 
-	email = "letsgo"
+	email = fmt.Sprintf("%s", JWTdata.Claims["email"])
 	return email
 }
