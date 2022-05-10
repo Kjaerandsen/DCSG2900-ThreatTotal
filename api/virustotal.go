@@ -98,7 +98,9 @@ func CallVirusTotal(id string) (response utils.ResultFrontendResponse, err error
 	var testStruct2 = make([]utils.FrontendResponse2, i)
 	testStruct2 = testStruct[0:(i - 1)]
 
-	response.FrontendResponse = testStruct2
+	totalDanger := vtResponse.Data.Attributes.LastAnalysisStats.Malicious + vtResponse.Data.Attributes.LastAnalysisStats.Suspicious
+
+	response.FrontendResponse = sortDanger(testStruct2, totalDanger, i-totalDanger)
 	// IMPORTANT TODO, FIGURE ROUTING
 
 	// Possible to add more cases in the future, for more accurate assessements
@@ -127,4 +129,35 @@ func CallVirusTotal(id string) (response utils.ResultFrontendResponse, err error
 	fmt.Println(response)
 
 	return response, nil
+}
+
+func sortDanger(values []utils.FrontendResponse2, dangerSize int, safeSize int) []utils.FrontendResponse2 {
+	if dangerSize == 0 {
+		return values
+	}
+	var dangerous = make([]utils.FrontendResponse2, dangerSize+1)
+	var safe = make([]utils.FrontendResponse2, safeSize+1)
+	var i, j = 0, 0
+
+	for l := 0; l < dangerSize+safeSize-1; l++ {
+		if values[l].EN.Status == "harmless" || values[l].EN.Status == "undetected" {
+			safe[i] = values[l]
+			i++
+		} else {
+			dangerous[j] = values[l]
+			j++
+		}
+	}
+
+	for l := 0; l < dangerSize-1; l++ {
+		values[l] = dangerous[l]
+		values[l].ID = l
+	}
+
+	for l := 0; l < safeSize-1; l++ {
+		values[l+dangerSize] = safe[l]
+		values[l+dangerSize].ID = l + dangerSize
+	}
+
+	return values
 }

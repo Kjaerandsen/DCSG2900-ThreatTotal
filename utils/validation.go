@@ -246,7 +246,7 @@ func SetResultFile(Response *ResultFrontendResponse, size int) {
 			Response.FrontendResponse[i].NO.Status = "Trygg"
 			Response.FrontendResponse[i].NO.Content = "Denne filen har ikke blitt merket som mistenksom, og kan vurderes som trygg"
 		case "malicious", "suspicious":
-			Response.FrontendResponse[i].EN.Status = "Unsafe"
+			Response.FrontendResponse[i].EN.Status = "Risk"
 			Response.FrontendResponse[i].EN.Content = "This file has been marked as malicious by known sources, it is advised not to interact with this file."
 
 			Response.FrontendResponse[i].NO.Status = "Utrygg"
