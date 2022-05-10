@@ -6,20 +6,20 @@ import (
 
 func SetResponeObjectAlienVault(jsonResponse AlienVaultURL, response *FrontendResponse2) {
 	whitelisted := false
-	
-	for i := 0; i<len(jsonResponse.Validation); i++{
-		if jsonResponse.Validation[i].Source == "whitelist"{
-		fmt.Println("This is whitelisted")
-		whitelisted = true
-		}
-	} 
 
-	if whitelisted == true{
+	for i := 0; i < len(jsonResponse.Validation); i++ {
+		if jsonResponse.Validation[i].Source == "whitelist" {
+			fmt.Println("This is whitelisted")
+			whitelisted = true
+		}
+	}
+
+	if whitelisted {
 		response.EN.Status = "Safe"
 		response.EN.Content = "Alienvault has whitelisted this domain/URL."
 		response.NO.Status = "Trygg"
 		response.NO.Content = "Alienvault har hvitelistet dette domenet/URL'en."
-	}else if jsonResponse.PulseInfo.Count == 0 {
+	} else if jsonResponse.PulseInfo.Count == 0 {
 		response.EN.Status = "Safe"
 		response.EN.Content = "Alienvault does not have any publicly availible pulses that indicate this is malicious."
 		response.NO.Status = "Trygg"
