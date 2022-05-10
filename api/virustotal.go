@@ -58,8 +58,6 @@ func CallVirusTotal(id string) (response utils.ResultFrontendResponse, err error
 		logging.Logerror(unmarshalledBody, "")
 	}
 
-	var test3 = make([]utils.FrontendResponse4, len(vtResponse.Data.Attributes.LastAnalysisResults))
-
 	log.Println("here is the test output we maybe want")
 	i := 0
 
@@ -70,31 +68,37 @@ func CallVirusTotal(id string) (response utils.ResultFrontendResponse, err error
 	for _, val := range vtResponse.Data.Attributes.LastAnalysisResults {
 		//log.Printf("testing, %s, %s", key, val)
 		// initialize struct
-		test3[i] = val
 		// print
-		log.Println(test3[i])
+		log.Println(val)
 
-		// save engine name
-		testStruct[i].ID = i + 1
-		testStruct[i].SourceName = test3[i].EngineName
-		// resolution of AV
-		testStruct[i].EN.Status = test3[i].Category
+		if val.Category == "undetected" ||
+			val.Category == "malicious" ||
+			val.Category == "malicious" ||
+			val.Category == "malicious" {
+			// save engine name
+			testStruct[i].ID = i + 1
+			testStruct[i].SourceName = val.EngineName
+			// resolution of AV
+			testStruct[i].EN.Status = val.Category
 
-		testStruct[i].EN.Content = vtResponse.Data.Attributes.MeaningfulName
-		testStruct[i].EN.Description = vtResponse.Data.Attributes.Magic
-		testStruct[i].EN.Tags = vtResponse.Data.Attributes.TypeTag
+			testStruct[i].EN.Content = vtResponse.Data.Attributes.MeaningfulName
+			testStruct[i].EN.Description = vtResponse.Data.Attributes.Magic
+			testStruct[i].EN.Tags = vtResponse.Data.Attributes.TypeTag
 
-		//testStruct.EN.Description =
+			//testStruct.EN.Description =
 
-		// can also display the total status (last analysis stats)
-		// this is an int ^^ so cant fill it in frontendresponse2
-		// question is, do we do it here or later
+			// can also display the total status (last analysis stats)
+			// this is an int ^^ so cant fill it in frontendresponse2
+			// question is, do we do it here or later
 
-		i++
+			i++
+		}
 	}
 	log.Println(testStruct)
+	var testStruct2 = make([]utils.FrontendResponse2, i)
+	testStruct2 = testStruct[0:(i - 1)]
 
-	response.FrontendResponse = testStruct
+	response.FrontendResponse = testStruct2
 	// IMPORTANT TODO, FIGURE ROUTING
 
 	// Possible to add more cases in the future, for more accurate assessements
@@ -114,9 +118,9 @@ func CallVirusTotal(id string) (response utils.ResultFrontendResponse, err error
 		response.NO.Result = "Filen er mistenkelig. Det anbefales å ikke videre håndtere filen. "
 	}
 
-	var engines int = len(vtResponse.Data.Attributes.LastAnalysisResults)
+	//var engines int = len(vtResponse.Data.Attributes.LastAnalysisResults)
 
-	utils.SetResultFile(&response, engines)
+	utils.SetResultFile(&response, i-1)
 
 	log.Println(response)
 
