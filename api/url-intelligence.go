@@ -91,10 +91,9 @@ func urlSearch(url string) (data []byte, err error, complete bool) {
 	urlscanio = &responseData[2]
 	alienvault = &responseData[3]
 
-	wg.Add(2)
+	wg.Add(3)
 	fmt.Println(url)
 	if checkUrlAgainstFilter(url) {
-		wg.Add(1)
 		go TestGoGoogleUrl(url, p, &wg)
 		go TestHybridAnalyisUrl(url, VirusTotal, urlscanio, &wg)
 		go TestAlienVaultUrl(url, alienvault, &wg)
@@ -113,12 +112,11 @@ func urlSearch(url string) (data []byte, err error, complete bool) {
 
 	utils.SetResultURL(setResults, len(responseData))
 
-	
 	//TESTING FUNCTIONALITY FOR SCREENSHOT OF URLS
-	utils.ScreenshotURL(url, setResults)			////
-													////
-	fmt.Println(len(resultResponse.Screenshot))		////
-	
+	utils.ScreenshotURL(url, setResults) ////
+	////
+	fmt.Println(len(resultResponse.Screenshot)) ////
+
 	complete = checkIfIntelligenceComplete(resultResponse, len(responseData)) //This runs a check to see if the intelligence is complete
 	//If complete is true the intelligence will be cached,
 	//If it is not complete the result won't be cached.
