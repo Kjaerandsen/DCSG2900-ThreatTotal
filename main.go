@@ -161,17 +161,16 @@ func main() {
 		url := c.Query("url")
 		result := c.Query("result")
 		
-		api.EscalateAnalysis(url, result, token)
+		//api.EscalateAnalysis(url, result, token)
 
-		/**authenticated, _ := auth.Authenticate("", token)
+		authenticated, _ := auth.Authenticate("", token)
 		if !authenticated {
 			c.JSON(http.StatusUnauthorized, gin.H{"authenticated": "You are not authenticated. User login is invalid."})
 		} else {
 			api.EscalateAnalysis(url, result, token)
-
 			c.JSON(http.StatusOK, nil)
 		}
-		*/
+		
 })
 
 	log.Fatal(r.Run(":8081"))

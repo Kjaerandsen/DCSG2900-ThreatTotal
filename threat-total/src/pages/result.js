@@ -146,15 +146,33 @@ function Result() {
             {isLoading ? <Oval height="100" width="100" color="grey"/> : renderResult}
             </div>
         <div className= "container w-full mb-3 sm:pl-36 sm:pr-36 flex justify-center overflow-hidden">
-            <a href="./investigate">
-                <button className="bg-orange-500 p-2 rounded justify-center">{t("manualAnalysisBtn")}</button>
-            </a>
+                <button onClick={() => EscalateAnalysis(url, userAuth)} className="bg-orange-500 p-2 rounded justify-center">{t("manualAnalysisBtn")}</button>
         </div>
 
         <CookieDisclosure />
 
         </div>
         );
+}
+
+function EscalateAnalysis(url, userAuth){
+
+    fetch(process.env.REACT_APP_BACKEND_URL+'/escalate?url=' + url +"&result=" + window.location.href + "&userAuth=" + userAuth, {
+        method: 'GET',
+        headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json'
+        }
+    }).then((response) => response.json())
+    .then((json) => {
+        // If the authentication response is invalid remove the authentication
+        // locally and redirect to the login page.
+        if (json.authenticated !== undefined){
+            localStorage.removeItem('userAuth')
+            window.location.href="/login"
+        }
+    })
+    window.alert("An email has been sent informing you about the escalation to manual analysis, futher contact will be made by email")
 }
 
 export default Result;
