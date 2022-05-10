@@ -1,10 +1,9 @@
 package utils
 
 import (
-	"strings"
 	"context"
-	"io/ioutil"
 	"log"
+	"strings"
 
 	//"github.com/chromedp/cdproto/page"
 	"github.com/chromedp/chromedp"
@@ -14,7 +13,7 @@ import (
 func ScreenshotURL(url string, FrondendResponse *ResultFrontendResponse){
 	screenshot, cancel := chromedp.NewContext(context.Background())
 	defer cancel()
-	
+
 	var SearchURL string
 
 	if strings.Contains(url, "https://") {
@@ -22,7 +21,7 @@ func ScreenshotURL(url string, FrondendResponse *ResultFrontendResponse){
 
 	} else if strings.Contains(url, "http://") {
 		SearchURL = url
-	
+
 	} else {
 		SearchURL = "https://" + url
 	}
@@ -52,50 +51,50 @@ func screenshotTasks(url string, imageBuf *[]byte) chromedp.Tasks {
 }
 
 */
-func ScreenshotURL(url string, Response *ResultFrontendResponse){
+func ScreenshotURL(url string, Response *ResultFrontendResponse) {
 
-var SearchURL string
-	
+	var SearchURL string
+
 	if strings.Contains(url, "https://") {
 		SearchURL = url
 
 	} else if strings.Contains(url, "http://") {
 		SearchURL = url
-	
+
 	} else {
 		SearchURL = "https://" + url
 	}
 
-	
-ctx, cancel := chromedp.NewContext(
-	context.Background(),
-	// chromedp.WithDebugf(log.Printf),
-)
-defer cancel()
+	ctx, cancel := chromedp.NewContext(
+		context.Background(),
+		// chromedp.WithDebugf(log.Printf),
+	)
+	defer cancel()
 
-// capture screenshot of an element
-var screenshotbuf []byte
+	// capture screenshot of an element
+	var screenshotbuf []byte
 
-/*
-if err := chromedp.Run(ctx, elementScreenshot(`https://pkg.go.dev/`, `img.Homepage-logo`, &screenshotbuf)); err != nil {
-	log.Fatal(err)
-}
-if err := ioutil.WriteFile("elementScreenshot.png", screenshotbuf, 0o644); err != nil {
-	log.Fatal(err)
-}
-*/
-//////
+	/*
+	   if err := chromedp.Run(ctx, elementScreenshot(`https://pkg.go.dev/`, `img.Homepage-logo`, &screenshotbuf)); err != nil {
+	   	log.Fatal(err)
+	   }
+	   if err := ioutil.WriteFile("elementScreenshot.png", screenshotbuf, 0o644); err != nil {
+	   	log.Fatal(err)
+	   }
+	*/
+	//////
 
-// capture entire browser viewport, returning png with quality=90
-if err := chromedp.Run(ctx, fullScreenshot(SearchURL, 90, &screenshotbuf)); err != nil {
-	log.Fatal(err)
-}
-if err := ioutil.WriteFile("fullScreenshot.png", screenshotbuf, 0o644); err != nil {
-	log.Fatal(err)
-}
+	// capture entire browser viewport, returning png with quality=90
+	if err := chromedp.Run(ctx, fullScreenshot(SearchURL, 90, &screenshotbuf)); err != nil {
+		log.Fatal(err)
+	}
+	/*
+	   if err := ioutil.WriteFile("fullScreenshot.png", screenshotbuf, 0o644); err != nil {
+	   	log.Fatal(err)
+	   }*/
 
-log.Printf("wrote elementScreenshot.png and fullScreenshot.png")
-Response.Screenshot = screenshotbuf
+	log.Printf("wrote elementScreenshot.png and fullScreenshot.png")
+	Response.Screenshot = screenshotbuf
 }
 
 // fullScreenshot takes a screenshot of the entire browser viewport.
@@ -103,8 +102,8 @@ Response.Screenshot = screenshotbuf
 // Note: chromedp.FullScreenshot overrides the device's emulation settings. Use
 // device.Reset to reset the emulation and viewport settings.
 func fullScreenshot(urlstr string, quality int, res *[]byte) chromedp.Tasks {
-return chromedp.Tasks{
-	chromedp.Navigate(urlstr),
-	chromedp.FullScreenshot(res, quality),
-}
+	return chromedp.Tasks{
+		chromedp.Navigate(urlstr),
+		chromedp.FullScreenshot(res, quality),
+	}
 }
