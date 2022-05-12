@@ -98,7 +98,7 @@ func urlSearch(url string) (data []byte, err error, complete bool) {
 		go TestHybridAnalyisUrl(url, VirusTotal, urlscanio, &wg)
 		go TestAlienVaultUrl(url, alienvault, &wg)
 	} else {
-		go giveTrueGoogleUrl(url, p)
+		go giveTrueGoogleUrl(url, p, &wg)
 		go TestHybridAnalyisUrl(url, VirusTotal, urlscanio, &wg)
 		go TestAlienVaultUrl(url, alienvault, &wg)
 	}
@@ -156,7 +156,9 @@ func checkUrlAgainstFilter(url string) bool {
 
 // Function which creates a safe response for the google api, used in combination
 // with the filter to demo filter functionality
-func giveTrueGoogleUrl(url string, response *utils.FrontendResponse2) {
+func giveTrueGoogleUrl(url string, response *utils.FrontendResponse2, wg *sync.WaitGroup) {
+	defer wg.Done()
+
 	response.EN.Status = "Safe"
 	response.EN.Content = "Google safebrowsing has no data that indicates this is an unsafe URL/Domain"
 	response.NO.Status = "Trygg"
