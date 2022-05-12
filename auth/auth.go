@@ -2,11 +2,10 @@ package auth
 
 import (
 	"crypto/sha256"
+	logging "dcsg2900-threattotal/logs"
 	"dcsg2900-threattotal/utils"
-	"dcsg2900-threattotal/logs"
 	"encoding/json"
 	"fmt"
-	"net/http"
 	"time"
 )
 
@@ -172,27 +171,12 @@ func tokenToHash(code string) (hash string) {
 }
 
 func Logout(hash string) bool {
-	// Get the login details from the database
-	userToken, err := getAuth(hash)
-	if !err {
-		return false
-	}
 
 	// Delete the database item
-	_, error := utils.Conn.Do("DEL", hash)
+	_, error := utils.Conn.Do("DEL", "user:"+hash)
 	if error != nil {
 		fmt.Println("Error removing data from redis:" + error.Error())
 		logging.Logerror(error, "Error removing data from redis Auth.go:")
-
-		return false
-	}
-
-	// Send a logout request to feide
-	resp, error := http.Get("https://auth.dataporten.no/openid/endsession?id_token_hint=" + userToken)
-	if error != nil {
-		fmt.Println("Error logging out from feide:" + error.Error() + ". HTTP status code: " + resp.Status)
-		logging.Logerror(error, "Error logging out of feide Auth.go:")
-
 		return false
 	}
 

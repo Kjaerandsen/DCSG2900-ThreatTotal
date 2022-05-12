@@ -19,11 +19,11 @@ function logoutRequest(){
             }).then((response) => response.json())
             .then((json) => {
                 console.log(json, json.hash)
-                window.location.href= "/logout"
+                window.location.href= "https://auth.dataporten.no/openid/endsession"
             })
             .catch(function(error){
                 console.log(error)
-                window.location.href= "/logout"
+                window.location.href= "https://auth.dataporten.no/openid/endsession"
             })
 }
 
