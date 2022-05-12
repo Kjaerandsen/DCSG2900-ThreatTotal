@@ -143,7 +143,13 @@ function Result() {
             <SubNavbar page="resultPage"/>
 
             <div className="pt-10 pb-10">
-            {isLoading ? <Oval height="100" width="100" color="grey"/> : renderResult}
+            {isLoading ? 
+                <>
+                <div className="flex justify-center place-items-center">
+                <Oval height="100" width="100" color="grey" className="m-auto"/>
+                </div>
+                <div><p>Loading could take up to a minute.</p></div>
+                </> : renderResult}
             </div>
         <div className= "container w-full mb-3 sm:pl-36 sm:pr-36 flex justify-center overflow-hidden">
                 <button onClick={() => EscalateAnalysis(url, userAuth)} className="bg-orange-500 p-2 rounded justify-center">{t("manualAnalysisBtn")}</button>
