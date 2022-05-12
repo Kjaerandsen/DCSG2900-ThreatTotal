@@ -100,10 +100,10 @@ func SetResponeObjectVirusTotal(jsonResponse HybridAnalysisURL, VirusTotal *Fron
 		VirusTotal.NO.Content = fmt.Sprintf("%d / %d Antivirus agenter har detektert dette som ondsinnet", jsonResponse.Scanners[0].Positives, jsonResponse.Scanners[0].Total)
 	} else if jsonResponse.Scanners[0].Status == "in-queue" {
 		VirusTotal.EN.Status = "Awaiting analysis"
-		VirusTotal.EN.Content = "Awaiting analysis"
+		VirusTotal.EN.Content = "Awaiting analysis attempt to refresh in 20 seconds."
 
 		VirusTotal.NO.Status = "Venter på analyse."
-		VirusTotal.NO.Content = "Venter på analyse."
+		VirusTotal.NO.Content = "Venter på analyse forsøk å laste inn siden på nytt om 20 sekunder."
 
 	} else if jsonResponse.Scanners[0].Status == "no-result" {
 
@@ -135,10 +135,10 @@ func SetResponeObjectUrlscanio(jsonResponse HybridAnalysisURL, urlscanio *Fronte
 		urlscanio.NO.Content = fmt.Sprintf("%s har detektert denne URLen / domenet som skadelig", jsonResponse.Scanners[1].Name)
 	} else if jsonResponse.Scanners[1].Status == "in-queue" {
 		urlscanio.EN.Status = "Awaiting analysis"
-		urlscanio.EN.Content = "Awaiting analysis"
+		urlscanio.EN.Content = "Awaiting analysis attempt to refresh in 20 seconds."
 
 		urlscanio.NO.Status = "Venter på analyse."
-		urlscanio.NO.Content = "Venter på analyse."
+		urlscanio.NO.Content = "Venter på analyse forsøk å laste inn siden på nytt om 20 sekunder."
 
 	} else {
 		urlscanio.EN.Status = "Error"
