@@ -1,8 +1,8 @@
 package api
 
 import (
+	logging "dcsg2900-threattotal/logs"
 	"dcsg2900-threattotal/utils"
-	"dcsg2900-threattotal/logs"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
@@ -59,7 +59,6 @@ func CallHybridAnalysisHash(hash string, response *utils.FrontendResponse2, wg *
 
 		err = json.Unmarshal(body, &jsonResponse)
 		if err != nil {
-			fmt.Println(string(body))
 			fmt.Println(err)
 			if len(string(body)) == 2 { //If this statement is true it means that the request
 				//is sucessful but it cant be unmarshalled because it returns empty
