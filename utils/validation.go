@@ -165,20 +165,26 @@ func SetResponseObjectAlienVaultHash(jsonResponse AlienVaultHash, response *Fron
 func SetResponseObjectHybridAnalysisHash(jsonResponse HybridAnalysishash, response *FrontendResponse2) {
 	response.SourceName = "Hybrid Analysis"
 
-	if jsonResponse.Verdict == "malicious" {
+	if jsonResponse[0].Verdict == "malicious" {
 		response.EN.Status = "Risk"
 		response.EN.Content = "This file is malicious"
 
 		response.NO.Status = "Utrygg"
 		response.EN.Content = "Denne filen er gjenkjent som ondsinnet"
 		//response.SourceName = jsonResponse.Submissions[0].Filename
-	} else if jsonResponse.Verdict == "whitelisted" {
+	} else if jsonResponse[0].Verdict == "whitelisted" {
 		response.EN.Status = "Safe"
 		response.EN.Content = "This file is known to be good"
 
 		response.NO.Status = "Trygg"
 		response.EN.Content = "Denne filen er hvitelistet av HybridAnalysis - Ikke ondsinnet."
 		//response.SourceName = jsonResponse.Submissions[0].Filename
+	} else if jsonResponse[0].Verdict == "no specific threat" {
+		response.EN.Status = "Safe"
+		response.EN.Content = "According to HybridAnalysis does this file not pose any specific threat."
+
+		response.NO.Status = "Trygg"
+		response.EN.Content = "I henhold til informasjon gitt av HybridAnalysis tilsier ikke denne filen noen trussel."
 	} else {
 		response.EN.Status = "Unknown" //Denne må byttes til at den er ukjent // grå farge elns på frontend.
 		response.EN.Content = "This filehash is not known to Hybrid Analysis"
@@ -188,10 +194,10 @@ func SetResponseObjectHybridAnalysisHash(jsonResponse HybridAnalysishash, respon
 	}
 
 	// Set the filename field if known
-	if jsonResponse.Submissions != nil {
-		if jsonResponse.Submissions[0].Filename != "" {
-			response.EN.Content = response.EN.Content + " " + jsonResponse.Submissions[0].Filename
-			response.NO.Content = response.NO.Content + " " + jsonResponse.Submissions[0].Filename
+	if jsonResponse[0].Submissions != nil {
+		if jsonResponse[0].Submissions[0].Filename != "" {
+			response.EN.Content = response.EN.Content + " " + jsonResponse[0].Submissions[0].Filename
+			response.NO.Content = response.NO.Content + " " + jsonResponse[0].Submissions[0].Filename
 		}
 	}
 }

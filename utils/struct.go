@@ -82,7 +82,7 @@ type GoogleSafeBrowsing struct {
 	} `json:"matches"`
 }
 
-type HybridAnalysishash struct {
+type HybridAnalysishash []struct {
 	JobID                   string        `json:"job_id"`
 	EnvironmentID           int           `json:"environment_id"`
 	EnvironmentDescription  string        `json:"environment_description"`

@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"strings"
 	"sync"
 
 	"github.com/gin-gonic/gin"
@@ -16,13 +17,13 @@ func HashIntelligence(c *gin.Context) {
 	var hashInt []byte
 	var err error
 
-	hash := c.Query("hash")
+	hash := strings.TrimSpace(c.Query("hash"))
 
 	value, err := utils.Conn.Do("GET", "hash:"+hash)
 	if value == nil {
 		if err != nil {
 			fmt.Println("Error:" + err.Error())
-			logging.Logerror(err ,"Error in retrieving cache - hash-intelligence")
+			logging.Logerror(err, "Error in retrieving cache - hash-intelligence")
 		}
 		fmt.Println("No Cache hit")
 
