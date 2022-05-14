@@ -101,15 +101,13 @@ func CallVirusTotal(id string) (response utils.ResultFrontendResponse, err error
 	totalDanger := vtResponse.Data.Attributes.LastAnalysisStats.Malicious + vtResponse.Data.Attributes.LastAnalysisStats.Suspicious
 
 	response.FrontendResponse = sortDanger(testStruct2, totalDanger, i-totalDanger)
-	// IMPORTANT TODO, FIGURE ROUTING
 
 	// Possible to add more cases in the future, for more accurate assessements
-	// very realisitc that we need more cases, too narrow for accurate results per now.
 	if vtResponse.Data.Attributes.LastAnalysisStats.Malicious == 0 && vtResponse.Data.Attributes.LastAnalysisStats.Suspicious == 0 {
 		response.EN.Result = "File is safe."
 		response.NO.Result = "Filen er trygg"
 		// osv response.EN.Result = fmt.Sprintf("File is considered safe", x av y)
-	} else if vtResponse.Data.Attributes.TotalVotes.Malicious > 0 && vtResponse.Data.Attributes.LastAnalysisStats.Suspicious >= 0 {
+	} else if vtResponse.Data.Attributes.LastAnalysisStats.Malicious > 0 && vtResponse.Data.Attributes.LastAnalysisStats.Suspicious >= 0 {
 		response.EN.Result = "File has malicious indicators, consider escalating to the NTNU SOC. "
 		response.NO.Result = "Filen har ondsinnede indikatorer, vennligst vurder å eskalere videre til NTNU SOC"
 	} else if vtResponse.Data.Attributes.LastAnalysisStats.Harmless > 0 && vtResponse.Data.Attributes.LastAnalysisStats.Malicious == 0 {
