@@ -149,15 +149,17 @@ func SetResponeObjectUrlscanio(jsonResponse HybridAnalysisURL, urlscanio *Fronte
 func SetResponseObjectAlienVaultHash(jsonResponse AlienVaultHash, response *FrontendResponse2) {
 	if jsonResponse.PulseInfo.Count == 0 || len(jsonResponse.PulseInfo.Related.Other.MalwareFamilies) == 0 {
 		response.EN.Status = "Safe"
-		response.EN.Content = "We have no information indicating that this is malicious."
+		response.EN.Content = "We have no information indicating that this file is malicious."
 
 		response.NO.Content = "Trygg"
-		response.NO.Content = "Vi har ingen informasjon som tyder på at dette er ondsinnet."
+		response.NO.Content = "Vi har ingen informasjon som tyder på at dette er en ondsinnet fil."
 	} else {
 		response.EN.Status = "Risk"
+		response.EN.Tags = "Malicious"
 		response.EN.Content = jsonResponse.PulseInfo.Related.Other.MalwareFamilies[0]
 
 		response.NO.Status = "Risk"
+		response.NO.Tags = "Ondsinnet"
 		response.NO.Content = jsonResponse.PulseInfo.Related.Other.MalwareFamilies[0]
 	}
 }
