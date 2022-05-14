@@ -160,6 +160,7 @@ func main() {
 		token := c.Query("userAuth")
 		url := c.Query("url")
 		result := c.Query("result")
+		hash := c.Query("hash")
 
 		//api.EscalateAnalysis(url, result, token)
 
@@ -167,7 +168,7 @@ func main() {
 		if !authenticated {
 			c.JSON(http.StatusUnauthorized, gin.H{"authenticated": "You are not authenticated. User login is invalid."})
 		} else {
-			api.EscalateAnalysis(url, result, token)
+			api.EscalateAnalysis(url, result, token, hash)
 			c.JSON(http.StatusOK, gin.H{"Successfull": "yes"})
 		}
 

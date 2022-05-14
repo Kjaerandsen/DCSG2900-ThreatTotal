@@ -11,7 +11,7 @@ import (
 	gomail "gopkg.in/mail.v2"
 )
 
-func EscalateAnalysis(url string, result string, token string) {
+func EscalateAnalysis(url string, result string, token string, hash string) {
 
 	email_pwd := os.Getenv("email_pwd")
 
@@ -32,9 +32,14 @@ func EscalateAnalysis(url string, result string, token string) {
 	// Set E-Mail subject
 	m.SetHeader("Subject", "Analysis sucessfully escalated")
 
-	// Set E-Mail body. You can set plain text or html with text/html
-	email_body := fmt.Sprintf("Your email has been escalated to manual analysis\n Details:\n URL: %s\n RequestLink: %s\n Do not reply to this email\n\n Further contact will be made from this email address", url, result)
-
+	var email_body string
+	// Set E-Mail body. You can set plain text or html with text/html - The IF/Else checks if the email is an escalation of URL og File hash search
+	if hash == ""{
+	email_body = fmt.Sprintf("Your email has been escalated to manual analysis\n Details:\n URL: %s\n RequestLink: %s\n Do not reply to this email\n\n Further contact will be made from this email address", url, result)
+	}else{
+	email_body = fmt.Sprintf("Your email has been escalated to manual analysis\n Details:\n File hash: %s\n RequestLink: %s\n Do not reply to this email\n\n Further contact will be made from this email address", hash, result)
+	} 
+	
 	m.SetBody("text/plain", email_body)
 
 	// Settings for SMTP server

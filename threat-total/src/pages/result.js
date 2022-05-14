@@ -152,7 +152,7 @@ function Result() {
                 </> : renderResult}
             </div>
         <div className= "container w-full mb-3 sm:pl-36 sm:pr-36 flex justify-center overflow-hidden">
-                <button onClick={() => EscalateAnalysis(url, userAuth)} className="bg-orange-500 p-2 rounded justify-center">{t("manualAnalysisBtn")}</button>
+                <button onClick={() => EscalateAnalysis(url, userAuth, hash)} className="bg-orange-500 p-2 rounded justify-center">{t("manualAnalysisBtn")}</button>
         </div>
 
         <CookieDisclosure />
@@ -161,9 +161,9 @@ function Result() {
         );
 }
 
-function EscalateAnalysis(url, userAuth){
+function EscalateAnalysis(url, userAuth, filehash){
 
-    fetch(process.env.REACT_APP_BACKEND_URL+'/escalate?url=' + url +"&result=" + window.location.href + "&userAuth=" + userAuth, {
+    fetch(process.env.REACT_APP_BACKEND_URL+'/escalate?url=' + url +"&result=" + window.location.href + "&userAuth=" + userAuth + "&hash=" + filehash, {
         method: 'GET',
         headers: {
             Accept: 'application/json',
