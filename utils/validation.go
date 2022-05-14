@@ -165,41 +165,55 @@ func SetResponseObjectAlienVaultHash(jsonResponse AlienVaultHash, response *Fron
 func SetResponseObjectHybridAnalysisHash(jsonResponse HybridAnalysishash, response *FrontendResponse2) {
 	response.SourceName = "Hybrid Analysis"
 
-	if jsonResponse[0].Verdict == "malicious" {
-		response.EN.Status = "Risk"
-		response.EN.Content = "This file is malicious"
+	if len(jsonResponse) >= 1 {
+		fmt.Println(len(jsonResponse))
 
-		response.NO.Status = "Utrygg"
-		response.EN.Content = "Denne filen er gjenkjent som ondsinnet"
-		//response.SourceName = jsonResponse.Submissions[0].Filename
-	} else if jsonResponse[0].Verdict == "whitelisted" {
-		response.EN.Status = "Safe"
-		response.EN.Content = "This file is known to be good"
+		if jsonResponse[0].Verdict == "malicious" {
+			response.EN.Status = "Risk"
+			response.EN.Content = "This file is recognized as malicious."
 
-		response.NO.Status = "Trygg"
-		response.EN.Content = "Denne filen er hvitelistet av HybridAnalysis - Ikke ondsinnet."
-		//response.SourceName = jsonResponse.Submissions[0].Filename
-	} else if jsonResponse[0].Verdict == "no specific threat" {
-		response.EN.Status = "Safe"
-		response.EN.Content = "According to HybridAnalysis does this file not pose any specific threat."
+			response.NO.Status = "Utrygg"
+			response.NO.Content = "Denne filen er gjenkjent som ondsinnet."
+			//response.SourceName = jsonResponse.Submissions[0].Filename
+		} else if jsonResponse[0].Verdict == "whitelisted." {
+			response.EN.Status = "Safe"
+			response.EN.Content = "This file is known to be good - whitelisted."
 
-		response.NO.Status = "Trygg"
-		response.EN.Content = "I henhold til informasjon gitt av HybridAnalysis tilsier ikke denne filen noen trussel."
+			response.NO.Status = "Trygg"
+			response.NO.Content = "Denne filen er hvitelistet av HybridAnalysis - Ikke ondsinnet."
+			//response.SourceName = jsonResponse.Submissions[0].Filename
+		} else if jsonResponse[0].Verdict == "no specific threat" {
+			response.EN.Status = "Safe"
+			response.EN.Content = "According to HybridAnalysis does this file not pose any specific threat."
+
+			response.NO.Status = "Trygg"
+			response.NO.Content = "I henhold til informasjon gitt av HybridAnalysis tilsier ikke denne filen noen trussel."
+		} else {
+			response.EN.Status = "Unknown" //Denne må byttes til at den er ukjent // grå farge elns på frontend.
+			response.EN.Content = "This file hash is not known to Hybrid Analysis."
+
+			response.NO.Status = "Ukjent"
+			response.NO.Status = "Denne filhashen er ukjent for Hybrid Analysis."
+		}
+		fmt.Println(jsonResponse[0].Verdict)
+		// Set the filename field if known
+		if jsonResponse[0].Submissions != nil {
+			if jsonResponse[0].Submissions[0].Filename != "" {
+				response.EN.Content = response.EN.Content + " filename: " + jsonResponse[0].Submissions[0].Filename
+				response.NO.Content = response.NO.Content + " filnavn: " + jsonResponse[0].Submissions[0].Filename
+
+				response.EN.Tags = "Known filename: " + jsonResponse[0].Submissions[0].Filename
+				response.NO.Tags = "Kjent filnavn: " + jsonResponse[0].Submissions[0].Filename
+			}
+		}
 	} else {
 		response.EN.Status = "Unknown" //Denne må byttes til at den er ukjent // grå farge elns på frontend.
-		response.EN.Content = "This filehash is not known to Hybrid Analysis"
+		response.EN.Content = "This file hash is not known to Hybrid Analysis."
 
 		response.NO.Status = "Ukjent"
-		response.NO.Status = "Denne filhashen er ukjent for Hybrid Analysis"
+		response.NO.Status = "Denne filhashen er ukjent for Hybrid Analysis."
 	}
 
-	// Set the filename field if known
-	if jsonResponse[0].Submissions != nil {
-		if jsonResponse[0].Submissions[0].Filename != "" {
-			response.EN.Content = response.EN.Content + " " + jsonResponse[0].Submissions[0].Filename
-			response.NO.Content = response.NO.Content + " " + jsonResponse[0].Submissions[0].Filename
-		}
-	}
 }
 
 func SetResultURL(Responses *ResultFrontendResponse, size int) {
@@ -220,13 +234,13 @@ func SetResultHash(Responses *ResultFrontendResponse, size int) {
 
 	for i := 0; i <= size-1; i++ {
 		if Responses.FrontendResponse[i].EN.Status == "Risk" {
-			Responses.EN.Result = "This filehash has been marked as malicious by atleast one of our threat intelligence sources visiting is not reccomended."
-			Responses.NO.Result = "Denne filhashen har blitt markert som ondsinnet av minst en av våre trusseletteretningskilder, besøk er ikke anbefalt."
+			Responses.EN.Result = "This file hash has been marked as malicious by atleast one of our threat intelligence sources, if this file is on the machine we reccomend to delete it and run a full antivirus scan of the machine."
+			Responses.NO.Result = "Denne filhashen har blitt markert som ondsinnet av minst en av våre trusseletteretningskilder, hvis du har denne filen på datamaskinen anbefaler vi å slette filen og kjøre en full antivirus skann av maskinen."
 		}
 	}
 	if Responses.EN.Result == "" {
-		Responses.EN.Result = "We do not have any intelligence indicating that this filehash is malicious."
-		Responses.NO.Result = "Vi har ingen informasjon som tilsier at denne filhashen er ondsinnet"
+		Responses.EN.Result = "We do not have any intelligence indicating that this file is malicious."
+		Responses.NO.Result = "Vi har ingen informasjon som tilsier at denne filen er ondsinnet"
 	}
 }
 
