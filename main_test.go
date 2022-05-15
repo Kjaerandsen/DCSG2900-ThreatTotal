@@ -213,7 +213,7 @@ func TestUrlIntelligenceValidOutput(t *testing.T) {
 }
 
 /**
-* API test to check whether the url-intelligence endpoint returns valid ouput
+* API test to check whether the hash-intelligence endpoint returns valid ouput
 * This test runs multiple tests, and tests the following:
 *
 * If status code is 200
