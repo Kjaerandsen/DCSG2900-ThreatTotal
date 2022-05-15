@@ -294,3 +294,31 @@ func TestHash_IntelligenceValidOutput(t *testing.T) {
 		t.Fatalf("The status of AlienVault has is not as expected Risk, Status is: %s", jsonResponse.FrontendResponse[1].EN.Status)
 	}
 }
+
+/**
+* This API test checks if an unspecified endpoint in the API returns 404 as expected 
+*
+*/
+
+func TestNotSpecifiedEndpoint(t *testing.T){
+
+	url := "http://localhost:8081/ThisShouldNotExist"
+
+	req, err := http.NewRequest("GET", url, nil)
+	if err != nil {
+		t.Fatalf("Error in request")
+	}
+	req.Header.Set("Content-Type", "application/json; charset=UTF-8")
+
+	client := &http.Client{}
+
+	res, err := client.Do(req)
+	if err != nil {
+		t.Fatalf("Request to Hash-Intelligence failed")
+	}
+	defer res.Body.Close()
+
+	if res.StatusCode != http.StatusNotFound {
+		t.Fatalf("Staus code did not return 404 as expected, code returned %d", res.StatusCode)
+	}
+}
