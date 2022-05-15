@@ -154,7 +154,7 @@ To use testing:
 1. Create a file named testauth.txt in directory /dcsg2900-threattotal
 2. Start the backend main.go file using go run main.go
 3. Start the frontend webserver using npm start in directory /dcsg2900-threattotal/threat-total
-4. Log to the application at localhost:3000
+4. Login to the application at localhost:3000
 5. Maneuver to the local storage tab of your webbrowserver in google chrome it is located under application -> local storage.
 6. Copy the value of the userAuth token stored in local storage.
 7. Paste the value of the userAuth token into the .txt file created named testauth.txt.
