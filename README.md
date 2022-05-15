@@ -146,3 +146,16 @@ What it does:
 
 Test function: TestNotSpecifiedEndpoint
 What it does:  This API test checks if an unspecified endpoint in the API returns 404 as expected 
+
+**HOW TO USE TESTING ***
+
+To use testing:
+
+1. Create a file named testauth.txt in directory /dcsg2900-threattotal
+2. Start the backend main.go file using go run main.go
+3. Start the frontend webserver using npm start in directory /dcsg2900-threattotal/threat-total
+4. Log to the application at localhost:3000
+5. Maneuver to the local storage tab of your webbrowserver in google chrome it is located under application -> local storage.
+6. Copy the value of the userAuth token stored in local storage.
+7. Paste the value of the userAuth token into the .txt file created named testauth.txt.
+8. Run the tests using command go test -v from the /dcsg2900-threattotal directory. 
