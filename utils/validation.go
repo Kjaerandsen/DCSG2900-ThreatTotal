@@ -213,7 +213,7 @@ func SetResponseObjectHybridAnalysisHash(jsonResponse HybridAnalysishash, respon
 		response.EN.Content = "This file hash is not known to Hybrid Analysis."
 
 		response.NO.Status = "Ukjent"
-		response.NO.Status = "Denne filhashen er ukjent for Hybrid Analysis."
+		response.NO.Content = "Denne filhashen er ukjent for Hybrid Analysis."
 	}
 
 }
