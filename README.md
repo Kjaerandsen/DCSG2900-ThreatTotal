@@ -96,3 +96,53 @@ Password set to the password defined in your environment variable.
 If your redis instance is running on a different ip address you also need to set
 protected mode to no.
 Which can be done through the redis-cli with `CONFIG SET protected-mode no`
+
+***TESTING***
+This project has implemented API and Unit testing through main_test.go
+
+The implemented tests are maninly for the url - and hash - intelligence endpoints and test various functionality contained in the endpoint as well as expected return values.
+
+There is also a test implemented to test wether an unspecified endpoint returns code 404 - Not found. 
+
+***TEST OVERVIEW***
+
+Test function: TestUrlIntelligenceOK
+What it does: This function tests if the url-intelligence endpoint returns the expected status code 200 when called as logged in user.
+
+Test function: TestUrlIntelligenceUnauthorized
+What it does: This function tests if the url intelligence endpoints returns the expected status code 401 when called without the user log in.
+
+Test function: TestHashIntelligenceOK
+What it does: This function tests if the hash-intelligence endpoint returns the expected status code 200 when called as logged in user.
+
+Test function: TestHashIntelligenceUnauthorized
+What it does: This function tests if the hash intelligence endpoints returns the expected status code 401 when called without the user log in.
+
+Test function: TestUrlIntelligenceValidOutput
+What it does: 
+* API test to check whether the url-intelligence endpoint returns valid ouput
+* This test runs multiple tests, and tests the following:
+
+* If status code is 200
+* If the data can be unmarshalled to the struct ResultResponse
+* If data can be accessed in the struct
+* If the first sourceName is "Google Safebrowsing API" as expected
+* If there is a screenshot of the requested URL
+* If status or content is not set in any of the responses from the intelligence sources both in english and norwegian
+
+
+Test function: TestHash_IntelligenceValidOutput
+What it does:
+* API test to check whether the hash-intelligence endpoint returns valid ouput
+* This test runs multiple tests, and tests the following:
+*
+* If status code is 200
+* If the data can be unmarshalled to the struct ResultResponse
+* If data can be accessed in the struct
+* If the first and second sourceName is "Hybrid Analysis and AlienVault" respectively, as expected
+* If status or content is not set in any of the responses from the intelligence sources both in english and norwegian.
+* If the status of AlienVault is risk as expected.
+
+
+Test function: TestNotSpecifiedEndpoint
+What it does:  This API test checks if an unspecified endpoint in the API returns 404 as expected 
