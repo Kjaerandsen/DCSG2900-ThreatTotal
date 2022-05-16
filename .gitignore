@@ -1,1 +1,13 @@
 .idea/**
+#key
+/APIKey
+/vendor
+/vscode
+quiet-stacker-343514-4576275229b2.json
+.scannerwork
+log
+logs/errorlog
+logs/log
+logs/infolog
+.env
+testauth.txt
