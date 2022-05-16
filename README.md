@@ -97,33 +97,33 @@ If your redis instance is running on a different ip address you also need to set
 protected mode to no.
 Which can be done through the redis-cli with `CONFIG SET protected-mode no`
 
-***TESTING***
+## Testing
 This project has implemented API and Unit testing through main_test.go
 
-The implemented tests are maninly for the url - and hash - intelligence endpoints and test various functionality contained in the endpoint as well as expected return values.
+The implemented tests are mainly for the url-, and hash intelligence endpoints and test various functionality contained in the endpoints as well as expected return values.
 
-There is also a test implemented to test wether an unspecified endpoint returns code 404 - Not found. 
+There is also a test implemented to test whether an unspecified endpoint returns code 404 - Not found. 
 
-***TEST OVERVIEW***
+## Test overview
 
 Test function: TestUrlIntelligenceOK
 What it does: This function tests if the url-intelligence endpoint returns the expected status code 200 when called as logged in user.
 
 Test function: TestUrlIntelligenceUnauthorized
-What it does: This function tests if the url intelligence endpoints returns the expected status code 401 when called without the user log in.
+What it does: This function tests if the url intelligence endpoints returns the expected status code 401 (unauthorized) when called without the user log in.
 
 Test function: TestHashIntelligenceOK
-What it does: This function tests if the hash-intelligence endpoint returns the expected status code 200 when called as logged in user.
+What it does: This function tests if the hash-intelligence endpoint returns the expected status code 200 (statusOK) when called as logged in user.
 
 Test function: TestHashIntelligenceUnauthorized
-What it does: This function tests if the hash intelligence endpoints returns the expected status code 401 when called without the user log in.
+What it does: This function tests if the hash intelligence endpoints returns the expected status code 401 (unauthorized) when called without the user log in.
 
 Test function: TestUrlIntelligenceValidOutput
 What it does: 
 * API test to check whether the url-intelligence endpoint returns valid ouput
 * This test runs multiple tests, and tests the following:
 
-* If status code is 200
+* If status code is 200 (StatusOK)
 * If the data can be unmarshalled to the struct ResultResponse
 * If data can be accessed in the struct
 * If the first sourceName is "Google Safebrowsing API" as expected
@@ -135,19 +135,18 @@ Test function: TestHash_IntelligenceValidOutput
 What it does:
 * API test to check whether the hash-intelligence endpoint returns valid ouput
 * This test runs multiple tests, and tests the following:
-*
-* If status code is 200
+* If the status code is 200 (StatusOK)
 * If the data can be unmarshalled to the struct ResultResponse
-* If data can be accessed in the struct
-* If the first and second sourceName is "Hybrid Analysis and AlienVault" respectively, as expected
+* If the data can be accessed in the response struct
+* If the first and second sourceNames are "Hybrid Analysis and AlienVault" respectively, as expected
 * If status or content is not set in any of the responses from the intelligence sources both in english and norwegian.
 * If the status of AlienVault is risk as expected.
 
 
 Test function: TestNotSpecifiedEndpoint
-What it does:  This API test checks if an unspecified endpoint in the API returns 404 as expected 
+What it does:  This API test checks if an unspecified endpoint in the API returns 404 (Error not found) as expected. 
 
-**HOW TO USE TESTING ***
+### HOW TO USE TESTING
 
 To use testing:
 
