@@ -10,3 +10,4 @@ logs/errorlog
 logs/log
 logs/infolog
 .env
+testauth.txt
