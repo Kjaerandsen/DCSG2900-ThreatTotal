@@ -12,7 +12,7 @@ import (
 
 /**
 * API - Test to check if the URL intelligence endpoint returns HTTP StatusOK when expected
-*/
+ */
 
 func TestUrlIntelligenceOK(t *testing.T) {
 
@@ -38,14 +38,14 @@ func TestUrlIntelligenceOK(t *testing.T) {
 	}
 	defer res.Body.Close()
 
-	if res.StatusCode != 200 {
+	if res.StatusCode != http.StatusOK {
 		t.Fatalf("Test failed, error code different from expected 200, received: %d", res.StatusCode)
 	}
 }
 
 /**
 * API test to check whether the url-intelligence endpoint will return 401 Unauthorized when attempting to be accessed without log in.
-*/
+ */
 
 func TestUrlIntelligenceUnauthorized(t *testing.T) {
 
@@ -66,16 +66,15 @@ func TestUrlIntelligenceUnauthorized(t *testing.T) {
 	}
 	defer res.Body.Close()
 
-	if res.StatusCode != 401 {
+	if res.StatusCode != http.StatusUnauthorized {
 		t.Fatalf("Test failed, error code different from expected 401, received: %d", res.StatusCode)
 	}
 }
 
-
 /**
 * API - Test to check if the hash intelligence endpoint returns HTTP StatusOK when expected
-*/
-func TestHashIntelligenceOK(t *testing.T){
+ */
+func TestHashIntelligenceOK(t *testing.T) {
 
 	content, err := ioutil.ReadFile("testauth.txt")
 	if err != nil {
@@ -99,15 +98,15 @@ func TestHashIntelligenceOK(t *testing.T){
 	}
 	defer res.Body.Close()
 
-	if res.StatusCode != 200 {
-		t.Fatalf("Test failed, error code different from expected 200, received: %d", res.StatusCode)
+	if res.StatusCode != http.StatusOK {
+		t.Fatalf("Test failed, status code different from expected 200, received: %d", res.StatusCode)
 	}
 }
 
 /**
 * API test to check whether the hash-intelligence endpoint will return 401 Unauthorized when attempting to be accessed without log in.
-*/
-func TestHashIntelligenceUnauthorized(t *testing.T){
+ */
+func TestHashIntelligenceUnauthorized(t *testing.T) {
 	auth := "ThisShouldNotWork"
 	url := "http://localhost:8081/hash-intelligence?hash=a7a665a695ec3c0f862a0d762ad55aff6ce6014359647e7c7f7e3c4dc3be81b7&userAuth=" + auth
 
@@ -125,8 +124,8 @@ func TestHashIntelligenceUnauthorized(t *testing.T){
 	}
 	defer res.Body.Close()
 
-	if res.StatusCode != 401 {
-		t.Fatalf("Test failed, error code different from expected 401, received: %d", res.StatusCode)
+	if res.StatusCode != http.StatusUnauthorized {
+		t.Fatalf("Test failed, status code different from expected 401, received: %d", res.StatusCode)
 	}
 }
 
@@ -141,7 +140,7 @@ func TestHashIntelligenceUnauthorized(t *testing.T){
 * If there is a screenshot of the requested URL
 * If status or content is not set in any of the responses from the intelligence sources
 *
-*/
+ */
 func TestUrlIntelligenceValidOutput(t *testing.T) {
 
 	content, err := ioutil.ReadFile("testauth.txt")
@@ -166,10 +165,9 @@ func TestUrlIntelligenceValidOutput(t *testing.T) {
 	}
 	defer res.Body.Close()
 
-	if res.StatusCode != 200 {
-		t.Fatalf("Test failed, error code different from expected 200, received: %d", res.StatusCode)
+	if res.StatusCode != http.StatusOK {
+		t.Fatalf("Test failed, status code different from expected 200, received: %d", res.StatusCode)
 	}
-
 
 	body, err := ioutil.ReadAll(res.Body)
 	if err != nil {
@@ -191,7 +189,7 @@ func TestUrlIntelligenceValidOutput(t *testing.T) {
 		t.Fatalf("Error in screenshot")
 	}
 
-	for i := 0; i<=3; i++{ 
+	for i := 0; i <= 3; i++ {
 		if jsonResponse.FrontendResponse[i].EN.Status == "" {
 			t.Fatalf("One status or more statuses are not set in english. Sourcename: %s , content is empty", jsonResponse.FrontendResponse[i].SourceName)
 		}
@@ -200,10 +198,10 @@ func TestUrlIntelligenceValidOutput(t *testing.T) {
 		}
 	}
 
-	for i := 0; i<=3; i++{ 
+	for i := 0; i <= 3; i++ {
 		if jsonResponse.FrontendResponse[i].EN.Content == "" {
 			t.Fatalf("One content or more contents are not set in english. Sourcename: %s , content is empty", jsonResponse.FrontendResponse[i].SourceName)
-			
+
 		}
 		if jsonResponse.FrontendResponse[i].NO.Content == "" {
 			t.Fatalf("One status or more contents are not set in norwegian. Sourcename: %s is not set.", jsonResponse.FrontendResponse[i].SourceName)
@@ -222,7 +220,7 @@ func TestUrlIntelligenceValidOutput(t *testing.T) {
 * If the first and second sourceName is "Hybrid Analysis and AlienVault" respectively, as expected
 * If status or content is not set in any of the responses from the intelligence sources both in english and norwegian.
 * If the status of AlienVault is risk as expected.
-*/
+ */
 func TestHash_IntelligenceValidOutput(t *testing.T) {
 
 	content, err := ioutil.ReadFile("testauth.txt")
@@ -251,7 +249,6 @@ func TestHash_IntelligenceValidOutput(t *testing.T) {
 		t.Fatalf("Test failed, error code different from expected 200, received: %d", res.StatusCode)
 	}
 
-
 	body, err := ioutil.ReadAll(res.Body)
 	if err != nil {
 		t.Fatalf("Error: reading api response")
@@ -268,11 +265,11 @@ func TestHash_IntelligenceValidOutput(t *testing.T) {
 		t.Fatalf("The first sourcename is not expected Google Safebrowsing API, output: %s", jsonResponse.FrontendResponse[0].SourceName)
 	}
 
-	if jsonResponse.FrontendResponse[1].SourceName != "AlienVault"{
+	if jsonResponse.FrontendResponse[1].SourceName != "AlienVault" {
 		t.Fatalf("Unexpected sourcename expected AlienVault, reality: %s", jsonResponse.FrontendResponse[1].SourceName)
 	}
 
-	for i := 0; i<=1; i++{ 
+	for i := 0; i <= 1; i++ {
 		if jsonResponse.FrontendResponse[i].EN.Status == "" {
 			t.Fatalf("One status or more statuses are not set in english, Sourcename: %s is not set.", jsonResponse.FrontendResponse[i].SourceName)
 		}
@@ -281,7 +278,7 @@ func TestHash_IntelligenceValidOutput(t *testing.T) {
 		}
 	}
 
-	for i := 0; i<=1; i++{ 
+	for i := 0; i <= 1; i++ {
 		if jsonResponse.FrontendResponse[i].EN.Content == "" {
 			t.Fatalf("One status or more contents are not set in english, Sourcename: %s is not set.", jsonResponse.FrontendResponse[i].SourceName)
 		}
@@ -290,17 +287,17 @@ func TestHash_IntelligenceValidOutput(t *testing.T) {
 		}
 	}
 
-	if jsonResponse.FrontendResponse[1].EN.Status != "Risk"{
+	if jsonResponse.FrontendResponse[1].EN.Status != "Risk" {
 		t.Fatalf("The status of AlienVault has is not as expected Risk, Status is: %s", jsonResponse.FrontendResponse[1].EN.Status)
 	}
 }
 
 /**
-* This API test checks if an unspecified endpoint in the API returns 404 as expected 
+* This API test checks if an unspecified endpoint in the API returns 404 as expected
 *
-*/
+ */
 
-func TestNotSpecifiedEndpoint(t *testing.T){
+func TestNotSpecifiedEndpoint(t *testing.T) {
 
 	url := "http://localhost:8081/ThisShouldNotExist"
 
