@@ -24,8 +24,8 @@ import (
 func init() {
 	var err error
 
+	// Setting global varaibles in the utils package
 	utils.Ctx = context.Background()
-
 	utils.Config = oauth2.Config{
 		ClientID:     os.Getenv("clientId"),
 		ClientSecret: os.Getenv("clientSecret"),
@@ -49,6 +49,7 @@ func init() {
 
 	utils.Verifier = utils.Provider.Verifier(oidcConfig)
 
+	// Start the redis connection
 	RedisPool := storage.InitPool()
 	utils.Conn = RedisPool.Get()
 
@@ -58,6 +59,7 @@ func init() {
 	utils.APIKeyHybridAnalysis = os.Getenv("APIKeyHybridAnalysis")
 	utils.APIKeyOTX = os.Getenv("APIKeyOTX")
 
+	// Make a blocklist used as a proof-of-concept
 	utils.UrlBlockList = make([]string, 3)
 	utils.UrlBlockList[0] = "ntnu.no"
 	utils.UrlBlockList[1] = "ntnu.edu"
@@ -156,6 +158,8 @@ func main() {
 		}
 	})
 
+	// Escalate endpoint which takes authentication and a case to ecalate through manual analysis.
+	// The user is then sent an email with deatils on the case.
 	r.GET("/escalate", func(c *gin.Context) {
 		token := c.Query("userAuth")
 		url := c.Query("url")
@@ -175,9 +179,4 @@ func main() {
 	})
 
 	log.Fatal(r.Run(":8081"))
-	// These don't do anything, and can't be placed above the line above as they stop the connections prematurely then.
-	/*
-		conn.Close()      // Close the connection
-		redisPool.Close() // Close the pool
-	*/
 }
