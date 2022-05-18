@@ -97,29 +97,7 @@ func CodeToToken(code string) (token string, authenticated bool) {
 		logging.Logerror(err, "Error adding data to redis Auth.go:")
 		return "", false
 	}
-	//fmt.Println(response)
 
-	// Uses the old token to get the userinfo again if expired
-	/*
-		userInfo, err := utils.Provider.UserInfo(utils.Ctx, oauth2.StaticTokenSource(oauth2Token))
-		if err != nil {
-			fmt.Println("Failed to get userinfo: " + err.Error())
-			return "", false
-		}
-
-		// Still need a function to check expiration of the access-token somehow
-
-		fmt.Println(oauth2.StaticTokenSource(oauth2Token).Token())
-
-		fmt.Println(userInfo)
-	*/
-	//
-
-	// Make the token a FeideToken struct
-
-	// Return it
-
-	// If everything is successfull return true and the authentication code for the frontend user.
 	return hash, true
 }
 
@@ -152,16 +130,11 @@ func getAuth(hash string) (token string, err bool) {
 			return "", false
 		}
 
-		//fmt.Println("marhaslled data: ", responseData)
-
-		// If email is needed a helper which checks the expiration of the jwt
-		// and requests a new one is needed.
-
 		return responseData.Oauth2Token.AccessToken, true
 	}
 }
 
-// Func which takes an authentication token and returns a hash.
+// Func which takes an authentication token and returns a sha256 hash of it.
 func tokenToHash(code string) (hash string) {
 	// Create the sha256 hash
 	fileHash := sha256.New()
@@ -170,6 +143,7 @@ func tokenToHash(code string) (hash string) {
 	return fmt.Sprintf("%x", fileHash.Sum(nil))
 }
 
+// Functtion which takes a user and deletes it from the backend, for log out purposes.
 func Logout(hash string) bool {
 
 	// Delete the database item
