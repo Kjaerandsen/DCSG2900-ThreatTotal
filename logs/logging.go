@@ -1,3 +1,4 @@
+
 package logging
 
 import (
@@ -6,6 +7,7 @@ import (
     "os"
 )
 
+//Function to handle error logging to file globally to file errorlog
 func Logerror(err error, msg string) {
     // log to custom file
     LOG_FILE := "./logs/errorlog"
@@ -16,16 +18,17 @@ func Logerror(err error, msg string) {
     }
     defer logFile.Close()
 
-    // Set log out put and enjoy :)
+    // Set log output file)
     log.SetOutput(logFile)
 
-    // optional: log date-time, filename, and line number
+    //log date-time, filename, and line number
     log.SetFlags(log.Lshortfile | log.LstdFlags)
 
 
 	log.Println(msg, err)
 }
 
+//Function to handle the logging of information globally to file infolog
 func Loginfo(msg string){
 	LOG_FILE := "./logs/infolog"
     // open log file
@@ -44,6 +47,8 @@ func Loginfo(msg string){
 	log.Println(msg)
 }
 
+
+//Må sjekke om denne her brukes
 func Logerrorinfo(msg string) {
     // log to custom file
     LOG_FILE := "./logs/errorlog"
@@ -54,10 +59,10 @@ func Logerrorinfo(msg string) {
     }
     defer logFile.Close()
 
-    // Set log out put and enjoy :)
+    // Set log output file 
     log.SetOutput(logFile)
 
-    // optional: log date-time, filename, and line number
+    //log date-time, filename, and line number
     log.SetFlags(log.Lshortfile | log.LstdFlags)
 
 	log.Println(msg)
