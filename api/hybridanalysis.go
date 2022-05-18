@@ -292,8 +292,8 @@ func TestHybridAnalyisUrl(URL string, VirusTotal *utils.FrontendResponse2, urlsc
 		fmt.Println("WHAT IS THIS \n\n\n", jsonResponse.Finished)
 		fmt.Println("URLSCANIO STATUS:", jsonResponse.Scanners[1].Status)
 
-		utils.SetResponeObjectVirusTotal(jsonResponse, VirusTotal)
-		utils.SetResponeObjectUrlscanio(jsonResponse, urlscanio)
+		utils.SetResponseObjectVirusTotal(jsonResponse, VirusTotal)
+		utils.SetResponseObjectUrlscanio(jsonResponse, urlscanio)
 	} else {
 		VirusTotal.SourceName = "VirusTotal"
 		VirusTotal.EN.Status = "Error"

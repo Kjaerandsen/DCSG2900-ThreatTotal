@@ -1,8 +1,8 @@
 package api
 
 import (
+	logging "dcsg2900-threattotal/logs"
 	"dcsg2900-threattotal/utils"
-	"dcsg2900-threattotal/logs"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
@@ -174,5 +174,5 @@ func TestAlienVaultUrl(url string, response *utils.FrontendResponse2, wg *sync.W
 	*/
 
 	//response = string(body)
-	utils.SetResponeObjectAlienVault(jsonResponse, response)
+	utils.SetResponseObjectAlienVault(jsonResponse, response)
 }

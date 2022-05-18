@@ -4,7 +4,8 @@ import (
 	"fmt"
 )
 
-func SetResponeObjectAlienVault(jsonResponse AlienVaultURL, response *FrontendResponse2) {
+// SetResponseObjectAlienVault takes the AlienVault api response and formats it accroding to our return object struct with translations.
+func SetResponseObjectAlienVault(jsonResponse AlienVaultURL, response *FrontendResponse2) {
 	whitelisted := false
 
 	for i := 0; i < len(jsonResponse.Validation); i++ {
@@ -38,6 +39,7 @@ func SetResponeObjectAlienVault(jsonResponse AlienVaultURL, response *FrontendRe
 	response.SourceName = "AlienVault"
 }
 
+// SetResponseObjectGoogle takes the Google Safebrowsing api response and formats it accroding to our return object struct with translations.
 func SetResponeObjectGoogle(jsonResponse GoogleSafeBrowsing, response *FrontendResponse2) {
 	if len(jsonResponse.Matches) != 0 {
 		response.EN.Content = "This URL has been marked as malicious by Google Safebrowsing, visiting is NOT recommended"
@@ -84,7 +86,8 @@ func SetResponeObjectGoogle(jsonResponse GoogleSafeBrowsing, response *FrontendR
 	response.SourceName = "Google SafeBrowsing Api"
 }
 
-func SetResponeObjectVirusTotal(jsonResponse HybridAnalysisURL, VirusTotal *FrontendResponse2) {
+// SetResponseObjectVirusTotal takes the VirusTotal reponse object from HybridAnalysis and formats it accroding to our return object struct with translations.
+func SetResponseObjectVirusTotal(jsonResponse HybridAnalysisURL, VirusTotal *FrontendResponse2) {
 	if jsonResponse.Scanners[0].Status == "clean" {
 
 		VirusTotal.EN.Status = "Safe"
@@ -119,7 +122,8 @@ func SetResponeObjectVirusTotal(jsonResponse HybridAnalysisURL, VirusTotal *Fron
 	}
 }
 
-func SetResponeObjectUrlscanio(jsonResponse HybridAnalysisURL, urlscanio *FrontendResponse2) {
+// SetResponseObjectAlienVault takes the UrlScanio response from HybridAnalysis and formats it accroding to our return object struct with translations.
+func SetResponseObjectUrlscanio(jsonResponse HybridAnalysisURL, urlscanio *FrontendResponse2) {
 	if jsonResponse.Scanners[1].Status == "clean" || jsonResponse.Scanners[1].Status == "no-classification" {
 
 		urlscanio.EN.Status = "Safe"
@@ -146,6 +150,7 @@ func SetResponeObjectUrlscanio(jsonResponse HybridAnalysisURL, urlscanio *Fronte
 	}
 }
 
+// SetResponseObjectVirusTotal takes the Alienvault api response and formats it accroding to our return object struct with translations.
 func SetResponseObjectAlienVaultHash(jsonResponse AlienVaultHash, response *FrontendResponse2) {
 	if jsonResponse.PulseInfo.Count == 0 || len(jsonResponse.PulseInfo.Related.Other.MalwareFamilies) == 0 {
 		response.EN.Status = "Safe"
@@ -164,6 +169,7 @@ func SetResponseObjectAlienVaultHash(jsonResponse AlienVaultHash, response *Fron
 	}
 }
 
+// SetResponseObjectVirusTotal takes the HybridAnalysis api response and formats it accroding to our return object struct with translations.
 func SetResponseObjectHybridAnalysisHash(jsonResponse HybridAnalysishash, response *FrontendResponse2) {
 	response.SourceName = "Hybrid Analysis"
 
@@ -218,6 +224,7 @@ func SetResponseObjectHybridAnalysisHash(jsonResponse HybridAnalysishash, respon
 
 }
 
+// Helper function which creates a description of the intelligence result for a url / domain search
 func SetResultURL(Responses *ResultFrontendResponse, size int) {
 
 	for i := 0; i <= size-1; i++ {
@@ -232,6 +239,7 @@ func SetResultURL(Responses *ResultFrontendResponse, size int) {
 	}
 }
 
+// Helper function which creates a description of the intelligence result for a file hash
 func SetResultHash(Responses *ResultFrontendResponse, size int) {
 
 	for i := 0; i <= size-1; i++ {
@@ -246,6 +254,7 @@ func SetResultHash(Responses *ResultFrontendResponse, size int) {
 	}
 }
 
+// // Helper function which creates a generic error response
 func SetGenericError(Response *FrontendResponse2) {
 
 	Response.EN.Status = "ERROR"
@@ -255,6 +264,7 @@ func SetGenericError(Response *FrontendResponse2) {
 	Response.NO.Content = "Vi har støtt på en error"
 }
 
+// Function which handles translations for a frontendResponse struct of a parameter length
 func SetResultFile(Response *ResultFrontendResponse, size int) {
 	// tell the input to be translated, use standardized output.
 	// probably more edits to be done here, figure out which fields are actually printed out
