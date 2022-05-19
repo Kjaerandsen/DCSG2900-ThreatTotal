@@ -6,6 +6,7 @@ import ntnuLogo from '../img/ntnuLogoUtenSlagOrd.svg';
 import CookieDisclosure from '../components/cookieDisclosure';
 import { useTranslation } from 'react-i18next';
 
+// Search function which redirects the user to the result page with a search parameter
 function search(e){
     e.preventDefault();
     var formData = new FormData(e.target.form);
@@ -24,15 +25,13 @@ function search(e){
     }
 }
 
-// Possibly cleaner to use an svg image for the headline text
-// consider renaming the file? our main function file probably shouldn't contain "test"
-
 function Homepage() {
     const { t } = useTranslation();
     const queryParams = new URLSearchParams(window.location.search);
     const code = queryParams.get('code');
 
-    // Put this on a seperate page with a redirect on completion of the request?
+    // Function which handles logging in, if a code parameter is present it is used with a request
+    // to get a proper authenticaion cookie.
     useEffect(() => {
         if (code != null) {
             fetch('http://localhost:8081/login?code=' + code, {

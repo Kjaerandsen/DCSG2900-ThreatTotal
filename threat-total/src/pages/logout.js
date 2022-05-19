@@ -32,8 +32,7 @@ const Logout = () => {
                     response_type=code&
                     redirect_uri=http://localhost:3000&
                     scope=openid&
-                    state=whatever&
-                    secret=198cb677-d113-446c-807e-8d9ad81ab8e0">
+                    state=whatever">
             <button className='bg-blue-400 border-2 rounded-lg p-2'>{t("loginButton")}</button>
             </a>
         </div>
