@@ -44,7 +44,7 @@ if (props.Data === "") {
                 </div>
             </div>
             <div className="">
-                <p>Tags: {props.Data.en.tags}</p>
+                <p>Tags: {t("tags")}</p>
                 <p>{t("shortForm")} {t("content")}</p>
             </div>   
         </div>

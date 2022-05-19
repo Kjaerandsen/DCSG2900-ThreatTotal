@@ -16,6 +16,7 @@ func HashIntelligence(c *gin.Context) {
 
 	var hashInt []byte
 	var err error
+	var completeInt bool
 
 	hash := strings.TrimSpace(c.Query("hash"))
 
@@ -28,21 +29,23 @@ func HashIntelligence(c *gin.Context) {
 		fmt.Println("No Cache hit")
 
 		// Perform the request
-		hashInt, err = hashSearch(hash)
+		hashInt, err, completeInt = hashSearch(hash)
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"Error ": "Invalid response from third party API's."})
 			return
 		}
 
-		// Add the data to the database
-		response, err := utils.Conn.Do("SETEX", "hash:"+hash, utils.CacheDurationHash, hashInt)
-		if err != nil {
-			fmt.Println("Error adding data to redis:" + err.Error())
-			logging.Logerror(err, "Error adding data to redis, hash-intelligence")
+		if completeInt {
+			// Add the data to the database
+			response, err := utils.Conn.Do("SETEX", "hash:"+hash, utils.CacheDurationHash, hashInt)
+			if err != nil {
+				fmt.Println("Error adding data to redis:" + err.Error())
+				logging.Logerror(err, "Error adding data to redis, hash-intelligence")
 
+			}
+
+			fmt.Println(response)
 		}
-
-		fmt.Println(response)
 
 	} else {
 
@@ -76,7 +79,7 @@ func HashIntelligence(c *gin.Context) {
 	c.Data(http.StatusOK, "application/json", hashInt)
 }
 
-func hashSearch(hash string) (data []byte, err error) {
+func hashSearch(hash string) (data []byte, err error, complete bool) {
 
 	var wg sync.WaitGroup
 	var responseData [2]utils.FrontendResponse2
@@ -98,12 +101,25 @@ func hashSearch(hash string) (data []byte, err error) {
 
 	utils.SetResultHash(resultPointer, len(responseData))
 
+	complete = checkIfIntelligenceCompleteHash(resultResponse, len(responseData))
 	hashInt, err := json.Marshal(resultResponse)
 	if err != nil {
 		fmt.Println(err)
 		logging.Logerror(err, "")
-		return nil, err
+		return nil, err, complete
 	}
 
-	return hashInt, nil
+	return hashInt, nil, complete
+}
+
+func checkIfIntelligenceCompleteHash(jsonData utils.ResultFrontendResponse, size int) (complete bool) {
+	complete = true
+
+	for i := 0; i <= size-1; i++ {
+		if jsonData.FrontendResponse[i].EN.Status == "Awaiting analysis" || jsonData.FrontendResponse[i].EN.Status == "Error" {
+			complete = false
+		}
+	}
+
+	return complete
 }
