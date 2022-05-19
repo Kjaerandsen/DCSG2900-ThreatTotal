@@ -46,7 +46,7 @@ func UrlIntelligence(c *gin.Context) {
 			fmt.Println("Bool is true")
 			fmt.Println(response)
 		}
-		//fmt.Println("WHERE IS MY CONTENT 2", responseData2)
+
 		// Cache hit
 	} else {
 		fmt.Println("Cache hit")
@@ -56,23 +56,16 @@ func UrlIntelligence(c *gin.Context) {
 			logging.Logerror(err, "Error handling redis response - Url-intelligence:")
 			http.Error(c.Writer, "Failed retrieving api data.", http.StatusInternalServerError)
 			return
-			// Maybe do another call to delete the key from the database?
+
 		}
-		/**
-		//var checkData utils.ResultFrontendResponse
-		err = json.Unmarshal(responseBytes, &checkdata)
-		if err!=nil {
-			fmt.Println(string(checkData))
-		}
-		fmt.Println(string(checkData))
-		*/
+
 		err = json.Unmarshal(responseBytes, &URLint)
 		if err != nil {
 			fmt.Println("Error handling redis response:" + err.Error())
 			logging.Logerror(err, "Error handling redis response - Url-intelligence:")
 			http.Error(c.Writer, "Failed retrieving api data.", http.StatusInternalServerError)
 			return
-			// Maybe do another call to delete the key from the database?
+
 		}
 	}
 
@@ -81,9 +74,9 @@ func UrlIntelligence(c *gin.Context) {
 
 // Makes the api requests used in urlIntelligence
 func urlSearch(url string) (data []byte, err error, complete bool) {
-	var wg sync.WaitGroup //Vente gruppe for goroutiner
+	var wg sync.WaitGroup //Wait group for go routines
 	var URLint []byte
-	var responseData [4]utils.FrontendResponse2
+	var responseData [4]utils.FrontendResponse2 //Array of frontend response structs
 
 	var p, VirusTotal, urlscanio, alienvault *utils.FrontendResponse2
 	p = &responseData[0]
@@ -112,10 +105,11 @@ func urlSearch(url string) (data []byte, err error, complete bool) {
 
 	utils.SetResultURL(setResults, len(responseData))
 
-	//TESTING FUNCTIONALITY FOR SCREENSHOT OF URLS
+
+	//FUNCTIONALITY FOR SCREENSHOT OF URLS
 	utils.ScreenshotURL(url, setResults) ////
-	////
-	fmt.Println(len(resultResponse.Screenshot)) ////
+
+	//fmt.Println(len(resultResponse.Screenshot)) ////Check if screenshot contains anything (Is valid)
 
 	complete = checkIfIntelligenceComplete(resultResponse, len(responseData)) //This runs a check to see if the intelligence is complete
 	//If complete is true the intelligence will be cached,
@@ -126,8 +120,6 @@ func urlSearch(url string) (data []byte, err error, complete bool) {
 		fmt.Println(err)
 		return URLint, err, complete
 	}
-
-	//fmt.Println("WHERE IS MY CONTENT 1", responseData)
 
 	return URLint, nil, complete
 }

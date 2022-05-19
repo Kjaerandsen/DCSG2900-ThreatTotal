@@ -13,9 +13,6 @@ import (
 // CallAlienVaultUrl function takes a url, returns data on it from the alienvault api
 func CallAlienVaultUrl(url string) (response utils.FrontendResponse) {
 
-	//DENNE FUNKSJONEN KAN UTARBEIDES TIL Å BARE RETURNERE MALCICIOUS / SUSPCIOUS OM DET BEFINNER SEG NEVNT I NOEN
-	// PULSEES (Problemet her er at ting som er OK kan være i pulse... Må tenke litt her)
-	// Convert []byte to string and print to screen
 	APIKey := utils.APIKeyOTX
 
 	getURL := "https://otx.alienvault.com//api/v1/indicators/url/" + url + "/general"
@@ -67,28 +64,25 @@ func CallAlienVaultUrl(url string) (response utils.FrontendResponse) {
 func CallAlienVaultHash(hash string, response *utils.FrontendResponse2, wg *sync.WaitGroup) {
 
 	defer wg.Done()
-	response.SourceName = "AlienVault"
+	response.SourceName = "AlienVault"	//Adds sourcename
 
-	APIKey := utils.APIKeyOTX
+	APIKey := utils.APIKeyOTX		//Gets API key
 
-	getURL := "https://otx.alienvault.com//api/v1/indicators/file/" + hash + "/general"
+	getURL := "https://otx.alienvault.com//api/v1/indicators/file/" + hash + "/general"		//Sets the endpoint URL
 
 	req, err := http.NewRequest("GET", getURL, nil)
 	req.Header.Set("X-OTX-API-KEY", APIKey)
 
-	//fmt.Println(req.Header)
-
 	client := &http.Client{}
 
 	res, err := client.Do(req)
-	//fmt.Println(res.Status)
-	//fmt.Print(string(res.Body))
+	
 	if err != nil {
 		fmt.Println("ERROR IN Request", err)
 		logging.Logerror(err, "ERROR IN REQUEST, AlienVault API")
 		utils.SetGenericError(response)
 	}
-	if res.StatusCode == 200 {
+	if res.StatusCode == 200 {		//Checks Statuscode IF ok, continue. 
 		defer res.Body.Close()
 
 		body, _ := ioutil.ReadAll(res.Body)
@@ -107,9 +101,6 @@ func CallAlienVaultHash(hash string, response *utils.FrontendResponse2, wg *sync
 			fmt.Println(err)
 		}
 
-		//output:= string(body)
-		//fmt.Println(output)
-		//fmt.Println("\n\nAMOUNT OF PULSES:::::: ", jsonResponse.PulseInfo.Count)
 		utils.SetResponseObjectAlienVaultHash(jsonResponse, response)
 	} else {
 
@@ -119,15 +110,11 @@ func CallAlienVaultHash(hash string, response *utils.FrontendResponse2, wg *sync
 		response.NO.Content = "Vi har møtt på en error, sjekk om filhashen er en gyldig filhash."
 		response.NO.Status = "ERROR"
 	}
-	//HER KAN VI SJEKKE OM "VERDICT feltet er" MALICIOUS, SUSPICIOUS ELLER NOE ANNET. OG Bare returnere det.
 }
 
 func TestAlienVaultUrl(url string, response *utils.FrontendResponse2, wg *sync.WaitGroup) {
-
 	defer wg.Done()
-	//DENNE FUNKSJONEN KAN UTARBEIDES TIL Å BARE RETURNERE MALCICIOUS / SUSPCIOUS OM DET BEFINNER SEG NEVNT I NOEN
-	// PULSEES (Problemet her er at ting som er OK kan være i pulse... Må tenke litt her)
-	// Convert []byte to string and print to screen
+	
 	APIKey := utils.APIKeyOTX
 
 	getURL := "https://otx.alienvault.com//api/v1/indicators/url/" + url + "/general"
@@ -135,7 +122,7 @@ func TestAlienVaultUrl(url string, response *utils.FrontendResponse2, wg *sync.W
 	req, err := http.NewRequest("GET", getURL, nil)
 	req.Header.Set("X-OTX-API-KEY", APIKey)
 
-	//fmt.Println(req.Header)
+	
 
 	client := &http.Client{}
 
@@ -160,19 +147,5 @@ func TestAlienVaultUrl(url string, response *utils.FrontendResponse2, wg *sync.W
 		logging.Logerror(err, "ERROR unmarshalling, AlienVault URLsearch API")
 	}
 
-	/*
-		//output:= string(body)
-		//fmt.Println(output)
-		//fmt.Println("\n\nAMOUNT OF PULSES:::::: ", jsonResponse.PulseInfo.Count)
-		if(jsonResponse.PulseInfo.Count == 0){
-			response.Status = "Safe"
-		}else{
-			response.Status = "Risk"
-		}
-
-		response.SourceName="AlienVault"
-	*/
-
-	//response = string(body)
 	utils.SetResponseObjectAlienVault(jsonResponse, response)
 }

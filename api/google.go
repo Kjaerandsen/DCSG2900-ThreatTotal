@@ -134,20 +134,16 @@ func TestGoGoogleUrl(url string, response *utils.FrontendResponse2, wg *sync.Wai
 
 		httpSearchURL = "http://" + container[1]
 
-		fmt.Println("1 : This is the HTTP URL after splitting and concatinating", httpSearchURL)
-		fmt.Println("1 : This is the HTTPs URL after splitting and concatinating", httpsSearchURL)
 	} else if strings.Contains(url, "http://") {
 		httpSearchURL = url
 		container := strings.SplitAfter(url, "http://")
 		httpsSearchURL = "https://" + container[1]
 
-		fmt.Println("2 : This is the HTTP URL after splitting and concatinating", httpSearchURL)
-		fmt.Println("2 : This is the HTTPs URL after splitting and concatinating", httpsSearchURL)
+		
 	} else {
 		httpSearchURL = "http://" + url
 		httpsSearchURL = "https://" + url
-		fmt.Println("3 : This is the HTTP URL after splitting and concatinating", httpSearchURL)
-		fmt.Println("4 : This is the HTTPs URL after splitting and concatinating", httpsSearchURL)
+		
 	}
 
 	APIKey := utils.APIKeyGoogle
@@ -183,7 +179,10 @@ func TestGoGoogleUrl(url string, response *utils.FrontendResponse2, wg *sync.Wai
 
 	res, err := client.Do(req)
 	if err != nil {
-		panic(err)
+		fmt.Println("Error: in google api response")
+		logging.Logerror(err, "ERROR reading google api response, Google API")
+		utils.SetGenericError(response)
+		return
 	}
 	defer res.Body.Close()
 
@@ -204,31 +203,6 @@ func TestGoGoogleUrl(url string, response *utils.FrontendResponse2, wg *sync.Wai
 	}
 	output := string(body)
 	fmt.Println("BODY::!", output)
-	//fmt.Println("ThreatType::::",jsonResponse.Matches[0].ThreatType)
-	//fmt.Println("response Body:", string(body))
-	/*
-		if len(jsonResponse.Matches) != 0 {
-			response.Content = "This URL has been marked as malicious by Google Safebrowsing, visiting is NOT recommended"
-			switch jsonResponse.Matches[0].ThreatType {
-			case "MALWARE":
-				response.Status = "Risk"
-
-			case "SOCIAL_ENGINEERING":
-				response.Status = "Risk"
-
-			case "UNWANTED_SOFTWARE":
-				response.Status = "Risk"
-
-			default:
-				response.Status = "potentially unsafe"
-				response.Content = "This URL has been marked as suspicious, not recommended to visit."
-			}
-		} else {
-			response.Status = "Safe"
-			response.Content = "Google safebrowsing has no data that indicates this is an unsafe URL"
-		}
-
-		response.SourceName = "Google SafeBrowsing Api"
-	*/
+	
 	utils.SetResponeObjectGoogle(jsonResponse, response)
 }
