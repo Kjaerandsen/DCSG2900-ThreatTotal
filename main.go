@@ -10,6 +10,7 @@ import (
 	// Internal
 	"dcsg2900-threattotal/api"
 	"dcsg2900-threattotal/auth"
+	logging "dcsg2900-threattotal/logs"
 	"dcsg2900-threattotal/storage"
 	"dcsg2900-threattotal/utils"
 
@@ -22,6 +23,7 @@ import (
 
 // Initialize global variables
 func init() {
+	logging.Loginfo("Initializing the application")
 	var err error
 
 	// Setting global varaibles in the utils package
@@ -67,7 +69,7 @@ func init() {
 }
 
 func main() {
-
+	logging.Loginfo("Starting the API")
 	r := gin.Default()
 	r.Use(cors.Default())
 
