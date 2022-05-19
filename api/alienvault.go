@@ -11,6 +11,8 @@ import (
 )
 
 // CallAlienVaultHash function takes a hash, returns data on it from the alienvault api
+//Documentation on the endpoint is found in https://otx.alienvault.com/assets/static/external_api.html
+//API endpoint contacted is: /api/v1/indicators/file/{file_hash}/{section}
 func CallAlienVaultHash(hash string, response *utils.FrontendResponse2, wg *sync.WaitGroup) {
 
 	defer wg.Done()
@@ -62,12 +64,15 @@ func CallAlienVaultHash(hash string, response *utils.FrontendResponse2, wg *sync
 	}
 }
 
+//Function to call the alienvault URL endpoint that gives us intelligence on a given URL or domain. 
+//Documentation on the endpoint is found in https://otx.alienvault.com/assets/static/external_api.html
+//API endpoint contacted is: /api/v1/indicators/url/{url}/{section}
 func CallAlienVaultUrl(url string, response *utils.FrontendResponse2, wg *sync.WaitGroup) {
 	defer wg.Done()
 	
 	APIKey := utils.APIKeyOTX
 
-	getURL := "https://otx.alienvault.com//api/v1/indicators/url/" + url + "/general"
+	getURL := "https://otx.alienvault.com//api/v1/indicators/url/" + url + "/general"	//Decalre the URL to be searched and the API endpoint. 
 
 	req, err := http.NewRequest("GET", getURL, nil)
 	req.Header.Set("X-OTX-API-KEY", APIKey)
@@ -82,20 +87,20 @@ func CallAlienVaultUrl(url string, response *utils.FrontendResponse2, wg *sync.W
 	}
 	defer res.Body.Close()
 
-	body, err := ioutil.ReadAll(res.Body)
+	body, err := ioutil.ReadAll(res.Body)	//Attempt to read body. 
 	if err != nil {
 		fmt.Println("ERROR READING JSON DATA", err)
 		logging.Logerror(err, "ERROR Reading JSON response, AlienVault API")
 
 	}
 
-	var jsonResponse utils.AlienVaultURL
+	var jsonResponse utils.AlienVaultURL		//Declare new struct. 
 
-	err = json.Unmarshal(body, &jsonResponse)
+	err = json.Unmarshal(body, &jsonResponse)		//Unmarshal data into struct.
 	if err != nil {
 		fmt.Println("UNMARSHAL ERROR:\n\n", err)
 		logging.Logerror(err, "ERROR unmarshalling, AlienVault URLsearch API")
 	}
 
-	utils.SetResponseObjectAlienVault(jsonResponse, response)
+	utils.SetResponseObjectAlienVault(jsonResponse, response)	//Set the response object for Alienvault. 
 }

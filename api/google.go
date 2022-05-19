@@ -13,7 +13,9 @@ import (
 	//"dcsg2900-threattotal/main"
 )
 
-
+//Function to call the Google Safe Browsing API.
+//API documentation can be found in: https://developers.google.com/safe-browsing/v4
+// Contacted API Endpoint : https://safebrowsing.googleapis.com/v4/threatMatches
 func CallGoogleUrl(url string, response *utils.FrontendResponse2, wg *sync.WaitGroup) {
 	// Google API returnerer [] om den ikke kjenner til domenet / URL. Kan bruke dette til
 	// å avgjøre om det er malicious eller ikke.
@@ -94,8 +96,6 @@ func CallGoogleUrl(url string, response *utils.FrontendResponse2, wg *sync.WaitG
 	if err != nil {
 		fmt.Println(err)
 	}
-	output := string(body)
-	fmt.Println("BODY::!", output)
 
 	utils.SetResponeObjectGoogle(jsonResponse, response)
 }
