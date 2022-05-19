@@ -118,6 +118,7 @@ func CallVirusTotal(id string) (response utils.ResultFrontendResponse, err error
 	return response, nil
 }
 
+// Sorts frontend display information from AV engines, based on malicious sites first, and harmless last
 func sortDanger(values []utils.FrontendResponse2, dangerSize int, safeSize int) []utils.FrontendResponse2 {
 	if dangerSize == 0 {
 		return values
