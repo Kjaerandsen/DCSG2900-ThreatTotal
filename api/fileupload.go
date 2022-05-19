@@ -17,6 +17,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// Retrieves data of uploaded file
 func UploadFileRetrieve(c *gin.Context) {
 	var fileData []byte
 
@@ -77,6 +78,7 @@ func UploadFileRetrieve(c *gin.Context) {
 	c.Data(http.StatusOK, "application/json", fileData)
 }
 
+// Performs request to virustotal, returning a full report of analyzed file
 func uploadFileRetrieveCall(id string) (data []byte, err error) {
 	var responseData utils.ResultFrontendResponse
 	responseData, err = CallVirusTotal(id)
@@ -94,6 +96,7 @@ func uploadFileRetrieveCall(id string) (data []byte, err error) {
 	return fileData, nil
 }
 
+// Uploads file to VirusTotal and returns an ID reference to the scan results in VirusTotal
 func UploadFile(c *gin.Context) {
 	log.Println("Fileupload worked")
 	logging.Loginfo("Fileupload worked")
