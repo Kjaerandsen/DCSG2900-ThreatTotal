@@ -106,20 +106,34 @@ There is also a test implemented to test whether an unspecified endpoint returns
 
 ## Test overview
 
-Test function: TestUrlIntelligenceOK
-What it does: This function tests if the url-intelligence endpoint returns the expected status code 200 when called as logged in user.
+**Test function:** TestUrlIntelligenceOK
 
-Test function: TestUrlIntelligenceUnauthorized
-What it does: This function tests if the url intelligence endpoints returns the expected status code 401 (unauthorized) when called without the user log in.
-
-Test function: TestHashIntelligenceOK
-What it does: This function tests if the hash-intelligence endpoint returns the expected status code 200 (statusOK) when called as logged in user.
-
-Test function: TestHashIntelligenceUnauthorized
-What it does: This function tests if the hash intelligence endpoints returns the expected status code 401 (unauthorized) when called without the user log in.
-
-Test function: TestUrlIntelligenceValidOutput
 What it does: 
+
+This function tests if the url-intelligence endpoint returns the expected status code 200 when called as logged in user.
+
+**Test function:** TestUrlIntelligenceUnauthorized
+
+What it does: 
+
+This function tests if the url intelligence endpoints returns the expected status code 401 (unauthorized) when called without the user log in.
+
+**Test function:** TestHashIntelligenceOK
+
+What it does:
+
+ This function tests if the hash-intelligence endpoint returns the expected status code 200 (statusOK) when called as logged in user.
+
+**Test function:** TestHashIntelligenceUnauthorized
+
+What it does:
+
+ This function tests if the hash intelligence endpoints returns the expected status code 401 (unauthorized) when called without the user log in.
+
+**Test function:** TestUrlIntelligenceValidOutput
+
+What it does: 
+
 * API test to check whether the url-intelligence endpoint returns valid ouput
 * This test runs multiple tests, and tests the following:
 
@@ -131,7 +145,8 @@ What it does:
 * If status or content is not set in any of the responses from the intelligence sources both in english and norwegian
 
 
-Test function: TestHash_IntelligenceValidOutput
+**Test function:** TestHash_IntelligenceValidOutput
+
 What it does:
 * API test to check whether the hash-intelligence endpoint returns valid ouput
 * This test runs multiple tests, and tests the following:
@@ -143,8 +158,11 @@ What it does:
 * If the status of AlienVault is risk as expected.
 
 
-Test function: TestNotSpecifiedEndpoint
-What it does:  This API test checks if an unspecified endpoint in the API returns 404 (Error not found) as expected. 
+**Test function:** TestNotSpecifiedEndpoint
+
+What it does:  
+
+This API test checks if an unspecified endpoint in the API returns 404 (Error not found) as expected. 
 
 ### HOW TO USE TESTING
 
