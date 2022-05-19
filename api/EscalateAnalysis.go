@@ -13,11 +13,12 @@ import (
 
 //Function linked to the escalation to manual analysis button in the frontend. Function sends email to user whom requested manual analysis.
 //Function utlizes the gomail package.
+//This function has been created with inspiration from https://www.loginradius.com/blog/engineering/sending-emails-with-golang/.
 func EscalateAnalysis(url string, result string, token string, hash string) {
 
-	email_pwd := os.Getenv("email_pwd")
+	email_pwd := os.Getenv("email_pwd") //Get service password from ENV.
 
-	from := "threattotalv2@gmail.com"
+	from := "threattotalv2@gmail.com" //Address to send email from.
 
 	to := getUserEmail(token) //Gets the email of the user.
 
@@ -52,6 +53,7 @@ func EscalateAnalysis(url string, result string, token string, hash string) {
 	// Now send E-Mail
 	if err := d.DialAndSend(m); err != nil {
 		fmt.Println(err)
+		logging.Logerror(err, "Error sending email - EscalateManualAnalysis.")
 	}
 }
 
@@ -68,17 +70,18 @@ func getUserEmail(hash string) (email string) {
 
 		}
 	}
-	responseBytes, err := json.Marshal(value)	//Marshal data	
+	responseBytes, err := json.Marshal(value) //Marshal data
 	if err != nil {
 		fmt.Println(err)
+		logging.Logerror(err, "Error marshalling data")
 	}
 
 	var test []byte
 	var JWTdata utils.IdAndJwt
 
-	err = json.Unmarshal(responseBytes, &test)		//Unmarshal data
+	err = json.Unmarshal(responseBytes, &test) //Unmarshal data
 	json.Unmarshal(test, &JWTdata)
 
-	email = fmt.Sprintf("%s", JWTdata.Claims["email"])		//Set the email
-	return email		//Return the email.
+	email = fmt.Sprintf("%s", JWTdata.Claims["email"]) //Set the email
+	return email                                       //Return the email.
 }
