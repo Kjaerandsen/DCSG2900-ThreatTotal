@@ -11,13 +11,11 @@ import (
 	"strings"
 	"sync"
 	"time"
-	//"golang.org/x/tools/go/analysis/passes/nilfunc"
 )
 
 // CallHybridAnalysisHash function takes a hash, returns data on it from the hybridanalysis api
+// API endpoint documentation https://www.hybrid-analysis.com/docs/api/v2#/Search/post_search_hash
 func CallHybridAnalysisHash(hash string, response *utils.FrontendResponse2, wg *sync.WaitGroup) {
-
-	// API dokumentasjon https://www.hybrid-analysis.com/docs/api/v2#/Search/post_search_hash
 
 	defer wg.Done()
 
@@ -49,11 +47,7 @@ func CallHybridAnalysisHash(hash string, response *utils.FrontendResponse2, wg *
 	fmt.Println("\nStatus paa request", res.Status)
 	if res.StatusCode == 200 {
 
-		//fmt.Println("response Status:", res.Status)
-		//fmt.Print("Response Headers:", res.Header)
 		body, _ := ioutil.ReadAll(res.Body)
-		fmt.Println("\nBody", string(body))
-		//fmt.Println("response Body:", string(body))
 
 		var jsonResponse utils.HybridAnalysishash
 
@@ -77,38 +71,30 @@ func CallHybridAnalysisHash(hash string, response *utils.FrontendResponse2, wg *
 }
 
 // CallHybridAnalyisUrl function takes a url, returns data on it from the hybridanalysis api
+// https://www.hybrid-analysis.com/docs/api/v2#/Quick%20Scan/post_quick_scan_url Documentation for contacted endpoint
 func CallHybridAnalyisUrl(URL string) (VirusTotal utils.FrontendResponse, urlscanio utils.FrontendResponse) {
-
-	fmt.Println("HYBRID URL: ", URL)
-	//DENNE FUNKSJONENE KAN SCANNE EN URL MEN DETTE BENYTTER SEG AV VIRUS TOTAL/
-	// DETTE ER KANSKJE EN GOD WORK AROUND FOR Å KUNNE BRUKE VT GRATIS SIDEN Hybrid Analysis har lisens.
-	// Problem her kan være at dette må inkomporere en "await - 5-15 sekunder
-	// om det ikke er noe cachet result på VirusTotal, fordi den maa kjore ny request.".
-	// Titter på dette.
-	// Vi har CAP på 2000 request i timen hos Hybrid Analyis, dette burde vell holde??? - 200 max i minuttet.
-	// https://www.hybrid-analysis.com/docs/api/v2#/Quick%20Scan/post_quick_scan_url Dokumentasjon for dette API endpointet.
 
 	APIKey := utils.APIKeyHybridAnalysis
 
 	postURL := "https://www.hybrid-analysis.com/api/v2/quick-scan/url"
 
 	data := url.Values{}
-	data.Set("scan_type", "all")
-	data.Set("url", URL)
-	data.Set("no_share_third_party", "true")
-	data.Set("allow_community_access", "false")
-	//data.Set("submit_name","")
+	data.Set("scan_type", "all")                //What type of scan to perform
+	data.Set("url", URL)                        //Sets URL to search
+	data.Set("no_share_third_party", "true")    //Makes the search not accessible to 3-rd party others
+	data.Set("allow_community_access", "false") //Does not share search with community
 
-	req, err := http.NewRequest("POST", postURL, strings.NewReader(data.Encode()))
+	req, err := http.NewRequest("POST", postURL, strings.NewReader(data.Encode())) //Sets the new request.
 	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
-	req.Header.Set("api-key", APIKey)
-	req.Header.Set("User-Agent", "Falcon Sandbox")
+	req.Header.Set("api-key", APIKey)              //Set API key
+	req.Header.Set("User-Agent", "Falcon Sandbox") //Set USER-AGENT, just to bypass user-agent check - See documentation on API
 
 	client := &http.Client{}
 
 	res, err := client.Do(req)
 	if err != nil {
-		panic(err)
+		fmt.Println("Error in request")
+		logging.Logerror(err, "Error in request Hybrid Analysis")
 	}
 	defer res.Body.Close()
 
@@ -138,7 +124,7 @@ func CallHybridAnalyisUrl(URL string) (VirusTotal utils.FrontendResponse, urlsca
 	}
 
 	if !jsonResponse.Finished {
-		time.Sleep(20 * time.Second) //Får prøve å finne en bedre løsning enn dette men det er det jeg har for now.
+		time.Sleep(20 * time.Second)
 
 		res, err := client.Do(req)
 		if err != nil {
@@ -178,55 +164,43 @@ func CallHybridAnalyisUrl(URL string) (VirusTotal utils.FrontendResponse, urlsca
 	return VirusTotal, urlscanio
 }
 
+//Function to perform request to the Hybrid Analysis API for URL and domain intelligence.
+// https://www.hybrid-analysis.com/docs/api/v2#/Quick%20Scan/post_quick_scan_url Documentation on used API endpoint.
+
 func TestHybridAnalyisUrl(URL string, VirusTotal *utils.FrontendResponse2, urlscanio *utils.FrontendResponse2, wg *sync.WaitGroup) {
 
 	defer wg.Done()
-
-	fmt.Println("HYBRID URL: ", URL)
-	//DENNE FUNKSJONENE KAN SCANNE EN URL MEN DETTE BENYTTER SEG AV VIRUS TOTAL/
-	// DETTE ER KANSKJE EN GOD WORK AROUND FOR Å KUNNE BRUKE VT GRATIS SIDEN Hybrid Analysis har lisens.
-	// Problem her kan være at dette må inkomporere en "await - 5-15 sekunder
-	// om det ikke er noe cachet result på VirusTotal, fordi den maa kjore ny request.".
-	// Titter på dette.
-	// Vi har CAP på 2000 request i timen hos Hybrid Analyis, dette burde vell holde??? - 200 max i minuttet.
-	// https://www.hybrid-analysis.com/docs/api/v2#/Quick%20Scan/post_quick_scan_url Dokumentasjon for dette API endpointet.
 
 	APIKey := utils.APIKeyHybridAnalysis
 
 	postURL := "https://www.hybrid-analysis.com/api/v2/quick-scan/url"
 
 	data := url.Values{}
-	data.Set("scan_type", "all")
-	data.Set("url", URL)
-	data.Set("no_share_third_party", "true")
-	data.Set("allow_community_access", "false")
-	//data.Set("submit_name","")
+	data.Set("scan_type", "all")                //Sets the scan type.
+	data.Set("url", URL)                        //Sets the URL to be searched
+	data.Set("no_share_third_party", "true")    //Does not share search with 3rd party
+	data.Set("allow_community_access", "false") //Sets it so that search is not shared with community.
 
-	req, err := http.NewRequest("POST", postURL, strings.NewReader(data.Encode()))
-	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
-	req.Header.Set("api-key", APIKey)
-	req.Header.Set("User-Agent", "Falcon Sandbox")
+	req, err := http.NewRequest("POST", postURL, strings.NewReader(data.Encode())) //Creates new post request
+	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")            //Sets required content type
+	req.Header.Set("api-key", APIKey)                                              //Adds the API key
+	req.Header.Set("User-Agent", "Falcon Sandbox")                                 //Sets user agent to falcon sandbox, to bypass user agent check.
 
 	client := &http.Client{}
 
 	res, err := client.Do(req)
 	if err != nil {
-		panic(err)
+		fmt.Println(err, "Error in request to Hybrid Analysis - URL endpoint. ")
+		logging.Logerror(err, "Error in request to Hybrid Analysis - URL")
+		utils.SetGenericError(VirusTotal)
+		utils.SetGenericError(urlscanio)
+		return
 	}
 	defer res.Body.Close()
 
 	fmt.Println("response Status:", res.Status)
 	if res.StatusCode == http.StatusOK {
 
-		// res.Body.Read("finished") Her skal jeg føre en sjekk som sjekker om "finished = true eller false"
-
-		// Hvis denne er false skal den vente 5 sekunder og kjøre requesten på nytt.
-		// Eventuelt om det er en måte å ikke close requesten før den er finished???????
-
-		// Her kan det sjekkes om VirusTotal - Status er Malicious og om Urlscan.io
-		// - status er malicious, suspicious, clean etc. også bare returnere denne responsen.
-
-		//fmt.Print("Response Headers:", res.Header)
 		body, err := ioutil.ReadAll(res.Body)
 		if err != nil {
 			fmt.Println("Ioutil error:", err)
@@ -234,7 +208,6 @@ func TestHybridAnalyisUrl(URL string, VirusTotal *utils.FrontendResponse2, urlsc
 
 		}
 
-		//var jsonData map[string]interface{}
 		var jsonResponse utils.HybridAnalysisURL
 
 		err = json.Unmarshal(body, &jsonResponse)
@@ -243,11 +216,14 @@ func TestHybridAnalyisUrl(URL string, VirusTotal *utils.FrontendResponse2, urlsc
 		}
 
 		if !jsonResponse.Finished {
-			time.Sleep(40 * time.Second) //Får prøve å finne en bedre løsning enn dette men det er det jeg har for now.
+			time.Sleep(40 * time.Second) //In case the analysis is not finished, we wait 40 seconds to perform a new request.
 
 			res, err := client.Do(req)
 			if err != nil {
-				panic(err)
+				fmt.Println(err, "Error in request to Hybrid Analysis - URL endpoint. ")
+				logging.Logerror(err, "Error in request to Hybrid Analysis - URL")
+				utils.SetGenericError(VirusTotal)
+				utils.SetGenericError(urlscanio)
 			}
 			defer res.Body.Close()
 
@@ -268,32 +244,50 @@ func TestHybridAnalyisUrl(URL string, VirusTotal *utils.FrontendResponse2, urlsc
 		fmt.Println(jsonResponse)
 		VirusTotal.SourceName = jsonResponse.Scanners[0].Name
 		urlscanio.SourceName = jsonResponse.Scanners[1].Name
-		/*
-				VirusTotal.Status = jsonResponse.Scanners[0].Status
-
-				// Set the clean value to safe instead for frontend display.
-				if VirusTotal.Status == "clean" {
-					VirusTotal.Status = "Safe"
-				}
-
-				urlscanio.SourceName = jsonResponse.Scanners[1].Name
-				urlscanio.Status = jsonResponse.Scanners[1].Status
-
-				fmt.Println("Attempted HybridAnalysisURL output VT:", VirusTotal.SourceName, "   Status:", VirusTotal.Status)
-				fmt.Println("\n\nAttempted HybridAnalysisURL output VT:", urlscanio.SourceName, "   Status:", urlscanio.Status)
-			} else {
-				VirusTotal.SourceName = "VirusTotal"
-				VirusTotal.Status = "Error"
-
-				urlscanio.SourceName = "urlscan.io"
-				urlscanio.Status = "Error"
-			}
-		*/
-		fmt.Println("WHAT IS THIS \n\n\n", jsonResponse.Finished)
-		fmt.Println("URLSCANIO STATUS:", jsonResponse.Scanners[1].Status)
 
 		utils.SetResponseObjectVirusTotal(jsonResponse, VirusTotal)
 		utils.SetResponseObjectUrlscanio(jsonResponse, urlscanio)
+	} else if res.StatusCode == http.StatusBadRequest {	//Added a special check here to see if the domain does not ecist
+
+		body, err := ioutil.ReadAll(res.Body)		//If body can not be read, default to generic error
+		if err != nil {
+			fmt.Println("Ioutil error:", err)
+			logging.Logerror(err, "Ioutil error HybridAnalysis: ")
+			VirusTotal.SourceName = "VirusTotal"
+			urlscanio.SourceName = "urlscan.io"
+
+			utils.SetGenericError(VirusTotal)
+			utils.SetGenericError(urlscanio)
+		}
+
+		var jsonResponse utils.HybridAnalysisBadRequest
+
+		err = json.Unmarshal(body, &jsonResponse)		//If json data can not be unmarshaled default to generic error struct
+		if err != nil {
+			fmt.Println(err)
+			logging.Logerror(err, "Ioutil error HybridAnalysis: ")
+			VirusTotal.SourceName = "VirusTotal"
+			urlscanio.SourceName = "urlscan.io"
+
+			utils.SetGenericError(VirusTotal)
+			utils.SetGenericError(urlscanio)
+		}
+		if jsonResponse.Message == "Failed to download file: domain does not exist" {	//If message contains this, it means domain does not exist
+			VirusTotal.SourceName = "VirusTotal"
+			VirusTotal.EN.Status = "Safe"
+			VirusTotal.EN.Content = "Domain does not exist"
+
+			VirusTotal.NO.Status = "Trygg"
+			VirusTotal.NO.Content = "Domenet eksisterer ikke"
+
+			urlscanio.SourceName = "urlscan.io"
+			urlscanio.EN.Status = "Safe"
+			urlscanio.EN.Content = "Domain does not exist"
+
+			urlscanio.NO.Status = "Trygg"
+			urlscanio.NO.Content = "Domenet eksisterer ikke"
+		}
+
 	} else {
 		VirusTotal.SourceName = "VirusTotal"
 		VirusTotal.EN.Status = "Error"
@@ -302,6 +296,5 @@ func TestHybridAnalyisUrl(URL string, VirusTotal *utils.FrontendResponse2, urlsc
 		urlscanio.SourceName = "urlscan.io"
 		urlscanio.EN.Status = "Error"
 		urlscanio.NO.Status = "Error"
-
 	}
 }
