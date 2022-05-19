@@ -36,15 +36,11 @@ func UrlIntelligence(c *gin.Context) {
 
 		// Add the data to the redis backend.
 		if completeInt {
-			response, err := utils.Conn.Do("SETEX", "url:"+url, utils.CacheDurationUrl, URLint)
+			_, err := utils.Conn.Do("SETEX", "url:"+url, utils.CacheDurationUrl, URLint)
 			if err != nil {
 				fmt.Println("Error adding data to redis:" + err.Error())
 				logging.Logerror(err, "Error addding data to redis - Url-intelligence:")
 			}
-
-			// Print the response to adding the data (should be "OK")
-			fmt.Println("Bool is true")
-			fmt.Println(response)
 		}
 
 		// Cache hit
@@ -85,26 +81,24 @@ func urlSearch(url string) (data []byte, err error, complete bool) {
 	alienvault = &responseData[3]
 
 	wg.Add(3)
-	fmt.Println(url)
-	if checkUrlAgainstFilter(url) {
-		go CallGoogleUrl(url, p, &wg)
+	if checkUrlAgainstFilter(url) { //Checks if the URL is in the POC urlfilter.
+		go CallGoogleUrl(url, p, &wg) //Calls different functions to contact intelligence sources.
 		go CallHybridAnalyisUrl(url, VirusTotal, urlscanio, &wg)
 		go CallAlienVaultUrl(url, alienvault, &wg)
-	} else {
+	} else { //If URL is in urlfilter, set google to safe as POC (Proof of concept.).
 		go giveTrueGoogleUrl(url, p, &wg)
 		go CallHybridAnalyisUrl(url, VirusTotal, urlscanio, &wg)
 		go CallAlienVaultUrl(url, alienvault, &wg)
 	}
 	wg.Wait()
 
-	var resultResponse utils.ResultFrontendResponse
+	var resultResponse utils.ResultFrontendResponse //Creat new struct that will be sent to frontend.
 
-	resultResponse.FrontendResponse = responseData[:]
+	resultResponse.FrontendResponse = responseData[:] //Move frontend response structs into resultresponse struct.
 
-	setResults := &resultResponse
+	setResults := &resultResponse //Create pointer to resultresponse.
 
-	utils.SetResultURL(setResults, len(responseData))
-
+	utils.SetResultURL(setResults, len(responseData)) //Set the result string.
 
 	//FUNCTIONALITY FOR SCREENSHOT OF URLS
 	utils.ScreenshotURL(url, setResults) ////
@@ -115,7 +109,7 @@ func urlSearch(url string) (data []byte, err error, complete bool) {
 	//If complete is true the intelligence will be cached,
 	//If it is not complete the result won't be cached.
 
-	URLint, err = json.Marshal(resultResponse)
+	URLint, err = json.Marshal(resultResponse) //Marshal data to be sent to frontend.
 	if err != nil {
 		fmt.Println(err)
 		return URLint, err, complete
@@ -124,6 +118,7 @@ func urlSearch(url string) (data []byte, err error, complete bool) {
 	return URLint, nil, complete
 }
 
+//Function to check if the intelligence is complete and ready to be cached, returns a complete bool - False = not ready, True = ready.
 func checkIfIntelligenceComplete(jsonData utils.ResultFrontendResponse, size int) (complete bool) {
 	complete = true
 
