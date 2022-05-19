@@ -372,3 +372,7 @@ type ValidationAlienVault struct {
 	Message string `json:"message"`
 	Name    string `json:"name"`
 }
+
+type HybridAnalysisBadRequest struct {
+	Message string `json:"message"`
+}
