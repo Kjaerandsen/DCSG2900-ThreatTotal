@@ -11,7 +11,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 )
-
+//URL intelligence function called from main, checks the cache for hits, if miss calls to gather intelligence. 
 func UrlIntelligence(c *gin.Context) {
 	url := c.Query("url")
 
