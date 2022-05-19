@@ -17,8 +17,7 @@ import (
 //API documentation can be found in: https://developers.google.com/safe-browsing/v4
 // Contacted API Endpoint : https://safebrowsing.googleapis.com/v4/threatMatches
 func CallGoogleUrl(url string, response *utils.FrontendResponse2, wg *sync.WaitGroup) {
-	// Google API returnerer [] om den ikke kjenner til domenet / URL. Kan bruke dette til
-	// å avgjøre om det er malicious eller ikke.
+	// Google API returns [] if it does not know the domain or URL. This is used to determine if it is malicious or not. 
 	defer wg.Done()
 
 	var httpSearchURL, httpsSearchURL string
@@ -95,6 +94,7 @@ func CallGoogleUrl(url string, response *utils.FrontendResponse2, wg *sync.WaitG
 	err = json.Unmarshal(body, &jsonResponse)
 	if err != nil {
 		fmt.Println(err)
+		logging.Logerror(err, "ERROR unmarshalling data to struct -Safebrowsing API.")
 	}
 
 	utils.SetResponeObjectGoogle(jsonResponse, response)
