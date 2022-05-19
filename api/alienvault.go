@@ -10,56 +10,6 @@ import (
 	"sync"
 )
 
-// CallAlienVaultUrl function takes a url, returns data on it from the alienvault api
-func CallAlienVaultUrl(url string) (response utils.FrontendResponse) {
-
-	APIKey := utils.APIKeyOTX
-
-	getURL := "https://otx.alienvault.com//api/v1/indicators/url/" + url + "/general"
-
-	req, err := http.NewRequest("GET", getURL, nil)
-	req.Header.Set("X-OTX-API-KEY", APIKey)
-
-	//fmt.Println(req.Header)
-
-	client := &http.Client{}
-
-	res, err := client.Do(req)
-	if err != nil {
-		panic(err)
-	}
-	defer res.Body.Close()
-
-	body, err := ioutil.ReadAll(res.Body)
-	if err != nil {
-		fmt.Println("ERROR READING JSON DATA", err)
-		logging.Logerror(err, "ERROR READING JSON DATA, AlienVault API")
-	}
-
-	var jsonResponse utils.AlienVaultURL
-
-	err = json.Unmarshal(body, &jsonResponse)
-	if err != nil {
-		fmt.Println("UNMARSHAL ERROR:\n\n", err)
-		logging.Logerror(err, "Unmarshal error AlienVault API")
-	}
-
-	//output:= string(body)
-	//fmt.Println(output)
-	//fmt.Println("\n\nAMOUNT OF PULSES:::::: ", jsonResponse.PulseInfo.Count)
-	if jsonResponse.PulseInfo.Count == 0 {
-		response.Status = "Safe"
-	} else {
-		response.Status = "Risk"
-	}
-
-	response.SourceName = "AlienVault"
-
-	//response = string(body)
-
-	return response
-}
-
 // CallAlienVaultHash function takes a hash, returns data on it from the alienvault api
 func CallAlienVaultHash(hash string, response *utils.FrontendResponse2, wg *sync.WaitGroup) {
 
@@ -112,7 +62,7 @@ func CallAlienVaultHash(hash string, response *utils.FrontendResponse2, wg *sync
 	}
 }
 
-func TestAlienVaultUrl(url string, response *utils.FrontendResponse2, wg *sync.WaitGroup) {
+func CallAlienVaultUrl(url string, response *utils.FrontendResponse2, wg *sync.WaitGroup) {
 	defer wg.Done()
 	
 	APIKey := utils.APIKeyOTX
