@@ -12,12 +12,9 @@ import (
 
 // CallVirusTotal returns data on a file id from virustotal
 func CallVirusTotal(id string) (response utils.ResultFrontendResponse, err error) {
-	// VT key has been added. REMEMBER TO DEACTIVATE AND CHANGE BEFORE FINAL RELEASE.
 	// prepare request towards API
 	// Convert []byte to string and print to screen
 	APIKey := utils.APIKeyVirusTotal
-	// remember to change api key, and reference it to a file instead
-	// as well as deactivate the key from the account, as it's leaked.
 	if id == "" {
 		log.Println("error, ID is empty")
 		logging.Logerrorinfo("Error, ID is empty - Upload")
@@ -61,12 +58,10 @@ func CallVirusTotal(id string) (response utils.ResultFrontendResponse, err error
 	log.Println("here is the test output we maybe want")
 	i := 0
 
-	// TODO for later, remove teststruct, as it's only used to put into response, later
 	var testStruct = make([]utils.FrontendResponse2, len(vtResponse.Data.Attributes.LastAnalysisResults))
 
 	// iterate through results
 	for _, val := range vtResponse.Data.Attributes.LastAnalysisResults {
-		//log.Printf("testing, %s, %s", key, val)
 		// initialize struct
 		// print
 		log.Println(val)
@@ -85,11 +80,7 @@ func CallVirusTotal(id string) (response utils.ResultFrontendResponse, err error
 			testStruct[i].EN.Description = vtResponse.Data.Attributes.Magic
 			testStruct[i].EN.Tags = vtResponse.Data.Attributes.TypeTag
 
-			//testStruct.EN.Description =
-
 			// can also display the total status (last analysis stats)
-			// this is an int ^^ so cant fill it in frontendresponse2
-			// question is, do we do it here or later
 
 			i++
 		}
@@ -117,8 +108,6 @@ func CallVirusTotal(id string) (response utils.ResultFrontendResponse, err error
 		response.EN.Result = "File is suspicious. It is not recommended to further handle this file."
 		response.NO.Result = "Filen er mistenkelig. Det anbefales å ikke videre håndtere filen. "
 	}
-
-	//var engines int = len(vtResponse.Data.Attributes.LastAnalysisResults)
 
 	utils.SetResultFile(&response, i-1)
 

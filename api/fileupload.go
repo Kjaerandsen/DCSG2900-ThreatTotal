@@ -64,23 +64,13 @@ func UploadFileRetrieve(c *gin.Context) {
 			logging.Logerror(err, "ERROR in RedisResponse, Fileupload API")
 			http.Error(c.Writer, "Failed retrieving api data.", http.StatusInternalServerError)
 			return
-			// Maybe do another call to delete the key from the database?
 		}
-		/**
-		//var checkData utils.ResultFrontendResponse
-		err = json.Unmarshal(responseBytes, &checkdata)
-		if err!=nil {
-			fmt.Println(string(checkData))
-		}
-		fmt.Println(string(checkData))
-		*/
 		err = json.Unmarshal(responseBytes, &fileData)
 		if err != nil {
 			fmt.Println("Error handling redis response:" + err.Error())
 			logging.Logerror(err, "ERROR handling redis response, fileupload API")
 			http.Error(c.Writer, "Failed retrieving api data.", http.StatusInternalServerError)
 			return
-			// Maybe do another call to delete the key from the database?
 		}
 	}
 
@@ -145,10 +135,11 @@ func UploadFile(c *gin.Context) {
 		logging.Logerror(err, "")
 	}
 
+	// fetch API key
 	APIKey := utils.APIKeyVirusTotal
 
+	// add API key to relevant header
 	req.Header.Add("X-Apikey", APIKey)
-	// error handle here, user should not be able to send requests without api key
 
 	// dynamically set content type, based on the formdata writer
 	req.Header.Set("Content-Type", writer.FormDataContentType())
@@ -156,6 +147,7 @@ func UploadFile(c *gin.Context) {
 	// perform the prepared API request
 	res, err := http.DefaultClient.Do(req)
 
+	// as long as the request returns 200
 	if err != nil {
 		log.Println(err)
 		logging.Logerror(err, "")
@@ -163,13 +155,12 @@ func UploadFile(c *gin.Context) {
 
 	defer res.Body.Close()
 
-	// så lenge status 200
-
 	// read the response
 	contents, _ := ioutil.ReadAll(res.Body)
 
 	var jsonResponse utils.VirusTotalUploadID
 
+	// unmarshal contents
 	unmarshalledID := json.Unmarshal(contents, &jsonResponse)
 
 	if unmarshalledID != nil {
@@ -177,6 +168,7 @@ func UploadFile(c *gin.Context) {
 		logging.Logerror(err, "")
 	}
 
+	// fetch ID which is base64 encoded
 	encodedID := jsonResponse.Data.ID
 
 	// decode provided values for virustotal report
