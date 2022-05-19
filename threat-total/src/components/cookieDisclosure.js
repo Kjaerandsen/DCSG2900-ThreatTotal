@@ -8,6 +8,7 @@ import { useTranslation } from 'react-i18next';
 function CookieDisclosure () {
     const { t } = useTranslation();
 
+    // Hide the cookie disclosure if the cookiesEnabled cookie is present
     useEffect(() => {
         if (localStorage.getItem("cookiesEnabled") !== "true") {
             console.log("True")

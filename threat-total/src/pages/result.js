@@ -20,6 +20,7 @@ function Result() {
     const userAuth = localStorage.getItem('userAuth')
     const [ScreenshotProvided, setScreenshotProvided] = useState(false)
     
+    // Perform api request to the backend
     useEffect(() => {
         if (userAuth != null) {
             if (hash != null) {
@@ -107,7 +108,7 @@ function Result() {
         }
     }, [file, hash, url, userAuth]);
 
-    console.log(JsonData)
+    // Add the translation data if the backend request gave data
     if (JsonData !== undefined){
         i18next.addResources('en', 'translation', JsonData.EN);
         i18next.addResources('no', 'translation', JsonData.NO);
@@ -161,6 +162,7 @@ function Result() {
         );
 }
 
+// Function which escalates a request to manual analysis by sending an api request to the backend.
 function EscalateAnalysis(url, userAuth, filehash){
 
     fetch(process.env.REACT_APP_BACKEND_URL+'/escalate?url=' + url +"&result=" + window.location.href + "&userAuth=" + userAuth + "&hash=" + filehash, {

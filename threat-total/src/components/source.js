@@ -3,29 +3,16 @@ import { useTranslation } from 'react-i18next';
 import i18next from '../i18next';
 
 export default function Source(props) {
-
-    //i18next.init({ resources: {} });
-    //i18next.addResourceBundle('en', 'sourceEn', translationData.en);
-    //i18next.addResourceBundle('no', 'sourceNo', translationData.no);
-    
     // Add the translation data from the backend
     if (props.Data !== "") {
     const norsk = props.Data.no
     const english = props.Data.en
     i18next.addResources('en', 'translation', english);
     i18next.addResources('no', 'translation', norsk);
-    //i18next.addResource('en', 'translation2', 'status', 'status2', {})
-    //console.log ("english: ", english)
-    //i18next.addResources({ lng:'no', ns : 'default', any: norsk });
-    //console.log("English source x: ", english)
-    //console.log( i18next.getDataByLanguage('en'))
-    //console.log( i18next.getResource('en', 'translation', 'status'))
-    //console.log( i18next.getResource('no', 'translation', 'status'))
     }
 
     const { t } = useTranslation();
     // If the input is empty return an empty box
-    // add a loading animation?
 if (props.Data === "") {
     return(
         <div className='bg-white border-2 m-2 border-gray-400 rounded-lg p-1 text-left'>

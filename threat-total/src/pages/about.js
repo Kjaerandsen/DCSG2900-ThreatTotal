@@ -7,6 +7,7 @@ import { useTranslation } from 'react-i18next';
 
 function About() {
 
+// The consts are used for the open / close functionality of the menus
 const { t } = useTranslation();
 
 const [q1, setQ1] = useState(false);

@@ -5,9 +5,10 @@ import SubNavbar from '../components/subNavbar'
 import { useTranslation } from 'react-i18next';
 import ntnuLogo from '../img/ntnuLogoUtenSlagOrd.svg';
 
+// Function for logging out the user
 function logoutRequest(){
+    // Get and remove the local  authentication key
     const userAuth = localStorage.getItem('userAuth');
-
     localStorage.removeItem('userAuth')
     console.log("logging out")
     fetch(process.env.REACT_APP_BACKEND_URL+'/login?userAuth=' + userAuth, {
@@ -16,6 +17,7 @@ function logoutRequest(){
                     Accept: 'application/json',
                     'Content-Type': 'application/json'
                 }
+            // Redirect to the logout page at Feide
             }).then((response) => response.json())
             .then((json) => {
                 console.log(json, json.hash)
@@ -31,6 +33,7 @@ function Login(){
     const { t } = useTranslation();
     const [isLoggedIn, setIsLoggedIn] = useState(false);
 
+    // Change the display of the component if the user is logged in
     useEffect(() => {
         if (localStorage.getItem('userAuth') != null) {
             setIsLoggedIn(true)
