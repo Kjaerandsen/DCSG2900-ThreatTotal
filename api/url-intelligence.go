@@ -87,13 +87,13 @@ func urlSearch(url string) (data []byte, err error, complete bool) {
 	wg.Add(3)
 	fmt.Println(url)
 	if checkUrlAgainstFilter(url) {
-		go TestGoGoogleUrl(url, p, &wg)
-		go TestHybridAnalyisUrl(url, VirusTotal, urlscanio, &wg)
-		go TestAlienVaultUrl(url, alienvault, &wg)
+		go CallGoogleUrl(url, p, &wg)
+		go CallHybridAnalyisUrl(url, VirusTotal, urlscanio, &wg)
+		go CallAlienVaultUrl(url, alienvault, &wg)
 	} else {
 		go giveTrueGoogleUrl(url, p, &wg)
-		go TestHybridAnalyisUrl(url, VirusTotal, urlscanio, &wg)
-		go TestAlienVaultUrl(url, alienvault, &wg)
+		go CallHybridAnalyisUrl(url, VirusTotal, urlscanio, &wg)
+		go CallAlienVaultUrl(url, alienvault, &wg)
 	}
 	wg.Wait()
 
