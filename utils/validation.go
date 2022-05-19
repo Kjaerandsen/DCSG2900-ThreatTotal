@@ -156,7 +156,7 @@ func SetResponseObjectAlienVaultHash(jsonResponse AlienVaultHash, response *Fron
 		response.EN.Status = "Safe"
 		response.EN.Content = "We have no information indicating that this file is malicious."
 
-		response.NO.Content = "Trygg"
+		response.NO.Status = "Trygg"
 		response.NO.Content = "Vi har ingen informasjon som tyder på at dette er en ondsinnet fil."
 	} else {
 		response.EN.Status = "Risk"
@@ -197,11 +197,11 @@ func SetResponseObjectHybridAnalysisHash(jsonResponse HybridAnalysishash, respon
 			response.NO.Status = "Trygg"
 			response.NO.Content = "I henhold til informasjon gitt av HybridAnalysis tilsier ikke denne filen noen trussel."
 		} else {
-			response.EN.Status = "Unknown" //Denne må byttes til at den er ukjent // grå farge elns på frontend.
+			response.EN.Status = "Unknown"
 			response.EN.Content = "This file hash is not known to Hybrid Analysis."
 
 			response.NO.Status = "Ukjent"
-			response.NO.Status = "Denne filhashen er ukjent for Hybrid Analysis."
+			response.NO.Content = "Denne filhashen er ukjent for Hybrid Analysis."
 		}
 		fmt.Println(jsonResponse[0].Verdict)
 		// Set the filename field if known
