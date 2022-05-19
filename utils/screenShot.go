@@ -2,9 +2,10 @@ package utils
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"strings"
-
+	logging "dcsg2900-threattotal/logs"
 	"github.com/chromedp/chromedp"
 )
 
@@ -35,7 +36,8 @@ func ScreenshotURL(url string, Response *ResultFrontendResponse) {
 
 	// Take the screenshot using the screenScreenshot function
 	if err := chromedp.Run(ctx, screenScreenshot(SearchURL, &screenshotbuf)); err != nil {
-		log.Fatal(err)
+		fmt.Println("This URL or Domain can not be accessed.")
+		logging.Logerror(err, "Page could not be loaded, URL or domain does not exist.")
 	}
 
 	log.Printf("Took a screenshot of a request url")
