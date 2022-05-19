@@ -124,7 +124,7 @@ func SetResponseObjectVirusTotal(jsonResponse HybridAnalysisURL, VirusTotal *Fro
 
 // SetResponseObjectAlienVault takes the UrlScanio response from HybridAnalysis and formats it accroding to our return object struct with translations.
 func SetResponseObjectUrlscanio(jsonResponse HybridAnalysisURL, urlscanio *FrontendResponse2) {
-	if jsonResponse.Scanners[1].Status == "clean" || jsonResponse.Scanners[1].Status == "no-classification" {
+	if jsonResponse.Scanners[1].Status == "clean" || jsonResponse.Scanners[1].Status == "no-classification" || jsonResponse.Scanners[1].Status == "no-result" {
 
 		urlscanio.EN.Status = "Safe"
 		urlscanio.EN.Content = fmt.Sprintf("%s has no information that indicates this URL is malicious", jsonResponse.Scanners[1].Name)
